@@ -27,94 +27,55 @@ if (app.Environment.IsDevelopment())
  * convierte cada fila del resultado en un objeto Student_model, y luego imprime la información.
  */
 
-// Crear la conexión
-SQL_connection sql = new SQL_connection();
+// Crear una instancia de conexión a la base de datos
+SQL_connection sQL_Connection = new SQL_connection();
 
-// Definir la consulta
-sql.query = "SELECT student_id, name, last_name FROM Student";
+// Definir la consulta SQL que se va a ejecutar
+sQL_Connection.query = "SELECT student_id, name, last_name, email FROM Student";
 
-// Variable para recibir la conexión abierta
-SqlConnection connection;
+// Crear la lista donde se almacenarán los estudiantes obtenidos
+List<Student_model> student_list = new List<Student_model>();
 
 try
 {
-    // Ejecutar la consulta
-    using (SqlDataReader reader = sql.Execute_query(out connection))
+    // Usar un bloque 'using' para manejar automáticamente la conexión
+    using (SqlConnection connection = new SqlConnection(sQL_Connection.connection_string))
     {
-        // Leer cada fila del resultado
-        while (reader.Read())
-        {
-            // Obtener los valores por nombre de columna
-            string id = reader["student_id"].ToString();
-            string name = reader["name"].ToString();
-            string lastName = reader["last_name"].ToString();
+        connection.Open(); // Abrir la conexión
 
-            // Mostrar datos
-            Console.WriteLine($"Estudiante: {id} - {name} {lastName}");
+        // Crear el comando SQL con la consulta y la conexión
+        using (SqlCommand command = new SqlCommand(sQL_Connection.query, connection))
+        using (SqlDataReader reader = command.ExecuteReader()) // Ejecutar el comando y obtener un lector de datos
+        {
+            // Leer cada fila del resultado
+            while (reader.Read())
+            {
+                // Crear un objeto Student_model con los datos de la fila
+                Student_model student = new Student_model
+                {
+                    student_id = reader["student_id"].ToString(),
+                    name = reader["name"].ToString(),
+                    last_name = reader["last_name"].ToString(),
+                    email = reader["email"].ToString()
+                };
+
+                // Agregar el estudiante a la lista
+                student_list.Add(student);
+            }
         }
-    } // Al cerrar el reader, también se cierra la conexión
+    }
+
+    // Mostrar los estudiantes en la consola
+    foreach (var student in student_list)
+    {
+        Console.WriteLine($"ID: {student.student_id}, Nombre: {student.name} {student.last_name}, Email: {student.email}");
+    }
 }
 catch (Exception ex)
 {
-    // Mostrar error si ocurre
-    Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+    // Mostrar el mensaje de error en caso de que ocurra una excepción
+    Console.WriteLine("Error: " + ex.Message);
 }
-
-
-Console.WriteLine("// ---------------- SELECT sin WHERE ni ORDER BY ----------------");
-Sql_query_builder_model select_1 = new Sql_query_builder_model("Student", "student_id", "name");
-Console.WriteLine(select_1.build_select());
-
-Console.WriteLine("\n// ---------------- SELECT con WHERE ----------------");
-Sql_query_builder_model select_2 = new Sql_query_builder_model("Student", "name", "email");
-select_2.add_where("email LIKE '%@gmail.com'");
-Console.WriteLine(select_2.build_select());
-
-Console.WriteLine("\n// ---------------- SELECT con ORDER BY ----------------");
-Sql_query_builder_model select_3 = new Sql_query_builder_model("Student", "student_id", "name", "last_name");
-select_3.set_order_by("name", "DESC");
-Console.WriteLine(select_3.build_select());
-
-Console.WriteLine("\n// ---------------- SELECT con JOIN ----------------");
-Sql_query_builder_model select_4 = new Sql_query_builder_model("Student", "Student.student_id", "name", "course_name");
-select_4.add_join("INNER", "Enrollment", "Student.student_id = Enrollment.student_id");
-select_4.add_join("LEFT", "Course", "Enrollment.course_id = Course.course_id");
-Console.WriteLine(select_4.build_select());
-
-Console.WriteLine("\n// ---------------- SELECT con TODO: JOIN, WHERE, ORDER BY ----------------");
-Sql_query_builder_model select_5 = new Sql_query_builder_model("Student", "Student.student_id", "name", "email");
-select_5.add_join("INNER", "Enrollment", "Student.student_id = Enrollment.student_id");
-select_5.add_where("email LIKE '%@example.com'");
-select_5.add_where("name = 'Ana'");
-select_5.set_order_by("student_id");
-Console.WriteLine(select_5.build_select());
-
-Console.WriteLine("\n// ---------------- INSERT ----------------");
-Sql_query_builder_model insert_1 = new Sql_query_builder_model("Student");
-insert_1.set_insert_value("name", "Pedro");
-insert_1.set_insert_value("last_name", "Ramirez");
-insert_1.set_insert_value("email", "pedro.ramirez@example.com");
-Console.WriteLine(insert_1.build_insert());
-
-Console.WriteLine("\n// ---------------- UPDATE con WHERE ----------------");
-Sql_query_builder_model update_1 = new Sql_query_builder_model("Student");
-update_1.set_update_value("email", "nuevo@email.com");
-update_1.add_where("student_id = 4");
-Console.WriteLine(update_1.build_update());
-
-Console.WriteLine("\n// ---------------- UPDATE sin WHERE ----------------");
-Sql_query_builder_model update_2 = new Sql_query_builder_model("Student");
-update_2.set_update_value("email", "mass_update@email.com");
-Console.WriteLine(update_2.build_update());
-
-Console.WriteLine("\n// ---------------- DELETE con WHERE ----------------");
-Sql_query_builder_model delete_1 = new Sql_query_builder_model("Student");
-delete_1.add_where("student_id = 10");
-Console.WriteLine(delete_1.build_delete());
-
-Console.WriteLine("\n// ---------------- DELETE sin WHERE (PELIGROSO) ----------------");
-Sql_query_builder_model delete_2 = new Sql_query_builder_model("Student");
-Console.WriteLine(delete_2.build_delete());
 
 
 
