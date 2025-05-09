@@ -1,24 +1,20 @@
 
---CREATE DATABASE CEDigital;
-
-
 CREATE TABLE Grupo(
-    ID_Grupo int NOT NULL PRIMARY KEY,
+    ID_Grupo int PRIMARY KEY IDENTITY(1,1),
     Número_grupo int NOT NULL,
 	Carnet int
 );
 
 CREATE TABLE Curso(
-	ID_Curso int NOT NULL PRIMARY KEY,
+	ID_Curso int PRIMARY KEY IDENTITY(1,1),
 	Nombre varchar(60) NOT NULL,
 	Codigo_Curso varchar(20) NOT NULL,
-	Carrera varchar(50) NOT NULL,
 	Creditos int NOT NULL,
 	ID_Grupo int
 );
 
 CREATE TABLE Semestre(
-	ID_Semestre int NOT NULL PRIMARY KEY,
+	ID_Semestre int PRIMARY KEY IDENTITY(1,1),
 	Año int NOT NULL
 );
 
@@ -31,20 +27,20 @@ CREATE TABLE Profesor(
 );
 
 CREATE TABLE Noticia(
-	ID_Noticia int NOT NULL PRIMARY KEY,
+	ID_Noticia int PRIMARY KEY IDENTITY(1,1),
 	Mensaje varchar(100),
 	Titulo varchar(50),
 	Cedula int
 );
 
 CREATE TABLE Carpeta(
-	ID_Carpeta int NOT NULL PRIMARY KEY,
+	ID_Carpeta int PRIMARY KEY IDENTITY(1,1),
 	Nombre varchar(50) NOT NULL,
 	ID_Grupo int
 );
 
 CREATE TABLE Documento(
-	ID_Documento int NOT NULL PRIMARY KEY,
+	ID_Documento int PRIMARY KEY IDENTITY(1,1),
 	Nombre varchar(60) NOT NULL,
 	Ruta varchar(20) NOT NULL,
 	Tamaño varchar(50) NOT NULL,
@@ -54,14 +50,14 @@ CREATE TABLE Documento(
 );
 
 CREATE TABLE Rubro(
-	ID_Rubro int NOT NULL PRIMARY KEY,
+	ID_Rubro int PRIMARY KEY IDENTITY(1,1),
 	Nombre varchar(60) NOT NULL,
 	Porcentaje int NOT NULL,
 	ID_Grupo int
 );
 
 CREATE TABLE Entrega(
-	ID_Entrega int NOT NULL PRIMARY KEY,
+	ID_Entrega int PRIMARY KEY IDENTITY(1,1),
 	Archivo varbinary(MAX) NOT NULL,
 	Peso varchar(20) NOT NULL,
 	Fecha_Entrega DATE,
@@ -71,7 +67,7 @@ CREATE TABLE Entrega(
 );
 
 CREATE TABLE Administrador(
-	ID_Admin int NOT NULL PRIMARY KEY,
+	ID_Admin int PRIMARY KEY IDENTITY(1,1),
 	Usuario varchar(50) NOT NULL,
 	Contraseña varchar(50) NOT NULL,
 );
