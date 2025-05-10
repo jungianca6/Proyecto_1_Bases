@@ -6,7 +6,7 @@ import EstudiantePg from "./pgs/EstudiantePg";
 import ProfesorPg from "./pgs/ProfesorPg";
 
 function App() {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({ rol: "Estudiante" }); // <- Mock para desarrollo
 
     return (
         <Router>
@@ -20,5 +20,4 @@ function App() {
         </Router>
     );
 }
-
 export default App;

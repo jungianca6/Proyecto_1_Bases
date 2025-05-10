@@ -3,9 +3,23 @@ import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+
 
 function EstudiantePg() {
-    return <div>Página del Estudiante</div>;
-  }
+    return (
+        <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100vh" }}
+        >
+            <Button variant="primary">Prueba</Button>
+            <Button style={{ backgroundColor: "purple", borderColor: "purple" }}>
+                Prueba
+            </Button>
 
-  export default EstudiantePg;
+        </div>
+    );
+}
+
+export default EstudiantePg;
