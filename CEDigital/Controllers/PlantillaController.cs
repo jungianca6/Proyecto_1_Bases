@@ -1,4 +1,3 @@
-using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,9 +29,17 @@ namespace CEDigital.Controllers
 
         // Petición POST
         [HttpPost("POST")]
-        public ActionResult<Api_response> Post_Example([FromBody] Student_model student)
+        public ActionResult<Api_response> Post_Example([FromBody] string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                response.status = "BadRequest";
+                response.message = "Message cannot be empty.";
+                return BadRequest(response);
+            }
 
+            response.status = "OK";
+            response.message = "Received message: " + message;
             return Ok(response);
         }
 
