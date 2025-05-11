@@ -4,6 +4,7 @@ import Login from "./pgs/Login";
 import AdminPg from "./pgs/AdminPg";
 import EstudiantePg from "./pgs/EstudiantePg";
 import ProfesorPg from "./pgs/ProfesorPg";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     const [user, setUser] = useState({ rol: "Estudiante" }); // <- Mock para desarrollo
