@@ -1,7 +1,7 @@
 
 CREATE TABLE Grupo(
     ID_Grupo int PRIMARY KEY IDENTITY(1,1),
-    Número_grupo int NOT NULL,
+    Numero_grupo int NOT NULL,
 	Carnet int
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE Curso(
 
 CREATE TABLE Semestre(
 	ID_Semestre int PRIMARY KEY IDENTITY(1,1),
-	Año int NOT NULL
+	AÃ±o int NOT NULL
 );
 
 CREATE TABLE Estudiante(
@@ -43,7 +43,7 @@ CREATE TABLE Documento(
 	ID_Documento int PRIMARY KEY IDENTITY(1,1),
 	Nombre varchar(60) NOT NULL,
 	Ruta varchar(20) NOT NULL,
-	Tamaño varchar(50) NOT NULL,
+	TamaÃ±o varchar(50) NOT NULL,
 	Fecha_subida DATE NOT NULL,
 	Subida_por_Profesor BIT,
 	ID_Carpeta int
@@ -69,7 +69,7 @@ CREATE TABLE Entrega(
 CREATE TABLE Administrador(
 	ID_Admin int PRIMARY KEY IDENTITY(1,1),
 	Usuario varchar(50) NOT NULL,
-	Contraseña varchar(50) NOT NULL,
+	ContraseÃ±a varchar(50) NOT NULL,
 );
 
 
