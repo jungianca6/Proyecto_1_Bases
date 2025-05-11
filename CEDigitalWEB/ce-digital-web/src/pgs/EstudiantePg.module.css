@@ -1,0 +1,24 @@
+/* EstudiantePg.module.css */
+.container {
+    position: relative;  /* Necesario para posicionamiento absoluto de hijos */
+    height: 100vh;
+    width: 100%;
+}
+
+.customButton1 {
+    position: absolute;
+    left: 255px;  /* Posición X */
+    top: 100px;   /* Posición Y */
+    width: 120px; /* Ancho personalizado */
+    height: 45px; /* Alto personalizado */
+}
+
+.customButton2 {
+    position: absolute;
+    left: 400px;  /* Posición X */
+    top: 250px;   /* Posición Y */
+    width: 150px; /* Ancho personalizado */
+    height: 60px; /* Alto personalizado */
+    background-color: purple;
+    border-color: purple;
+}
