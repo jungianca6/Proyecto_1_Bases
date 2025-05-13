@@ -27,6 +27,11 @@ namespace CEDigital.Controllers
         [HttpPost("POST")]
         public ActionResult<Api_response> Login([FromBody] string message)
         {
+            // Crear la conexión
+            SQL_connection sql = new SQL_connection();
+
+
+
             if (string.IsNullOrEmpty(message))
             {
                 response.status = "BadRequest";
