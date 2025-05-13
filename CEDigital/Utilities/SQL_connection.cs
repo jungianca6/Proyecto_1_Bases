@@ -6,7 +6,7 @@ namespace CEDigital.Utilities
     public class SQL_connection
     {
         // Cadena de conexión a la base de datos
-        public string connection_string = "Server=localhost;Database=AcademicDB;Trusted_Connection=True;TrustServerCertificate=True;";
+        public string connection_string = "Server=localhost;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
 
         // Consulta que se desea ejecutar
         public string query { get; set; }
