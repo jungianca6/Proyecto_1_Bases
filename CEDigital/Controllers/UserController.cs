@@ -1,20 +1,15 @@
-using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CEDigital.Controllers
 {
     [ApiController]
-    [Route("xxxx/[controller]")]
-    public class PlantillaController : ControllerBase
+    [Route("login/[controller]")]
+    public class UserController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private Api_response response;
-        public PlantillaController()
+        public UserController()
         {
             response = new Api_response("OK", null);  // Inicializando la respuesta por defecto
         }
@@ -30,9 +25,17 @@ namespace CEDigital.Controllers
 
         // Petición POST
         [HttpPost("POST")]
-        public ActionResult<Api_response> Post_Example([FromBody] Student_model student)
+        public ActionResult<Api_response> Login([FromBody] string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                response.status = "BadRequest";
+                response.message = "Message cannot be empty.";
+                return BadRequest(response);
+            }
 
+            response.status = "OK";
+            response.message = "Received message: " + message;
             return Ok(response);
         }
 
