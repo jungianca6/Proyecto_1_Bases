@@ -85,7 +85,7 @@ public class Professor
 }
 
 
-
+//Función para encriptar las contraseñas con MD5
 public class Encriptador
 {
     public static string ObtenerHashMD5(string input)
