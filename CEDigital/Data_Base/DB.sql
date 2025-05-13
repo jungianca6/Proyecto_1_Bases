@@ -1,4 +1,51 @@
 CREATE DATABASE CEDigital;
+USE master;
+ALTER DATABASE CEDigital SET SINGLE_USER WITH ROLLBACK AFTER 5 SECONDS;
+DROP DATABASE CEDigital;
+
+
+
+USE CEDigital;
+GO
+
+-- Tablas N:M primero (porque pueden tener claves foráneas a otras)
+IF OBJECT_ID('Professor_Group', 'U') IS NOT NULL DROP TABLE Professor_Group;
+IF OBJECT_ID('Course_Semester', 'U') IS NOT NULL DROP TABLE Course_Semester;
+
+-- Luego tablas que dependen de otras
+IF OBJECT_ID('Submission', 'U') IS NOT NULL DROP TABLE Submission;
+IF OBJECT_ID('Grading_item', 'U') IS NOT NULL DROP TABLE Grading_item;
+IF OBJECT_ID('Document', 'U') IS NOT NULL DROP TABLE Document;
+IF OBJECT_ID('Folder', 'U') IS NOT NULL DROP TABLE Folder;
+IF OBJECT_ID('News', 'U') IS NOT NULL DROP TABLE News;
+
+-- Tablas principales
+IF OBJECT_ID('Admin', 'U') IS NOT NULL DROP TABLE Admin;
+IF OBJECT_ID('Professor', 'U') IS NOT NULL DROP TABLE Professor;
+IF OBJECT_ID('Student', 'U') IS NOT NULL DROP TABLE Student;
+IF OBJECT_ID('Semester', 'U') IS NOT NULL DROP TABLE Semester;
+IF OBJECT_ID('Course', 'U') IS NOT NULL DROP TABLE Course;
+IF OBJECT_ID('[Group]', 'U') IS NOT NULL DROP TABLE [Group];  -- usa corchetes por palabra reservada
+
+
+
+
+-- Eliminar claves foráneas de relaciones 1:N
+ALTER TABLE Course DROP CONSTRAINT FK_Curso_Grupo;
+ALTER TABLE News DROP CONSTRAINT FK_Noticia_Profesor;
+ALTER TABLE Folder DROP CONSTRAINT FK_Carpeta_Grupo;
+ALTER TABLE Document DROP CONSTRAINT FK_Documento_Carpeta;
+ALTER TABLE Grading_item DROP CONSTRAINT FK_Rubro_Grupo;
+ALTER TABLE Submission DROP CONSTRAINT FK_Entrega_Rubro;
+
+-- Eliminar claves foráneas de relaciones N:M
+ALTER TABLE Course_Semester DROP CONSTRAINT FK_Curso_Semestre_Curso;
+ALTER TABLE Course_Semester DROP CONSTRAINT FK_Curso_Semestre_Semestre;
+ALTER TABLE Professor_Group DROP CONSTRAINT FK_Profesor_Grupo_Profesor;
+ALTER TABLE Professor_Group DROP CONSTRAINT FK_Profesor_Grupo_Grupo;
+
+
+DELETE FROM Course;
 
 ----------------- Creación de las Tablas y sus FKs ----------------------
 
@@ -207,3 +254,78 @@ INSERT INTO Course (name, course_code, credits) VALUES
 ('Electiva III', 'CE5901', 3),
 ('Seminario De Estudios Costarricenses', 'CS4402', 2),
 ('Trabajo Final De Graduacion', 'CE5601', 12);
+
+
+
+SELECT 
+    f.name AS foreign_key_name,
+    OBJECT_NAME(f.parent_object_id) AS table_name
+FROM sys.foreign_keys AS f
+ORDER BY table_name;
+
+
+
+SELECT 
+    name AS table_name
+FROM 
+    sys.tables
+ORDER BY 
+    name;
+
+
+
+SELECT 
+    fk.name AS foreign_key_name,
+    OBJECT_NAME(fk.parent_object_id) AS referencing_table,
+    pc.name AS referencing_column,
+    OBJECT_NAME(fk.referenced_object_id) AS referenced_table,
+    rc.name AS referenced_column
+FROM 
+    sys.foreign_keys AS fk
+JOIN 
+    sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
+JOIN 
+    sys.columns AS pc ON fkc.parent_object_id = pc.object_id AND fkc.parent_column_id = pc.column_id
+JOIN 
+    sys.columns AS rc ON fkc.referenced_object_id = rc.object_id AND fkc.referenced_column_id = rc.column_id
+ORDER BY 
+    referencing_table, foreign_key_name;
+
+
+SELECT * FROM Course;
+
+
+
+SELECT * 
+FROM Course
+WHERE name LIKE '%Algoritmos%';
+
+
+
+SELECT * 
+FROM Course
+ORDER BY credits DESC;
+
+
+
+SELECT * 
+FROM Course
+WHERE credits = 0;
+
+
+
+SELECT credits, COUNT(*) AS cantidad_de_cursos
+FROM Course
+GROUP BY credits
+ORDER BY credits;
+
+
+
+SELECT * 
+FROM Course
+WHERE course_code = 'CE1101';
+
+
+
+SELECT name, course_code 
+FROM Course;
