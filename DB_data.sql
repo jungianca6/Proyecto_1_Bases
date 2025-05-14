@@ -1,10 +1,10 @@
-CREATE DATABASE CEDigital;
 
 ----------------- Creación de las Tablas y sus FKs ----------------------
 
-CREATE TABLE [Group](
+CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
-    group_number int NOT NULL
+    group_number int NOT NULL,
+	student_id int
 );
 
 CREATE TABLE Course(
@@ -12,6 +12,7 @@ CREATE TABLE Course(
 	name varchar(60) NOT NULL,
 	course_code varchar(20) NOT NULL,
 	credits int NOT NULL,
+	career varchar(50) NOT NULL DEFAULT 'Ingenieria en Computadores',
 	group_id int
 );
 
@@ -32,7 +33,7 @@ CREATE TABLE News(
 	news_id int PRIMARY KEY IDENTITY(1,1),
 	message varchar(100),
 	title varchar(50),
-	professor_id int
+	id_number int
 );
 
 CREATE TABLE Folder(
@@ -78,7 +79,7 @@ CREATE TABLE Admin(
 -- Tablas N:M --
 CREATE TABLE Course_Semester(
 	course_id int ,
-	semester_id int
+	semester_id int,
 	PRIMARY KEY (course_id, semester_id)
 );
 
@@ -93,10 +94,15 @@ CREATE TABLE Professor_Group(
 -- FKs de Las tablas --
 -- Para las 1:1 y 1:N --
 
+ALTER TABLE Groups
+ADD CONSTRAINT FK_Group_student
+FOREIGN KEY (student_id)
+REFERENCES Student(student_id);
+
 ALTER TABLE Course
 ADD CONSTRAINT FK_Curso_Grupo
 FOREIGN KEY (group_id)
-REFERENCES [Group](group_id);
+REFERENCES Groups(group_id);
 
 ALTER TABLE News
 ADD CONSTRAINT FK_Noticia_Profesor
@@ -106,7 +112,7 @@ REFERENCES Professor(id_number);
 ALTER TABLE Folder
 ADD CONSTRAINT FK_Carpeta_Grupo
 FOREIGN KEY (group_id)
-REFERENCES [Group](group_id);
+REFERENCES Groups(group_id);
 
 ALTER TABLE Document
 ADD CONSTRAINT FK_Documento_Carpeta
@@ -116,7 +122,7 @@ REFERENCES Folder(folder_id);
 ALTER TABLE Grading_item
 ADD CONSTRAINT FK_Rubro_Grupo
 FOREIGN KEY (group_id)
-REFERENCES [Group](group_id);
+REFERENCES Groups(group_id);
 
 ALTER TABLE Submission
 ADD CONSTRAINT FK_Entrega_Rubro
@@ -138,13 +144,13 @@ REFERENCES Semester(semester_id);
 
 ALTER TABLE Professor_Group
 ADD CONSTRAINT FK_Profesor_Grupo_Profesor
-FOREIGN KEY (Cedula)
-REFERENCES Profesor(Cedula);
+FOREIGN KEY (id_number)
+REFERENCES Professor(id_number);
 
 ALTER TABLE Professor_Group
 ADD CONSTRAINT FK_Profesor_Grupo_Grupo
 FOREIGN KEY (group_id)
-REFERENCES [Group](group_id);
+REFERENCES Groups(group_id);
 
 ---------------------------- Datos a insertar ---------------------------
 
