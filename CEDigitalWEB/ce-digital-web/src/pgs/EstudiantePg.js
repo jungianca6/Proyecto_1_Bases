@@ -36,6 +36,7 @@ function EstudiantePg() {
                         value={noticias}
                         onChange={(e) => setNoticias(e.target.value)}
                         placeholder="Aquí se mostrarán las noticias importantes..."
+                        readOnly
                         className={styles.textArea}
                     />
                 </Card.Body>
@@ -51,6 +52,7 @@ function EstudiantePg() {
                         value={notas}
                         onChange={(e) => setNotas(e.target.value)}
                         placeholder="Aquí se mostrarán tus calificaciones..."
+                        readOnly
                         className={styles.textArea}
                     />
                 </Card.Body>
