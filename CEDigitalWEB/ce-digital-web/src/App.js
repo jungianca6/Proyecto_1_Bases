@@ -7,7 +7,7 @@ import ProfesorPg from "./pgs/ProfesorPg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-    const [user, setUser] = useState({ rol: "Estudiante" }); // <- Mock para desarrollo
+    const [user, setUser] = useState(null);
 
     return (
         <Router>

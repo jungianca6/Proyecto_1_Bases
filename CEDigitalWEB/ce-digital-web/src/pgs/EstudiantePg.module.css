@@ -1,26 +1,75 @@
 /* EstudiantePg.module.css */
-.container {
-    position: relative;  /* Necesario para posicionamiento absoluto de hijos */
+.estudianteWrapper {
+    position: relative;
     height: 100vh;
     width: 100%;
     background: url('./Assets/FondoLogin.jpg') no-repeat center center;
     background-size: cover;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
 }
 
-.customButton1 {
-    position: absolute;
-    left: 255px;  /* Posición X */
-    top: 100px;   /* Posición Y */
-    width: 120px; /* Ancho personalizado */
-    height: 45px; /* Alto personalizado */
+/* Sección Noticias */
+.noticiasSection {
+    grid-column: 1;
+    grid-row: 1;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.customButton2 {
+/* Sección Notas */
+.notasSection {
+    grid-column: 2;
+    grid-row: 1;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Áreas de texto */
+.textArea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Botones */
+.cursosButton {
     position: absolute;
-    left: 200px;  /* Posición X */
-    top: 250px;   /* Posición Y */
-    width: 150px; /* Ancho personalizado */
-    height: 60px; /* Alto personalizado */
-    background-color: purple;
-    border-color: purple;
+    left: 30px;
+    bottom: 30px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.evaluacionesButton {
+    position: absolute;
+    left: 170px;
+    bottom: 30px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.documentosButton {
+    position: absolute;
+    left: 310px;
+    bottom: 30px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
 }
