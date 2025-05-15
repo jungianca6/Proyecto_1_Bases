@@ -30,6 +30,7 @@ namespace CEDigital.Controllers
 
         // Petición POST
         [HttpPost("POST")]
+        public ActionResult<Api_response> Post_Example([FromBody] Student_model student)
         {
             if (string.IsNullOrEmpty(message))
             {

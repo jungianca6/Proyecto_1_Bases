@@ -1,0 +1,275 @@
+1)
+
+Para el caso del login
+
+Ejemplo de entrada:
+{
+  "data_input_login": {
+    "username": "user123",
+    "password": "pass123",
+    "user_type": null,
+    "primary_key": null
+  }
+}
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": {
+    "data_output_login": {
+      "username": "user123",
+      "password": "pass123",
+      "user_type": "student",
+      "primary_key": "20210001"
+    }
+  }
+}
+
+
+###########################################################
+2)
+
+Para el caso de la creacion de un curso, 
+
+Ejemplo de entrada:
+{
+  "data_input_admin_create_course": {
+    "course_code": "MAT101",
+    "name": "Mathematics I",
+    "credits": 5,
+    "career": "Engineering",
+    "group_id": 2,
+    "semester_ids": [1, 2]
+  }
+
+}
+
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Course created successfully."
+}
+
+###########################################################
+3)
+
+Desabilitacion de un curso
+
+Ejemplo de entrada:
+{
+  "data_input_admin_disable_course": {
+    "course_code": "MAT101"
+  }
+}
+
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Course disabled successfully."
+}
+
+###########################################################
+4)
+
+Visualizar un curso
+
+Ejemplo de entrada:
+{
+  "data_input_admin_view_course": {
+    "course_code": "MAT101",
+    "name": null,
+    "credits": null,
+    "career": null,
+    "group_id": null,
+    "semester_ids": null
+  }
+}
+
+
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": {
+    "data_output_admin_view_course": {
+      "course_id": 1,
+      "course_code": "MAT101",
+      "name": "Mathematics I",
+      "credits": 5,
+      "career": "Engineering",
+      "group_id": 2,
+      "semester_ids": [1, 2]
+    }
+  }
+}
+
+###########################################################
+5)
+Inicializar semestre
+
+Ejemplo de entrada:
+{
+  "data_input_initialize_semester": {
+    "year": 2025,
+    "period": 1
+  }
+}
+
+Ejemplo de salida:
+
+{
+  "status": "OK",
+  "message": "Semester initialized successfully."
+}
+
+###########################################################
+6)
+Anadir un curso a un semestre
+
+Ejemplo de entrada:
+{
+  "data_input_add_course_to_semester": {
+    "course_code": "CS101",
+    "year": 2025,
+    "period": 1
+  }
+}
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Course added to semester successfully."
+}
+
+###########################################################
+7)
+anadir un estudiante a un grupo 
+
+Ejemplo de entrada:
+{
+  "data_input_add_student_to_group": {
+    "student_card": "2018001234",
+    "group_number": 3,
+    "course_code": "CS101"
+  }
+}
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Student added to group successfully."
+}
+
+###########################################################
+8)
+anadir secciones de documentos a un curso 
+
+Ejemplo de entrada:
+{
+  "data_input_add_default_document_sections": {
+    "course_code": "CS101",
+    "sections": ["Syllabus", "Schedule", "Rules"]
+  }
+}
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Default document sections added successfully."
+}
+
+###########################################################
+9)
+anadir rubros por defecto a un curso 
+Ejemplo de entrada:
+{
+  "data_input_add_default_grades": {
+    "course_code": "CS101",
+    "sections": ["Homework", "Midterm", "Final"],
+    "percentages": [30.0, 30.0, 40.0]
+  }
+}
+Ejemplo de salida:
+{
+  "status": "OK",
+  "message": "Default grades added successfully."
+}
+
+###########################################################
+10)
+Ejemplo de entrada:
+Ejemplo de salida:
+
+11)
+Ejemplo de entrada:
+Ejemplo de salida:
+
+
+
+
+###########################################################
+----------------------FALTA POR CUBRIR---------------------
+###########################################################
+
+3) Profesor:
+
+					
+	Agregar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo
+	Eliminar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo a eliminar	
+	Editar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo viejo, archivo nuevo
+
+	Crear sección de documentos: Yo le mando: codigo de curso, numero de grupo, seccion a añadir
+	Eliminar seccion de documentos: Yo le mando: codigo de curso, numero de grupo, seccion a añadir	
+
+	Gestion de rubros: Esto es de lo mas dificil del proyecto, tengo el siguiente plan:
+
+				Boton para mostrar los rubros existentes de un curso: Yo le mando: codigo de curso, numero de grupo
+										      Ud me manda: rubros y sus porcentajes.
+
+			   	Boton para mandar modificaciones hechas (eliminar, editar o agregar): Yo le mando: codigo de curso, numero de grupo, rubros y sus porcentajes
+
+	Asignar de evaluaciones: 
+
+				1er boton:
+
+				Yo le mando: codigo de curso, numero de grupo, rubro
+				
+				Ud me manda: codigo de curso, numero de grupo, rubro, porcentaje del rubro, porcentajes de evaluaciones ya existentes
+
+				2do boton (asignacion): 
+
+				Yo le mando: 
+				
+				codigo de curso, numero de grupo, rubro, evaluacion,  porcentaje del rubro, porcentaje de la evaluacion, fecha/hora de entrega, texto extra de evaluacion, grupal o individual.
+
+	Evaluar entregables:
+	
+				1er boton: Yo le mando: codigo de curso, numero de grupo, rubro, evaluacion, nota, observaciones/archivo, booleano de si las notas son publicas a los estudiantes
+					   Ud me manda: archivo del entregable asociado a la evaluacion
+
+				2do boton: Yo le mando: codigo de curso, numero de grupo, rubro, evaluacion, nota, observaciones/archivo, booleano de si las notas son publicas a los estudiantes
+
+	Gestion de noticias: 
+				Agregar, editar o eliminar noticias: Yo le mando: titulo, mensaje, fecha de publicacion, autor y codigo de curso
+	
+	Reporte de notas:      
+				Yo le mando: codigo de curso, numero de grupo
+
+				Ud manda: notas de los estudiantes que forman ese curso (luego se ve como porque esta feillo)
+
+	Reporte de estudiantes matriculados:
+
+				Yo le mando: codigo de curso
+				
+				Ud manda: Estudiantes matriculados en el curso puesto (cada uno con carnet, nombre, correo electrónico y teléfono)
+				
+
+4) Estudiante
+
+	Visualizar documentos: Me manda casi que toda la info de documentos del estudiante.
+
+	Ver evaluaciones: Me manda todo lo de evaluaciones del estudiante
+
+	Enviar evaluaciones: Yo le mando: carnet, codigo de curso, numero de grupo, rubro, evaluacion, archivo de evaluacion
+
+	Reporte notas estudiante: Yo le mando carnet, codigo de curso, numero de grupo
+
+	Visualizar noticias: Yo le mando: codigo de curso
+			     Ud me manda: noticias y sus aspectos
+
+		
