@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Card, Form } from 'react-bootstrap';
-import styles from './DocumentosEstudiantePg.module.css'
+import styles from './DocumentosEstudiantePg.module.css';
 
 function DocumentosEstudiantePg() {
     return <div className={styles.documentosWrapper}>
