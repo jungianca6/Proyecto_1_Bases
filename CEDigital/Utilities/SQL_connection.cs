@@ -14,6 +14,12 @@ namespace CEDigital.Utilities
         // Ejecuta la consulta y devuelve un SqlDataReader con los resultados
         public SqlDataReader Execute_query(out SqlConnection connection)
         {
+            // Validar que la consulta no esté vacía
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new ArgumentException("La consulta no puede ser nula o vacía.");
+            }
+
             // Crear la conexión
             connection = new SqlConnection(connection_string);
 
@@ -24,13 +30,22 @@ namespace CEDigital.Utilities
             {
                 // Abrir la conexión
                 connection.Open();
+                Console.WriteLine("Base conectada: " + connection.Database);
 
                 // Ejecutar la consulta y devolver el lector (reader)
                 return command.ExecuteReader(CommandBehavior.CloseConnection); // la conexión se cierra al cerrar el reader
             }
-            catch
+            catch (SqlException sqlEx)
             {
-                // Si hay error, liberar la conexión
+                // Capturar errores específicos de SQL
+                Console.WriteLine($"Error de SQL: {sqlEx.Message}");
+                connection.Dispose();
+                throw; // volver a lanzar el error
+            }
+            catch (Exception ex)
+            {
+                // Capturar otros errores generales
+                Console.WriteLine($"Error: {ex.Message}");
                 connection.Dispose();
                 throw; // volver a lanzar el error
             }

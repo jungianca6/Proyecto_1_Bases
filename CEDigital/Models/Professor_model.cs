@@ -3,7 +3,7 @@
     //Clase que representa a un profesor
     public class Professor_model
     {
-        public string id_number { get; set; }
+        public int id_number { get; set; }
         public string name { get; set; }
         public string last_name { get; set; }
         public string email { get; set; }
