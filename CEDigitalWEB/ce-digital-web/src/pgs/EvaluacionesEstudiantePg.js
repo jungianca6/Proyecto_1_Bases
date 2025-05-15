@@ -1,10 +1,10 @@
 
 import React from "react";
 import { Button, Card, Form } from 'react-bootstrap';
-import styles from './EstudiantePg.module.css'
+import styles from './EvaluacionesEstudiantePg.module.css'
 
 function EvaluacionesEstudiantesPg() {
-    return <div className={styles.estudianteWrapper}>
+    return <div className={styles.evaluacionesWrapper}>
         <h1 className={styles.title}>CE Digital</h1>
         <h3 className={styles.subtitle}>Evaluaciones</h3>
 

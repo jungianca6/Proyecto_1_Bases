@@ -1,5 +1,5 @@
-/* EstudiantePg.module.css */
-.estudianteWrapper {
+
+.evaluacionesWrapper {
     position: relative;
     height: 100vh;
     width: 100%;
@@ -12,16 +12,15 @@
     gap: 20px;
 }
 
-/* Sección Noticias */
-.noticiasSection {
-    grid-column: 1;
-    grid-row: 3;
+/* Sección Notas */
+.notasSection {
+    grid-column: 2;
+    grid-row: 4;
     height: 300px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 
 /* Áreas de texto */
 .textArea {
@@ -51,34 +50,19 @@
     color: rgba(255, 255, 255, 0.9);
 }
 
-
-/* Botones */
-.cursosButton {
+.listaEvaluacion {
     position: absolute;
-    left: 30px;
-    bottom: 700px;
-    width: 120px;
-    height: 45px;
-    background-color: cornflowerblue;
-    border-color: cornflowerblue;
+    font-size: 25px;
+    left: 50px;
+    bottom: 600px;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.documentosButton {
+.notaEvaluacion {
     position: absolute;
-    left: 550px;
-    bottom: 700px;
-    width: 120px;
-    height: 45px;
-    background-color: cornflowerblue;
-    border-color: cornflowerblue;
+    font-size: 25px;
+    left: 300px;
+    bottom: 600px;
+    color: rgba(255, 255, 255, 0.9);
 }
 
-.evaluacionesButton {
-    position: absolute;
-    left: 750px;
-    bottom: 700px;
-    width: 120px;
-    height: 45px;
-    background-color: cornflowerblue;
-    border-color: cornflowerblue;
-}
