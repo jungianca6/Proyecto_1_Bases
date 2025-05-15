@@ -45,3 +45,35 @@ public class Professor
     public string username { get; set; }
     public string password { get; set; }
 }
+
+
+/*
+ * var inserter = new MongoDataInserter();
+
+        var student = new Student
+        {
+            _id = "20250001",
+            name = "Carlos",
+            last_name = "Rodriguez",
+            id_number = "1122334455",
+            email = "carlos.rod@example.com",
+            username = "admin",
+            password = "123456", // puedes usar hashing aquí si lo deseas
+            phone = "2222-3333"
+        };
+
+        var professor = new Professor
+        {
+            _id = "99887766",
+            name = "Ana",
+            last_name = "Torres",
+            email = "ana.torres@example.com",
+            username = "ana123",
+            password = "123456"
+        };
+        
+        await inserter.InsertStudent(student);
+        await inserter.InsertProfessor(professor);
+        
+        Console.WriteLine("Datos insertados correctamente.");
+*/
