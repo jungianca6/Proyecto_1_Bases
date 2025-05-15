@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
@@ -6,7 +7,10 @@ import React from "react";
 import { Button, Card, Form } from 'react-bootstrap';
 import styles from './EstudiantePg.module.css';
 
+
 function EstudiantePg() {
+
+    const navigate = useNavigate();
     // Estados para el contenido de las áreas de texto
     const [noticias, setNoticias] = React.useState("");
     const [notas, setNotas] = React.useState("");
@@ -17,11 +21,11 @@ function EstudiantePg() {
     };
 
     const handleEvaluacionesClick = () => {
-        alert("Navegando a Evaluaciones");
-    };
+        navigate('/estudiante/evaluaciones');
+    }
 
     const handleDocumentosClick = () => {
-        alert("Navegando a Documentos");
+        navigate('/estudiante/documentos');
     };
 
     return (
