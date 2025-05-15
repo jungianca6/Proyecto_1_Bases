@@ -11,9 +11,6 @@ import styles from './EstudiantePg.module.css';
 function EstudiantePg() {
 
     const navigate = useNavigate();
-    // Estados para el contenido de las áreas de texto
-    const [noticias, setNoticias] = React.useState("");
-    const [notas, setNotas] = React.useState("");
 
     // Manejadores para los botones
     const handleCursosClick = () => {
@@ -30,6 +27,10 @@ function EstudiantePg() {
 
     return (
         <div className={styles.estudianteWrapper}>
+
+            <h1 className={styles.title}>CE Digital</h1>
+            <h3 className={styles.subtitle}>Estudiante</h3>
+
             {/* Sección Noticias */}
             <Card className={styles.noticiasSection}>
                 <Card.Header as="h5">Noticias</Card.Header>
@@ -37,25 +38,7 @@ function EstudiantePg() {
                     <Form.Control
                         as="textarea"
                         rows={5}
-                        value={noticias}
-                        onChange={(e) => setNoticias(e.target.value)}
                         placeholder="Aquí se mostrarán las noticias importantes..."
-                        readOnly
-                        className={styles.textArea}
-                    />
-                </Card.Body>
-            </Card>
-
-            {/* Sección Notas */}
-            <Card className={styles.notasSection}>
-                <Card.Header as="h5">Notas</Card.Header>
-                <Card.Body>
-                    <Form.Control
-                        as="textarea"
-                        rows={5}
-                        value={notas}
-                        onChange={(e) => setNotas(e.target.value)}
-                        placeholder="Aquí se mostrarán tus calificaciones..."
                         readOnly
                         className={styles.textArea}
                     />
