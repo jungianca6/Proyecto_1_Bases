@@ -19,3 +19,5 @@ public class Encriptador
         }
     }
 }
+
+/* Encriptador.ObtenerHashMD5("ola") */

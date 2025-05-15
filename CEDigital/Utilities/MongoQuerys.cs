@@ -34,10 +34,10 @@ public class MongoDbQueryService
     }
 
     // Buscar profesor por nombre de usuario
-    public async Task<Professor> FindProfessorByUsername(string username)
+    public async Task<Professor> FindProfessorByName(string name)
     {
         var collection = _database.GetCollection<Professor>("Professor");
-        var filter = Builders<Professor>.Filter.Eq(p => p.username, username);
+        var filter = Builders<Professor>.Filter.Eq(p => p.username, name);
         return await collection.Find(filter).FirstOrDefaultAsync();
     }
 }
