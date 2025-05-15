@@ -1,3 +1,4 @@
+using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +30,6 @@ namespace CEDigital.Controllers
 
         // Petición POST
         [HttpPost("POST")]
-        public ActionResult<Api_response> Post_Example([FromBody] string message)
         {
             if (string.IsNullOrEmpty(message))
             {
