@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import React from "react";
+import axios from "axios";
 import styles from "./AdminPg.module.css"; 
 import { Button, Card, Form } from 'react-bootstrap';
 
@@ -40,91 +41,225 @@ function AdminPg() {
   const handleCrearCurso = async (e) => {
   e.preventDefault();
 
-  // Separar las cédulas por comas y eliminar espacios extra
-  const listaCedulas = cedulasProfesores
+  // Convertir "1,2" → [1, 2]
+  const listaProfesores = cedulasProfesores
     .split(',')
-    .map(c => c.trim())
-    .filter(c => c.length > 0); // eliminar entradas vacías
+    .map(s => parseInt(s.trim()))
+    .filter(n => !isNaN(n));
 
-  const curso = {
-    codigo: codigoCurso,
-    nombre: nombreCurso,
-    creditos: parseInt(creditosCurso),
-    carrera: carreraCurso,
-    grupo: grupoCurso,
-    cedulasProfesores: listaCedulas, // ahora es un array
+  const listaGrupos = grupoCurso
+    .split(',')
+    .map(g => parseInt(g.trim()))
+    .filter(n => !isNaN(n));
+
+  const requestData = {
+    data_input_admin_create_course: {
+      course_code: codigoCurso,
+      name: nombreCurso,
+      credits: parseInt(creditosCurso),
+      career: carreraCurso,
+      group_id: listaGrupos,               
+      semester_ids: listaProfesores
+    }
   };
-  console.log("Crear curso:", curso);
+
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/CrearCurso", requestData);
+
+    if (response.data.status === "OK") {
+      alert(response.data.message);
+    } else {
+      alert("Error al crear curso: " + (response.data.message || "Error desconocido"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error al conectar con el servidor");
+  }
 };
+
+
   const handleVisualizarCursos = async (e) => {
-    e.preventDefault();
-    console.log("Visualizar cursos");
+  e.preventDefault();
+
+  const requestData = {
+    data_input_admin_view_course: {
+      course_code: codigoCurso,
+      name: null,
+      credits: null,
+      career: null,
+      group_id: null,
+      semester_ids: null
+    }
   };
+
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/VisualizarCurso", requestData);
+
+    if (response.data.status === "OK") {
+      const curso = response.data.message.data_output_admin_view_course;
+      console.log("Curso encontrado:", curso);
+      alert(`Curso: ${curso.name}\nCódigo: ${curso.course_code}\nCréditos: ${curso.credits}\nCarrera: ${curso.career}\nGrupo: ${curso.group_id}\nSemestres: ${curso.semester_ids.join(", ")}`);
+    } else {
+      alert("Error al visualizar curso: " + (response.data.message || "Error desconocido"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error al conectar con el servidor");
+  }
+};
 
   const handleDeshabilitarCurso = async (e) => {
-    e.preventDefault();
-    console.log("Deshabilitar curso con código:", codigoCurso);
-  };
-
-  const handleInicializarSemestre = (e) => {
-    e.preventDefault();
-
-    const semestre = {
-      anio: aSemestre,
-      periodo: periodoSemestre,
-    };
-
-    console.log("Inicializar semestre:", semestre);
-  };
-
-  const handleAgregarCursoASemestre = (e) => {
-    e.preventDefault();
-
-    const data = {
-      codigoCurso: codigoCursoSemestre,
-      anio: aSemestreCurso,
-      periodo: periodoSemestreCurso,
-    };
-
-    console.log("Agregar curso a semestre:", data);
-  };
-
-  const handleAgregarEstudiantesAGrupo = (e) => {
-    e.preventDefault();
-    // Separar los carnets por coma y limpiar espacios
-    const listaCarnets = carnetsEstudiantes
-      .split(',')
-      .map(c => c.trim())
-      .filter(c => c.length > 0);
-    const data = {
-      carnetsEstudiantes: listaCarnets,
-      numeroGrupo: numeroGrupoEstudiantes,
-      codigoCurso: codigoCursoEstudiantes,
-    };
-    console.log("Agregar estudiantes a grupo:", data);
-  };
-
-  const handleAgregarDocuSeccionesPorDefecto = (e) => {
   e.preventDefault();
 
-  const data = {
-    codigoCurso: codigoDocuSecciones,
-    secciones: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
+  const requestData = {
+    data_input_admin_disable_course: {
+      course_code: codigoCurso
+    }
   };
 
-  console.log("Agregar secciones por defecto:", data);
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/DeshabilitarCurso", requestData);
+
+    if (response.data.status === "OK") {
+      alert(response.data.message);
+    } else {
+      alert("Error al deshabilitar curso: " + (response.data.message || "Error desconocido"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error al conectar con el servidor");
+  }
 };
 
-const handleAgregarRubrosDefaultACurso = (e) => {
+  const handleInicializarSemestre = async (e) => {
   e.preventDefault();
 
-  const data = {
-    codigoCurso: codigoCursoRubrosDefault,
-    rubros: ["Quices", "Exámenes", "Proyectos"],
-    porcentajes: [30, 30, 40]
+  const requestData = {
+    data_input_initialize_semester: {
+      year: parseInt(aSemestre),
+      period: parseInt(periodoSemestre)
+    }
   };
 
-  console.log("Agregar rubros por defecto a curso:", data);
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/InicializarSemestre", requestData);
+
+    if (response.data.status === "OK") {
+      alert("Semestre inicializado correctamente.");
+      console.log("Respuesta:", response.data.message);
+    } else {
+      alert("Error al inicializar semestre: " + (response.data.message || "Error desconocido"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error al conectar con el servidor.");
+  }
+};
+
+  const handleAgregarCursoASemestre = async (e) => {
+  e.preventDefault();
+
+  const requestData = {
+    data_input_add_course_to_semester: {
+      course_code: codigoCursoSemestre,
+      year: parseInt(aSemestreCurso),
+      period: parseInt(periodoSemestreCurso)
+    }
+  };
+
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", requestData);
+
+    if (response.data.status === "OK") {
+      alert("Curso agregado al semestre correctamente.");
+      console.log("Respuesta:", response.data.message);
+    } else {
+      alert("Error al agregar curso al semestre: " + (response.data.message || "Error desconocido"));
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Error al conectar con el servidor.");
+  }
+};
+
+  const handleAgregarEstudiantesAGrupo = async (e) => {
+  e.preventDefault();
+
+  const listaCarnets = carnetsEstudiantes
+    .split(',')
+    .map(c => c.trim())
+    .filter(c => c.length > 0);
+
+  for (const carnet of listaCarnets) {
+    const requestData = {
+      data_input_add_student_to_group: {
+        student_card: carnet,
+        group_number: parseInt(numeroGrupoEstudiantes),
+        course_code: codigoCursoEstudiantes
+      }
+    };
+
+    try {
+      const response = await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", requestData);
+
+      if (response.data.status === "OK") {
+        console.log(`Estudiante ${carnet} agregado correctamente.`);
+      } else {
+        console.warn(`Error al agregar estudiante ${carnet}:`, response.data.message);
+      }
+    } catch (error) {
+      console.error(`Error al conectar con el servidor para el estudiante ${carnet}:`, error);
+    }
+  }
+
+  alert("Proceso de adición de estudiantes finalizado.");
+};
+
+  const handleAgregarDocuSeccionesPorDefecto = async (e) => {
+  e.preventDefault();
+
+  const requestData = {
+    data_input_add_default_document_sections: {
+      course_code: codigoDocuSecciones,
+      sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
+    }
+  };
+
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", requestData);
+
+    if (response.data.status === "OK") {
+      console.log("Secciones agregadas correctamente.");
+    } else {
+      console.warn("Error al agregar secciones:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Error al conectar con el servidor:", error);
+  }
+};
+
+const handleAgregarRubrosDefaultACurso = async (e) => {
+  e.preventDefault();
+
+  const requestData = {
+    data_input_add_default_grades: {
+      course_code: codigoCursoRubrosDefault,
+      sections: ["Quices", "Exámenes", "Proyectos"],
+      percentages: [30.0, 30.0, 40.0]
+    }
+  };
+
+  try {
+    const response = await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", requestData);
+
+    if (response.data.status === "OK") {
+      console.log("Rubros por defecto agregados correctamente.");
+    } else {
+      console.warn("Error al agregar rubros:", response.data.message);
+    }
+  } catch (error) {
+    console.error("Error al conectar con el servidor:", error);
+  }
 };
 
   return (
@@ -165,12 +300,15 @@ const handleAgregarRubrosDefaultACurso = (e) => {
         onChange={(e) => setCarreraCurso(e.target.value)}
       />
 
-      <label className={styles.label}>Número de Grupo Asociado:</label>
+      <label className={styles.label}>Números de Grupos Asociados (separar con comas si son varios):</label>
       <input
         type="text"
         className={styles.input}
         value={grupoCurso}
-        onChange={(e) => setGrupoCurso(e.target.value)}
+        onChange={(e) => {
+          const valorFiltrado = e.target.value.replace(/[^0-9,]/g, ""); // solo números y comas
+          setGrupoCurso(valorFiltrado);
+        }}
       />
 
       <label className={styles.label}>Cédulas de Profesores Asociados (separar con comas si son varios):</label>
@@ -209,6 +347,9 @@ const handleAgregarRubrosDefaultACurso = (e) => {
           Deshabilitar Curso
         </button>
       </div>
+      <p style={{ marginTop: "10px", color: "#555" }}>
+      <strong>Nota:</strong> Para visualizar o eliminar un curso, solo es necesario ingresar el <strong>código del curso</strong>.
+      </p>
     </form>
 
         <h3 className={styles.title} style={{ marginTop: "3rem" }}>

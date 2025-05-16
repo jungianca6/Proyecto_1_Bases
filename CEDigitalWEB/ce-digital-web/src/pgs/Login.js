@@ -65,45 +65,57 @@ function Login({ setUser }) {
 
         // Login real con backend
         try {
-            const response = await axios.post("https://localhost:7190/MenuInicio/Login", {
-                usuario: username,
-                contrasena: password
-            });
-
-            if (response.data.success) {
-                const usuario = response.data.usuario_actual;
-                const cuenta = response.data.cuenta_actual;
-
-                setUser(usuario);
-                localStorage.setItem("usuario_actual", JSON.stringify(usuario));
-
-                setCuenta(cuenta);
-                localStorage.setItem("cuenta_actual", JSON.stringify(cuenta));
-
-                alert("Logeo exitoso");
-
-                switch (usuario.rol) {
-                    case "Admin":
-                        navigate("/admin");
-                        break;
-                    case "Estudiante":
-                        navigate("/estudiante");
-                        break;
-                    case "Profesor":
-                        navigate("/profesor");
-                        break;
-                    default:
-                        alert("Rol desconocido");
-                        break;
-                }
-            } else {
-                alert(response.data.message);
+        const requestData = {
+            data_input_login: {
+                username: username,
+                password: password,
+                user_type: null,
+                primary_key: null
             }
-        } catch (error) {
-            console.error(error);
-            alert("Error al conectar con el servidor");
+        };
+
+        const response = await axios.post("https://localhost:7190/MenuInicio/Login", requestData);
+
+        if (response.data.status === "OK") {
+            const data = response.data.message.data_output_login;
+
+            const usuario = {
+                nombre: data.username,
+                usuario: data.username,
+                contrasena: data.password,
+                rol: data.user_type
+            };
+
+            setUser(usuario);
+            localStorage.setItem("usuario_actual", JSON.stringify(usuario));
+
+            setCuenta(data);
+            localStorage.setItem("cuenta_actual", JSON.stringify(data));
+
+            alert("Logeo exitoso");
+
+            switch (data.user_type) {
+                case "Admin":
+                    navigate("/admin");
+                    break;
+                case "Estudiante":
+                    navigate("/estudiante");
+                    break;
+                case "Profesor":
+                    navigate("/profesor");
+                    break;
+                default:
+                    alert("Rol desconocido");
+                    break;
+            }
+        } else {
+            alert("Login fallido: " + (response.data.message || "Respuesta no válida del servidor"));
         }
-    };
+    } catch (error) {
+        console.error(error);
+        alert("Error al conectar con el servidor");
+    }
+};
 
     return (
         <div className={styles.loginWrapper}>
