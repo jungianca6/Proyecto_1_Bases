@@ -405,12 +405,16 @@ const handleExcelUpload = (e) => {
         />
 
         <label className={styles.label}>Periodo:</label>
-        <input
-          type="text"
+        <select
           className={styles.input}
           value={periodoSemestre}
           onChange={(e) => setPeriodoSemestre(e.target.value)}
-        />
+        >
+          <option value="">Seleccione</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="V">V</option>
+        </select>
 
         <div className={styles.buttonGroup}>
           <button
@@ -444,12 +448,16 @@ const handleExcelUpload = (e) => {
         />
 
         <label className={styles.label}>Periodo del semestre:</label>
-        <input
-          type="text"
+        <select
           className={styles.input}
           value={periodoSemestreCurso}
           onChange={(e) => setPeriodoSemestreCurso(e.target.value)}
-        />
+        >
+          <option value="">Seleccione</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="V">V</option>
+        </select>
 
         <div className={styles.buttonGroup}>
           <button
