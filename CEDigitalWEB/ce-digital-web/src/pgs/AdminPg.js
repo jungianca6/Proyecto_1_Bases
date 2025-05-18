@@ -59,8 +59,8 @@ function AdminPg() {
       name: nombreCurso,
       credits: parseInt(creditosCurso),
       career: carreraCurso,
-      group_id: listaGrupos,               
-      semester_ids: listaProfesores
+      group_ids: listaGrupos,               
+      professors_ids: listaProfesores
     }
   };
 
@@ -88,8 +88,8 @@ function AdminPg() {
       name: null,
       credits: null,
       career: null,
-      group_id: null,
-      semester_ids: null
+      group_ids: null,
+      professors_ids: null
     }
   };
 
@@ -99,7 +99,7 @@ function AdminPg() {
     if (response.data.status === "OK") {
       const curso = response.data.message.data_output_admin_view_course;
       console.log("Curso encontrado:", curso);
-      alert(`Curso: ${curso.name}\nCódigo: ${curso.course_code}\nCréditos: ${curso.credits}\nCarrera: ${curso.career}\nGrupo: ${curso.group_id}\nSemestres: ${curso.semester_ids.join(", ")}`);
+      alert(`Curso: ${curso.name}\nCódigo: ${curso.course_code}\nCréditos: ${curso.credits}\nCarrera: ${curso.career}\nGrupo: ${curso.group_ids}\nSemestres: ${curso.professors_ids.join(", ")}`);
     } else {
       alert("Error al visualizar curso: " + (response.data.message || "Error desconocido"));
     }
