@@ -43,7 +43,7 @@ namespace CEDigital.Controllers
              * 
              */
 
-            
+
 
             response.status = "OK";
             response.message = "Mensaje Aqui";
@@ -241,13 +241,56 @@ namespace CEDigital.Controllers
              * 
              */
 
-        
+
             response.status = "OK";
             response.message = "Mensaje Aqui";
             return Ok(response);
         }
 
+        [HttpPost("evaluate_submission")]
+        public IActionResult PostEvaluateSubmission([FromBody] Data_input_submit_grade_and_request_file message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
 
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            Data_output_submission_file data_out = new Data_output_submission_file();
+
+            response.status = "OK";
+            response.message = data_out;
+            return Ok(response);
+        }
+
+        [HttpPost("update_submission")]
+        public IActionResult PostUpdateSubmission([FromBody] Data_input_update_grade message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
 
 
     }
