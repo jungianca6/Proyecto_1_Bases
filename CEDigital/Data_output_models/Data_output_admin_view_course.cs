@@ -7,7 +7,7 @@
         public string name { get; set; }
         public int credits { get; set; }
         public string career { get; set; }
-        public int group_id { get; set; }
-        public List<int> semester_ids { get; set; }
+        public List<int> group_ids { get; set; }             // Lista de grupos asociados
+        public List<int> professors_ids { get; set; }   // Vacío o null
     }
 }

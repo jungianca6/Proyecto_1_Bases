@@ -7,8 +7,8 @@
         public string name { get; set; }              // Vacío en petición
         public int? credits { get; set; }             // Vacío (nullable)
         public string career { get; set; }            // Vacío
-        public int? group_id { get; set; }            // Vacío (nullable)
-        public List<int> semester_ids { get; set; }   // Vacío o null
+        public List<int> group_ids { get; set; }       // Lista de grupos asociados
+        public List<int> professors_ids { get; set; }   // Vacío o null
     }
 
 }

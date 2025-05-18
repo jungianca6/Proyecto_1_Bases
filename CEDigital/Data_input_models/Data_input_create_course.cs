@@ -6,8 +6,8 @@
         public string name { get; set; }              // Nombre del curso
         public int credits { get; set; }              // Cantidad de créditos
         public string career { get; set; }            // Carrera a la que pertenece
-        public int group_id { get; set; }             // Número de grupo asociado
-        public List<int> semester_ids { get; set; }  // Semestres asociados (en vez de profesores, según tu modelo)
+        public List<int> group_ids { get; set; }             // Lista de grupos asociados
+        public List<int> professors_ids { get; set; }  // Semestres asociados (en vez de profesores, según tu modelo)
     }
 
 }
