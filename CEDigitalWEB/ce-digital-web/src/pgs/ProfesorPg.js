@@ -33,6 +33,25 @@ function ProfesorPg() {
                 Documentos
             </Button>
 
+            <Button
+                className={styles.rubrosButton}>
+                Rubros
+            </Button>
+
+            <Button
+                className={styles.noticiasButton}>
+                Noticias
+            </Button>
+
+            <Button
+                className={styles.notasButton}>
+                Notas
+            </Button>
+
+            <Button
+                className={styles.reporteButton}>
+                Reporte
+            </Button>
     </div>
     );
   }
