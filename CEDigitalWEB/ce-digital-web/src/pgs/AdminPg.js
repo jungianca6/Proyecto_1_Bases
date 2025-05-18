@@ -59,7 +59,7 @@ function AdminPg() {
       name: nombreCurso,
       credits: parseInt(creditosCurso),
       career: carreraCurso,
-      group_ids: listaGrupos,               
+      group_ids: null,               
       professors_ids: listaProfesores
     }
   };
@@ -274,29 +274,81 @@ const handleExcelUpload = (e) => {
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
     const json = XLSX.utils.sheet_to_json(sheet);
 
-    // Asignar valores a los campos
-    if (json.length > 0) {
-      const row = json[0];
-
-      const codigoCurso = row["Código Curso"];
-      const año = row["Año"];
-      const periodo = row["Periodo"];
-
-      setASemestre(año);
-      setASemestreCurso(año);
-      setPeriodoSemestre(periodo);
-      setPeriodoSemestreCurso(periodo);
-      setCodigoCursoSemestre(codigoCurso);
-      setCodigoCursoEstudiantes(codigoCurso);
-      setCodigoDocuSecciones(codigoCurso);
-      setCodigoCursoRubrosDefault(codigoCurso);
-      setCarnetsEstudiantes(row["Carnets Estudiantes"]);
-      setNumeroGrupoEstudiantes(row["Número Grupo"]);
-
-    }
+    // Llama a la función que envía línea por línea
+    enviarDatosFilaPorFila(json);
   };
   reader.readAsBinaryString(file);
 };
+
+const enviarDatosFilaPorFila = async (filas) => {
+  for (const row of filas) {
+    // Construyes el objeto para enviar con la info de esta fila
+    const dataSemestre = {
+      year: parseInt(row["Año"]),
+      period: parseInt(row["Periodo"])
+    };
+
+    const dataCurso = {
+      course_code: row["Código Curso"],
+      year: parseInt(row["Año"]),
+      period: parseInt(row["Periodo"])
+    };
+
+    const listaCarnets = row["Carnets Estudiantes"]
+      ? row["Carnets Estudiantes"].split(",").map(c => c.trim()).filter(c => c.length > 0)
+      : [];
+
+    const dataSecciones = {
+      course_code: row["Código Curso"],
+      sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
+    };
+
+    const dataRubros = {
+      course_code: row["Código Curso"],
+      sections: ["Quices", "Exámenes", "Proyectos"],
+      percentages: [30.0, 30.0, 40.0]
+    };
+
+    try {
+      // Inicializar semestre (si quieres hacerlo por cada fila)
+      await axios.post("https://localhost:7190/Admin/InicializarSemestre", {
+        data_input_initialize_semester: dataSemestre
+      });
+
+      // Agregar curso
+      await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", {
+        data_input_add_course_to_semester: dataCurso
+      });
+
+      // Agregar estudiantes al grupo, uno por uno
+      for (const carnet of listaCarnets) {
+        await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", {
+          data_input_add_student_to_group: {
+            student_card: carnet,
+            group_number: parseInt(row["Número Grupo"]),
+            course_code: row["Código Curso"]
+          }
+        });
+      }
+
+      // Agregar secciones por defecto
+      await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", {
+        data_input_add_default_document_sections: dataSecciones
+      });
+
+      // Agregar rubros por defecto
+      await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", {
+        data_input_add_default_grades: dataRubros
+      });
+
+      console.log(`Fila con curso ${row["Código Curso"]} procesada correctamente.`);
+    } catch (error) {
+      console.error(`Error al procesar fila con curso ${row["Código Curso"]}:`, error);
+    }
+  }
+  alert("Proceso completado.");
+};
+
 
   return (
     <div className={styles.container}>
@@ -334,17 +386,6 @@ const handleExcelUpload = (e) => {
         className={styles.input}
         value={carreraCurso}
         onChange={(e) => setCarreraCurso(e.target.value)}
-      />
-
-      <label className={styles.label}>Números de Grupos Asociados (separar con comas si son varios):</label>
-      <input
-        type="text"
-        className={styles.input}
-        value={grupoCurso}
-        onChange={(e) => {
-          const valorFiltrado = e.target.value.replace(/[^0-9,]/g, ""); // solo números y comas
-          setGrupoCurso(valorFiltrado);
-        }}
       />
 
       <label className={styles.label}>Cédulas de Profesores Asociados (separar con comas si son varios):</label>
