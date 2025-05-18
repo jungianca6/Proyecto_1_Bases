@@ -1,35 +1,41 @@
 import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
-import React from "react";
-import { Button, Card, Form } from 'react-bootstrap';
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Button, Card, Form } from 'react-bootstrap';
 import styles from './NoticiasProfesorPg.module.css';
 
 function NoticiasProfesorPg() {
+    const [formData, setFormData] = useState({
+        tituloNoticia: "",
+        mensajeNoticia: "",
+        fechaPublicacion: "",
+        cursoAsociado: ""
+    });
 
-
-    // Estados para el formulario de noticias
-    const [tituloNoticia, setTituloNoticia] = useState("");
-    const [mensajeNoticia, setMensajeNoticia] = useState("");
-    const [fechaPublicacion, setFechaPublicacion] = useState("");
-    const [cursoAsociado, setCursoAsociado] = useState("");
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const handlePublicarNoticia = () => {
-        // Validación básica
+        const { tituloNoticia, mensajeNoticia, fechaPublicacion, cursoAsociado } = formData;
+
         if (!tituloNoticia || !mensajeNoticia || !fechaPublicacion || !cursoAsociado) {
             alert("Por favor complete todos los campos");
             return;
         }
 
-        // Aquí iría la lógica para enviar al backend
         alert(`Noticia "${tituloNoticia}" creada para el curso ${cursoAsociado}`);
-
-        // Limpiar formulario después de "enviar"
-        setTituloNoticia("");
-        setMensajeNoticia("");
-        setFechaPublicacion("");
-        setCursoAsociado("");
+        setFormData({
+            tituloNoticia: "",
+            mensajeNoticia: "",
+            fechaPublicacion: "",
+            cursoAsociado: ""
+        });
     };
 
     return (
@@ -37,8 +43,6 @@ function NoticiasProfesorPg() {
             <h1 className={styles.title}>CE Digital</h1>
             <h3 className={styles.subtitle}>Noticias</h3>
 
-
-            {/* Sección Noticias */}
             <Card className={styles.noticiasSection}>
                 <Card.Header as="h5">Noticias</Card.Header>
                 <Card.Body>
@@ -52,9 +56,6 @@ function NoticiasProfesorPg() {
                 </Card.Body>
             </Card>
 
-
-
-            {/* Sección de Publicación de Noticias */}
             <Card className={styles.noticiasCard}>
                 <Card.Header as="h5">Publicar Nueva Noticia</Card.Header>
                 <Card.Body>
@@ -62,8 +63,9 @@ function NoticiasProfesorPg() {
                         <Form.Label>Título de la Noticia</Form.Label>
                         <Form.Control
                             type="text"
-                            value={tituloNoticia}
-                            onChange={(e) => setTituloNoticia(e.target.value)}
+                            name="tituloNoticia"
+                            value={formData.tituloNoticia}
+                            onChange={handleChange}
                             placeholder="Ingrese el título de la noticia"
                         />
                     </Form.Group>
@@ -73,8 +75,9 @@ function NoticiasProfesorPg() {
                         <Form.Control
                             as="textarea"
                             rows={3}
-                            value={mensajeNoticia}
-                            onChange={(e) => setMensajeNoticia(e.target.value)}
+                            name="mensajeNoticia"
+                            value={formData.mensajeNoticia}
+                            onChange={handleChange}
                             placeholder="Escriba el contenido de la noticia"
                         />
                     </Form.Group>
@@ -83,8 +86,9 @@ function NoticiasProfesorPg() {
                         <Form.Label>Fecha de Publicación</Form.Label>
                         <Form.Control
                             type="date"
-                            value={fechaPublicacion}
-                            onChange={(e) => setFechaPublicacion(e.target.value)}
+                            name="fechaPublicacion"
+                            value={formData.fechaPublicacion}
+                            onChange={handleChange}
                         />
                     </Form.Group>
 
@@ -92,8 +96,9 @@ function NoticiasProfesorPg() {
                         <Form.Label>Curso Asociado</Form.Label>
                         <Form.Control
                             type="text"
-                            value={cursoAsociado}
-                            onChange={(e) => setCursoAsociado(e.target.value)}
+                            name="cursoAsociado"
+                            value={formData.cursoAsociado}
+                            onChange={handleChange}
                             placeholder="Código del curso"
                         />
                     </Form.Group>

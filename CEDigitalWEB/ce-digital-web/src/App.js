@@ -7,6 +7,12 @@ import ProfesorPg from "./pgs/ProfesorPg";
 import DocumentosEstudiantePg from "./pgs/DocumentosEstudiantePg";
 import EvaluacionesEstudiantesPg from "./pgs/EvaluacionesEstudiantePg";
 import NoticiasProfesorPg from "./pgs/NoticiasProfesorPg";
+import DocumentosProfesorPg from "./pgs/DocumentosProfesorPg";
+import EvaluacionesProfesorPg from "./pgs/EvaluacionesProfesorPg";
+import ReporteNotasProfesorPg from "./pgs/ReporteNotasProfesorPg";
+import ReporteEstudianteProfesorPg from "./pgs/ReporteEstudianteProfesorPg";
+import RubrosProfesorPg from "./pgs/RubrosProfesorPg";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -23,11 +29,20 @@ function App() {
                     <Navigate to="/login" />} />
                 <Route path="/estudiante/evaluaciones" element={user?.rol === "Estudiante" ? <EvaluacionesEstudiantesPg /> :
                     <Navigate to="/login" />} />
-
+                {/* Rutas del profesor */}
                 <Route path="/profesor" element={user?.rol === "Profesor" ? <ProfesorPg /> : <Navigate to="/login" />} />
                 <Route path="/profesor/noticias" element={user?.rol === "Profesor" ? <NoticiasProfesorPg /> :
                     <Navigate to="/login" />} />
-
+                <Route path="/profesor/documentos" element={user?.rol === "Profesor" ? <DocumentosProfesorPg /> :
+                    <Navigate to="/login" />} />
+                <Route path="/profesor/evaluaciones" element={user?.rol === "Profesor" ? <EvaluacionesProfesorPg /> :
+                    <Navigate to="/login" />} />
+                <Route path="/profesor/reportenotas" element={user?.rol === "Profesor" ? <ReporteNotasProfesorPg /> :
+                    <Navigate to="/login" />} />
+                <Route path="/profesor/reporteEstudiantes" element={user?.rol === "Profesor" ? <ReporteEstudianteProfesorPg /> :
+                    <Navigate to="/login" />} />
+                <Route path="/profesor/rubros" element={user?.rol === "Profesor" ? <RubrosProfesorPg /> :
+                    <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>

@@ -4,6 +4,7 @@
     width: 100%;
     background: url('./Assets/FondoLogin.jpg') no-repeat center center;
     background-size: cover;
+    padding: 20px;
 }
 
 /* Titulos */
@@ -26,9 +27,9 @@
 /* Sección Noticias */
 .noticiasSection {
     position: absolute;
-    left: 120px;
+    left: 100px;
     top: 100px;
-    height: 300px;
+    height: 300px !important;
     width: 500px;
     background-color: rgba(40, 40, 40, 0.9);
     border-radius: 10px;
@@ -53,8 +54,8 @@
 /* Card de Noticias */
 .noticiasCard {
     position: absolute;
-    left: 930px;
-    bottom: 100px;
+    left: 1000px;
+    bottom: 200px !important;
     width: 400px;
     height: 500px;
     background-color: rgba(255, 255, 255, 0.9);

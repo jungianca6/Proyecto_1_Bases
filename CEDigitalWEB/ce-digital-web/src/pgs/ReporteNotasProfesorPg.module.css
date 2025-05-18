@@ -1,0 +1,28 @@
+.reporteNotasWrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-color: #1a1a1a; /* Fondo gris oscuro sólido */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Títulos */
+.title {
+    position: absolute;
+    font-size: 30px;
+    left: 30px;
+    bottom: 650px;
+    color: #ffffff; /* Texto blanco */
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 25px;
+    left: 900px;
+    bottom: 650px;
+    color: #ffffff; /* Texto blanco */
+}

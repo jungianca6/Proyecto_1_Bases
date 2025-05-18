@@ -14,6 +14,26 @@ function ProfesorPg() {
         navigate('/profesor/noticias');
     }
 
+    const handleDocumentosClick = () => {
+        navigate('/profesor/documentos');
+    }
+
+    const handleEvaluacionesClick = () => {
+        navigate('/profesor/evaluaciones');
+    }
+
+    const handlerepNotasClick = () => {
+        navigate('/profesor/reportenotas');
+    }
+
+    const handlerubrosClick = () => {
+        navigate('/profesor/rubros');
+    }
+
+    const handlerepEstudiantesClick = () => {
+        navigate('/profesor/reporteEstudiantes');
+    }
+
     return (
         <div className={styles.profesorWrapper}>
             <h1 className={styles.title}>CE Digital</h1>
@@ -26,17 +46,20 @@ function ProfesorPg() {
             </Button>
 
             <Button
-                className={styles.evaluacionesButton}>
+                className={styles.evaluacionesButton}
+                onClick={handleEvaluacionesClick}>
                 Evaluaciones
             </Button>
 
             <Button
-                className={styles.documentosButton}>
+                className={styles.documentosButton}
+                onClick={handleDocumentosClick}>
                 Documentos
             </Button>
 
             <Button
-                className={styles.rubrosButton}>
+                className={styles.rubrosButton}
+                onClick={handlerubrosClick}>
                 Rubros
             </Button>
 
@@ -47,12 +70,14 @@ function ProfesorPg() {
             </Button>
 
             <Button
-                className={styles.notasButton}>
+                className={styles.notasButton}
+                onClick={handlerepNotasClick}>
                 Reporte de notas
             </Button>
 
             <Button
-                className={styles.reporteButton}>
+                className={styles.reporteButton}
+                onClick={handlerepEstudiantesClick}>
                 Reporte de estudiantes
             </Button>
         </div>
