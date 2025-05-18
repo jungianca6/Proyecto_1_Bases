@@ -7,7 +7,7 @@ using CEDigital.Data_output_models;
 namespace CEDigital.Controllers
 {
     [ApiController]
-    [Route("login/[controller]")]
+    [Route("[controller]")]
     public class LoginController : ControllerBase
     {
 

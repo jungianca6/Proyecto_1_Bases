@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CEDigital.Controllers
 {
     [ApiController]
-    [Route("login/[controller]")]
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
 
