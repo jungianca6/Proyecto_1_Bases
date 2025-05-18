@@ -47,18 +47,21 @@ function EstudiantePg() {
 
             {/* Botones de navegación */}
             <Button
+                variant="dark"
                 className={styles.cursosButton}
                 onClick={handleCursosClick}>
                 Cursos
             </Button>
 
             <Button
+                variant="dark"
                 className={styles.evaluacionesButton}
                 onClick={handleEvaluacionesClick}>
                 Evaluaciones
             </Button>
 
             <Button
+                variant="dark"
                 className={styles.documentosButton}
                 onClick={handleDocumentosClick}>
                 Documentos

@@ -6,6 +6,7 @@ import EstudiantePg from "./pgs/EstudiantePg";
 import ProfesorPg from "./pgs/ProfesorPg";
 import DocumentosEstudiantePg from "./pgs/DocumentosEstudiantePg";
 import EvaluacionesEstudiantesPg from "./pgs/EvaluacionesEstudiantePg";
+import NoticiasProfesorPg from "./pgs/NoticiasProfesorPg";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -24,6 +25,10 @@ function App() {
                     <Navigate to="/login" />} />
 
                 <Route path="/profesor" element={user?.rol === "Profesor" ? <ProfesorPg /> : <Navigate to="/login" />} />
+                <Route path="/profesor/noticias" element={user?.rol === "Profesor" ? <NoticiasProfesorPg /> :
+                    <Navigate to="/login" />} />
+
+
                 <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
         </Router>

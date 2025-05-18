@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import React from "react";
 import { Button, Card, Form } from 'react-bootstrap';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from './ProfesorPg.module.css';
 
 function ProfesorPg() {
-
     const navigate = useNavigate();
 
+    const handleNoticiasClick = () => {
+        navigate('/profesor/noticias');
+    }
 
-    return(
+    return (
         <div className={styles.profesorWrapper}>
-
             <h1 className={styles.title}>CE Digital</h1>
             <h3 className={styles.subtitle}>Profesor</h3>
 
@@ -39,7 +41,8 @@ function ProfesorPg() {
             </Button>
 
             <Button
-                className={styles.noticiasButton}>
+                className={styles.noticiasButton}
+                onClick={handleNoticiasClick}>
                 Noticias
             </Button>
 
@@ -52,8 +55,8 @@ function ProfesorPg() {
                 className={styles.reporteButton}>
                 Reporte de estudiantes
             </Button>
-    </div>
+        </div>
     );
-  }
+}
 
-  export default ProfesorPg;
+export default ProfesorPg;

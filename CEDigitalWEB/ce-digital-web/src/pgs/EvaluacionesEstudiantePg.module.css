@@ -1,10 +1,8 @@
-
 .evaluacionesWrapper {
     position: relative;
     height: 100vh;
     width: 100%;
-    background: url('./Assets/FondoLogin.jpg') no-repeat center center;
-    background-size: cover;
+    background-color: #1a1a1a; /* Fondo gris oscuro */
     padding: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -17,9 +15,10 @@
     grid-column: 2;
     grid-row: 4;
     height: 300px;
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: #2a2a2a; /* Fondo oscuro sólido para tarjeta */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
 }
 
 /* Áreas de texto */
@@ -27,19 +26,20 @@
     width: 100%;
     height: 100%;
     resize: none;
-    border: 1px solid #ced4da;
+    border: 1px solid #555555;
     border-radius: 5px;
     padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: #333333;
+    color: #ffffff;
 }
 
-/* Titulos */
+/* Títulos */
 .title {
     position: absolute;
     font-size: 30px;
     left: 30px;
     bottom: 850px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
 }
 
 .subtitle {
@@ -47,7 +47,7 @@
     font-size: 25px;
     left: 900px;
     bottom: 850px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
 }
 
 .listaEvaluacion {
@@ -55,7 +55,7 @@
     font-size: 25px;
     left: 50px;
     bottom: 600px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
 }
 
 .notaEvaluacion {
@@ -63,6 +63,5 @@
     font-size: 25px;
     left: 300px;
     bottom: 600px;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
 }
-
