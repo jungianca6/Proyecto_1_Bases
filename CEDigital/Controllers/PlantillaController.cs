@@ -32,7 +32,7 @@ namespace CEDigital.Controllers
         [HttpPost("POST")]
         public ActionResult<Api_response> Post_Example([FromBody] Student_model student)
         {
-            if (string.IsNullOrEmpty(message))
+            if (string.IsNullOrEmpty(student.name))
             {
                 response.status = "BadRequest";
                 response.message = "Message cannot be empty.";
@@ -40,7 +40,7 @@ namespace CEDigital.Controllers
             }
 
             response.status = "OK";
-            response.message = "Received message: " + message;
+            response.message = "Received message: " + student;
             return Ok(response);
         }
 
