@@ -1,0 +1,52 @@
+.noticiasprofesorWrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background: url('./Assets/FondoLogin.jpg') no-repeat center center;
+    background-size: cover;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Titulos */
+.title {
+    position: absolute;
+    font-size: 30px;
+    left: 30px;
+    bottom: 650px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 25px;
+    left: 900px;
+    bottom: 650px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* Card de Noticias */
+.noticiasCard {
+    position: absolute;
+    left: 930px;
+    top: 90px;
+    width: 400px;
+    height: 450px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* Botón Publicar */
+.publicarButton {
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+    width: 100%;
+}
