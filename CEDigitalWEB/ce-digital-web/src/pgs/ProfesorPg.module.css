@@ -32,7 +32,7 @@
 .cursosButton {
     position: absolute;
     left: 30px;
-    bottom: 500px;
+    bottom: 550px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -42,7 +42,7 @@
 .documentosButton {
     position: absolute;
     left: 350px;
-    bottom: 500px;
+    bottom: 550px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -52,7 +52,7 @@
 .rubrosButton {
     position: absolute;
     left: 550px;
-    bottom: 500px;
+    bottom: 550px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -62,7 +62,7 @@
 .evaluacionesButton {
     position: absolute;
     left: 750px;
-    bottom: 500px;
+    bottom: 550px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -72,7 +72,7 @@
 .noticiasButton {
     position: absolute;
     left: 950px;
-    bottom: 500px;
+    bottom: 550px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -82,9 +82,9 @@
 .notasButton {
     position: absolute;
     left: 1150px;
-    bottom: 500px;
-    width: 120px;
-    height: 45px;
+    bottom: 550px;
+    width: 140px;
+    height: 55px;
     background-color: cornflowerblue;
     border-color: cornflowerblue;
 }
@@ -92,9 +92,9 @@
 .reporteButton {
     position: absolute;
     left: 1350px;
-    bottom: 500px;
-    width: 120px;
-    height: 45px;
+    bottom: 550px;
+    width: 140px;
+    height: 55px;
     background-color: cornflowerblue;
     border-color: cornflowerblue;
 }

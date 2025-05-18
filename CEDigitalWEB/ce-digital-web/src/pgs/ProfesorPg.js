@@ -45,12 +45,12 @@ function ProfesorPg() {
 
             <Button
                 className={styles.notasButton}>
-                Notas
+                Reporte de notas
             </Button>
 
             <Button
                 className={styles.reporteButton}>
-                Reporte
+                Reporte de estudiantes
             </Button>
     </div>
     );
