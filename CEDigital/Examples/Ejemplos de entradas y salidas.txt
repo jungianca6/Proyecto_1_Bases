@@ -473,54 +473,132 @@ Ejemplo de salida:
   }
 }
 
-23)
+23) Visualizar documentos del estudiante
 Ejemplo de entrada:
+{
+  "student_id": "2021056789"
+}
 Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "documents": [
+      {
+        "title": "Certificado de matrícula",
+        "file_name": "cert_matricula.pdf",
+        "file_path": "/docs/2021056789/cert_matricula.pdf",
+        "upload_date": "2024-03-01T10:30:00"
+      },
+      {
+        "title": "Comprobante de pago",
+        "file_name": "pago_marzo.pdf",
+        "file_path": "/docs/2021056789/pago_marzo.pdf",
+        "upload_date": "2024-03-02T09:00:00"
+      }
+    ]
+  }
+}
 
-24)
+24) Ver evaluaciones del estudiante 
 Ejemplo de entrada:
+{
+  "student_id": "2021056789"
+}
 Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "evaluations": [
+      {
+        "rubric_name": "Examenes",
+        "evaluation_title": "Examen 1",
+        "grade": 85.5,
+        "feedback": "Buen trabajo",
+        "is_public": true,
+        "evaluation_date": "2024-04-15T08:00:00"
+      },
+      {
+        "rubric_name": "Proyectos",
+        "evaluation_title": "Proyecto Final",
+        "grade": 92.0,
+        "feedback": "Excelente presentación",
+        "is_public": true,
+        "evaluation_date": "2024-05-10T15:30:00"
+      }
+    ]
+  }
+}
 
+25)Enviar evaluación
 
-###########################################################
-----------------------FALTA POR CUBRIR---------------------
-###########################################################
+Ejemplo de entrada:
+{
+  "student_id": "2021056789",
+  "course_code": "CE3101",
+  "group_number": 2,
+  "grading_item_name": "Proyectos",
+  "evaluation_title": "Proyecto 2",
+  "file_name": "proyecto2.zip",
+  "file_path": "/uploads/2021056789/proyecto2.zip"
+}
 
-3) Profesor:
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": "Evaluación enviada correctamente."
+  }
+}
 
-	Evaluar entregables:
-	
-				1er boton: Yo le mando: codigo de curso, numero de grupo, rubro, evaluacion, nota, observaciones/archivo, booleano de si las notas son publicas a los estudiantes
-					   Ud me manda: archivo del entregable asociado a la evaluacion
+26) Reporte de notas del estudiante 
 
-				2do boton: Yo le mando: codigo de curso, numero de grupo, rubro, evaluacion, nota, observaciones/archivo, booleano de si las notas son publicas a los estudiantes
+Ejemplo de entrada:
+{
+  "student_id": "2021056789",
+  "course_code": "CE3101",
+  "group_number": 2
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "evaluations": [
+      {
+        "rubric_name": "Quices",
+        "evaluation_title": "Quiz 1",
+        "grade": 70
+      },
+      {
+        "rubric_name": "Proyectos",
+        "evaluation_title": "Proyecto 1",
+        "grade": 90
+      }
+    ]
+  }
+}
 
-	Gestion de noticias: 
-				Agregar, editar o eliminar noticias: Yo le mando: titulo, mensaje, fecha de publicacion, autor y codigo de curso
-	
-	Reporte de notas:      
-				Yo le mando: codigo de curso, numero de grupo
-
-				Ud manda: notas de los estudiantes que forman ese curso (luego se ve como porque esta feillo)
-
-	Reporte de estudiantes matriculados:
-
-				Yo le mando: codigo de curso
-				
-				Ud manda: Estudiantes matriculados en el curso puesto (cada uno con carnet, nombre, correo electrónico y teléfono)
-				
-
-4) Estudiante
-
-	Visualizar documentos: Me manda casi que toda la info de documentos del estudiante.
-
-	Ver evaluaciones: Me manda todo lo de evaluaciones del estudiante
-
-	Enviar evaluaciones: Yo le mando: carnet, codigo de curso, numero de grupo, rubro, evaluacion, archivo de evaluacion
-
-	Reporte notas estudiante: Yo le mando carnet, codigo de curso, numero de grupo
-
-	Visualizar noticias: Yo le mando: codigo de curso
-			     Ud me manda: noticias y sus aspectos
-
-		
+27) Visualizar noticias
+Ejemplo de entrada:
+{
+  "student_id": "2021056789",
+  "course_code": "CE3101"
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "news_list": [
+      {
+        "title": "Cambio de fecha del examen",
+        "message": "El examen se reprogramó para el 25 de mayo.",
+        "publish_date": "2024-05-01T10:00:00",
+        "author": "Prof. Pérez"
+      },
+      {
+        "title": "Nueva guía del proyecto",
+        "message": "Se ha subido la guía del proyecto final.",
+        "publish_date": "2024-04-28T14:30:00",
+        "author": "Prof. Pérez"
+      }
+    ]
+  }
+}
