@@ -191,15 +191,295 @@ Ejemplo de salida:
 }
 
 ###########################################################
-10)
+10) Agregar documentos
+
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "document_section": "Exams",
+  "file_name": "exam1.pdf"
+}
+Ejemplo de salida:
+{
+  "status": "Ok",
+  "message": "El documento fue agregado correctamente"
+}
+
+11)Eliminar documentos
+
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "document_section": "Exams",
+  "file_name": "exam1.pdf"
+}
+Ejemplo de salida:
+{
+  "status": "Ok",
+  "message": "El documento fue eliminado correctamente"
+}
+
+12)Editar documentos
+
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "document_section": "Exams",
+  "old_file_name": "exam1.pdf",
+  "new_file_name": "exam1_updated.pdf"
+}
+Ejemplo de salida:
+{
+  "status": "Ok",
+  "message": "El documento fue editado correctamente"
+}
+
+13)Crear sección de documentos
+
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "section_name": "Homework"
+}
+Ejemplo de salida:
+{
+  "status": "Ok",
+  "message": "La sección fue creada correctamente"
+}
+
+14)Eliminar sección de documentos
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "section_name": "Homework"
+}
+Ejemplo de salida:
+{
+  "status": "Ok",
+  "message": "La sección fue eliminada correctamente"
+}
+
+15)mostrar rubros existentes
+
+Ejemplo de entrada:
+{
+  "data_input_show_grading_items": {
+    "course_code": "CS101",
+    "group_number": 2
+  }
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "grading_items": [
+      {
+        "grading_item_id": 1,
+        "name": "Proyecto Final",
+        "percentage": 40.0,
+        "group_id": 2,
+        "submission_ids": [101, 102]
+      },
+      {
+        "grading_item_id": 2,
+        "name": "Examen Teórico",
+        "percentage": 60.0,
+        "group_id": 2,
+        "submission_ids": []
+      }
+    ]
+  }
+}
+
+16)Modificar rubros (agregar, editar, eliminar)
+
+Ejemplo de entrada:
+{
+  "data_input_update_grading_items": {
+    "course_code": "CS101",
+    "group_number": 2,
+    "grading_items": [
+      {
+        "grading_item_id": 1,
+        "name": "Proyecto Final Modificado",
+        "percentage": 50.0,
+        "group_id": 2,
+        "submission_ids": [101]
+      },
+      {
+        "grading_item_id": 0,
+        "name": "Nuevo Rubro",
+        "percentage": 10.0,
+        "group_id": 2,
+        "submission_ids": []
+      }
+    ]
+  }
+}
+
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": "Rubros actualizados correctamente"
+}
+
+
+17) Asignar evaluación a un rubro
+Ejemplo de entrada:
+{
+  "data_input_assign_evaluation": {
+    "course_code": "CS101",
+    "group_number": 2,
+    "grading_item_name": "Proyecto Final",
+    "evaluation_name": "Informe",
+    "grading_item_percentage": 40.0,
+    "evaluation_percentage": 20.0,
+    "delivery_date": "2025-06-10T23:59:00",
+    "description": "Entrega del informe técnico",
+    "evaluation_type": "grupal"
+  }
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": "Evaluación asignada correctamente"
+}
+
+18)Evaluar entregables
+
+Ejemplo de entrada:
+{
+  "course_code": 101,
+  "group_number": 2,
+  "grading_item_name": "Midterm",
+  "evaluation_name": "Exam 1",
+  "grade": 9.0,
+  "observations": "Entrega puntual y completa",
+  "grades_public": true
+}
+Ejemplo de salida:
+{
+  "status": "success",
+   "message":{
+      "file_name": "exam1_submission.pdf",
+      "file_path": "/files/course101/group2/midterm/exam1_submission.pdf"
+       }
+}
+
+19)
+(actualizar nota y observaciones)
+
+Ejemplo de entrada:
+{
+  "course_code": 101,
+  "group_number": 2,
+  "grading_item_name": "Midterm",
+  "evaluation_name": "Exam 1",
+  "grade": 9.5,
+  "observations": "Revisión corregida, mejor nota",
+  "grades_public": false
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": "Nota y observaciones actualizadas correctamente"
+}
+
+20)Input para agregar, editar o eliminar noticias
+
+
+Ejemplo de entrada:
+{
+  "title": "Nuevo examen programado",
+  "message": "El examen final será el 20 de junio a las 9 AM.",
+  "publication_date": "2025-05-18T10:00:00",
+  "author": "Profesor Juan Pérez",
+  "course_code": 101
+}
+
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": "Noticia agregada/modificada/eliminada correctamente"
+}
+
+
+21) Input para reporte de notas
+
+Ejemplo de entrada:
+{
+  "course_code": 101,
+  "group_number": 3
+}
+
+Ejemplo de salida:
+
+{
+  "status": "success",
+  "message": {
+    "grades": [
+      {
+        "student_id": "2021001",
+        "student_name": "Ana Gómez",
+        "grades_by_rubric": {
+          "Homework": 9.5,
+          "Midterm": 8.0,
+          "Final Project": 9.0
+        }
+      },
+      {
+        "student_id": "2021002",
+        "student_name": "Carlos Ruiz",
+        "grades_by_rubric": {
+          "Homework": 8.0,
+          "Midterm": 7.5,
+          "Final Project": 8.5
+        }
+      }
+    ]
+  }
+}
+
+22) Reporte de estudiantes matriculados
+
+Ejemplo de entrada:
+{
+  "course_code": "CS101",
+  "group_number": 1
+}
+Ejemplo de salida:
+{
+  "status": "success",
+  "message": {
+    "students": [
+      {
+        "student_id": "2021001",
+        "student_name": "Ana Gómez",
+        "email": "ana.gomez@example.com",
+        "phone": "+50612345678"
+      },
+      {
+        "student_id": "2021002",
+        "student_name": "Carlos Ruiz",
+        "email": "carlos.ruiz@example.com",
+        "phone": "+50687654321"
+      }
+    ]
+  }
+}
+
+23)
 Ejemplo de entrada:
 Ejemplo de salida:
 
-11)
+24)
 Ejemplo de entrada:
 Ejemplo de salida:
-
-
 
 
 ###########################################################
@@ -207,35 +487,6 @@ Ejemplo de salida:
 ###########################################################
 
 3) Profesor:
-
-					
-	Agregar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo
-	Eliminar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo a eliminar	
-	Editar documentos: Yo le mando: código de curso, numero de grupo, seccion de documento, archivo viejo, archivo nuevo
-
-	Crear sección de documentos: Yo le mando: codigo de curso, numero de grupo, seccion a añadir
-	Eliminar seccion de documentos: Yo le mando: codigo de curso, numero de grupo, seccion a añadir	
-
-	Gestion de rubros: Esto es de lo mas dificil del proyecto, tengo el siguiente plan:
-
-				Boton para mostrar los rubros existentes de un curso: Yo le mando: codigo de curso, numero de grupo
-										      Ud me manda: rubros y sus porcentajes.
-
-			   	Boton para mandar modificaciones hechas (eliminar, editar o agregar): Yo le mando: codigo de curso, numero de grupo, rubros y sus porcentajes
-
-	Asignar de evaluaciones: 
-
-				1er boton:
-
-				Yo le mando: codigo de curso, numero de grupo, rubro
-				
-				Ud me manda: codigo de curso, numero de grupo, rubro, porcentaje del rubro, porcentajes de evaluaciones ya existentes
-
-				2do boton (asignacion): 
-
-				Yo le mando: 
-				
-				codigo de curso, numero de grupo, rubro, evaluacion,  porcentaje del rubro, porcentaje de la evaluacion, fecha/hora de entrega, texto extra de evaluacion, grupal o individual.
 
 	Evaluar entregables:
 	

@@ -1,6 +1,7 @@
 using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.Data.SqlClient;
+using CEDigital.Data_Base;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,13 @@ catch (Exception ex)
     // Mostrar error si ocurre
     Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
 }
+
+
+/*
+ * CODIGO DE UN SOLO USO
+var MongoDB_create = new MongoDB_create();
+await MongoDB_create.CrearBaseYColeccionesAsync();
+*/
 
 
 Console.WriteLine("// ---------------- SELECT sin WHERE ni ORDER BY ----------------");
