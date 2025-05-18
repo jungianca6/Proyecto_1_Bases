@@ -588,14 +588,18 @@ Ejemplo de salida:
   "message": {
     "news_list": [
       {
+        "news_id": 1,
         "title": "Cambio de fecha del examen",
         "message": "El examen se reprogramó para el 25 de mayo.",
+        "professor_id": "pf123",
         "publish_date": "2024-05-01T10:00:00",
         "author": "Prof. Pérez"
       },
       {
+        "news_id": 2,
         "title": "Nueva guía del proyecto",
         "message": "Se ha subido la guía del proyecto final.",
+        "professor_id": "pf123",
         "publish_date": "2024-04-28T14:30:00",
         "author": "Prof. Pérez"
       }

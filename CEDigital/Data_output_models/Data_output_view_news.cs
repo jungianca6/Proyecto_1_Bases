@@ -1,12 +1,7 @@
-﻿namespace CEDigital.Data_output_models
+﻿using CEDigital.Models;
+
+namespace CEDigital.Data_output_models
 {
-    public class News_model
-    {
-        public string title { get; set; }
-        public string message { get; set; }
-        public DateTime publish_date { get; set; }
-        public string author { get; set; }
-    }
 
     public class Data_output_view_news
     {
