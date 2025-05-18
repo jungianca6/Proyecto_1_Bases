@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CEDigital.Controllers
 {
     [ApiController]
-    [Route("student/[controller]")]
+    [Route("[controller]")]
     public class StudentController : ControllerBase
     {
         private Api_response response;

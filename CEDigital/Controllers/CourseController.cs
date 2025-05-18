@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CEDigital.Controllers
 {
     [ApiController]
-    [Route("course/[controller]")]
+    [Route("[controller]")]
     public class CourseController : ControllerBase
     {
 
@@ -112,10 +112,8 @@ namespace CEDigital.Controllers
              * 
              */
 
-            Data_output_admin_view_course data_Output_Admin_View_Course = new Data_output_admin_view_course();
-
             response.status = "OK";
-            response.message = data_Output_Admin_View_Course;
+            response.message = "Mensaje Aqui";
             return Ok(response);
         }
 
@@ -136,12 +134,121 @@ namespace CEDigital.Controllers
              * 
              */
 
-            Data_output_admin_view_course data_Output_Admin_View_Course = new Data_output_admin_view_course();
-
             response.status = "OK";
-            response.message = data_Output_Admin_View_Course;
+            response.message = "Mensaje Aqui";
             return Ok(response);
         }
+
+        [HttpPost("show_grading_item")]
+        public IActionResult PostShowGradingItem([FromBody] Data_input_show_grading_items message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            Data_output_show_grading_items data_Output_Show_Grading_Item = new Data_output_admin_view_course();
+
+            response.status = "OK";
+            response.message = data_Output_Show_Grading_Item;
+            return Ok(response);
+        }
+
+        [HttpPost("modify_grading_item")]
+        public IActionResult PostShowGradingItem([FromBody] Data_input_update_grade message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
+
+        [HttpPost("add_grading_item")]
+        public IActionResult PostAddGradingItem([FromBody] Data_input_update_grade message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
+
+        [HttpPost("delete_grading_item")]
+        public IActionResult PostDeleteGradingItem([FromBody] Data_input_show_grading_items message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
+
+        [HttpPost("assign_evaluation")]
+        public IActionResult PostAssingEvalutaion([FromBody] Data_input_assign_evaluation message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+        
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
+
+
+
 
     }
 }

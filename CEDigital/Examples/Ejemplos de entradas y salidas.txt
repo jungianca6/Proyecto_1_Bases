@@ -206,6 +206,9 @@ Ejemplo de salida:
   "message": "El documento fue agregado correctamente"
 }
 
+
+
+
 11)Eliminar documentos
 
 Ejemplo de entrada:
