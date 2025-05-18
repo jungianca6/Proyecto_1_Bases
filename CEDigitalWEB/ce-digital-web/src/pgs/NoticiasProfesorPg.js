@@ -37,6 +37,23 @@ function NoticiasProfesorPg() {
             <h1 className={styles.title}>CE Digital</h1>
             <h3 className={styles.subtitle}>Noticias</h3>
 
+
+            {/* Sección Noticias */}
+            <Card className={styles.noticiasSection}>
+                <Card.Header as="h5">Noticias</Card.Header>
+                <Card.Body>
+                    <Form.Control
+                        as="textarea"
+                        rows={5}
+                        placeholder="Aquí se mostrarán las noticias importantes..."
+                        readOnly
+                        className={styles.textArea}
+                    />
+                </Card.Body>
+            </Card>
+
+
+
             {/* Sección de Publicación de Noticias */}
             <Card className={styles.noticiasCard}>
                 <Card.Header as="h5">Publicar Nueva Noticia</Card.Header>
