@@ -1,0 +1,84 @@
+/* EstudiantePg.module.css */
+.estudianteWrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background: url('./Assets/FondoLogin.jpg') no-repeat center center;
+    background-size: cover;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Sección Noticias */
+.noticiasSection {
+    grid-column: 1;
+    grid-row: 3;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Áreas de texto */
+.textArea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Titulos */
+.title {
+    position: absolute;
+    font-size: 30px;
+    left: 30px;
+    bottom: 850px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 25px;
+    left: 900px;
+    bottom: 850px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* Botones */
+.cursosButton {
+    position: absolute;
+    left: 30px;
+    bottom: 500px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.documentosButton {
+    position: absolute;
+    left: 550px;
+    bottom: 700px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.evaluacionesButton {
+    position: absolute;
+    left: 750px;
+    bottom: 700px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
