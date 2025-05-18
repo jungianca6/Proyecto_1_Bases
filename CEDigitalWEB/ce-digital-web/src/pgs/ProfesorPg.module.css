@@ -1,5 +1,4 @@
-/* EstudiantePg.module.css */
-.estudianteWrapper {
+.profesorWrapper {
     position: relative;
     height: 100vh;
     width: 100%;
@@ -12,34 +11,12 @@
     gap: 20px;
 }
 
-/* Sección Noticias */
-.noticiasSection {
-    grid-column: 1;
-    grid-row: 3;
-    height: 300px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-/* Áreas de texto */
-.textArea {
-    width: 100%;
-    height: 100%;
-    resize: none;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
 /* Titulos */
 .title {
     position: absolute;
     font-size: 30px;
     left: 30px;
-    bottom: 850px;
+    bottom: 650px;
     color: rgba(255, 255, 255, 0.9);
 }
 
@@ -47,16 +24,15 @@
     position: absolute;
     font-size: 25px;
     left: 900px;
-    bottom: 850px;
+    bottom: 650px;
     color: rgba(255, 255, 255, 0.9);
 }
-
 
 /* Botones */
 .cursosButton {
     position: absolute;
     left: 30px;
-    bottom: 500px;
+    bottom: 700px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -66,7 +42,17 @@
 .documentosButton {
     position: absolute;
     left: 550px;
-    bottom: 700px;
+    bottom: 500px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.rubrosButton {
+    position: absolute;
+    left: 750px;
+    bottom: 500px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
@@ -76,7 +62,7 @@
 .evaluacionesButton {
     position: absolute;
     left: 750px;
-    bottom: 700px;
+    bottom: 500px;
     width: 120px;
     height: 45px;
     background-color: cornflowerblue;
