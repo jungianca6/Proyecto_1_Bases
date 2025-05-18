@@ -6,6 +6,7 @@ import React from "react";
 import axios from "axios";
 import styles from "./AdminPg.module.css"; 
 import { Button, Card, Form } from 'react-bootstrap';
+import * as XLSX from "xlsx";
 
 function AdminPg() {
   //Estados para cursos
@@ -262,6 +263,41 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
   }
 };
 
+const handleExcelUpload = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    const data = evt.target.result;
+    const workbook = XLSX.read(data, { type: "binary" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+
+    // Asignar valores a los campos
+    if (json.length > 0) {
+      const row = json[0];
+
+      const codigoCurso = row["Código Curso"];
+      const año = row["Año"];
+      const periodo = row["Periodo"];
+
+      setASemestre(año);
+      setASemestreCurso(año);
+      setPeriodoSemestre(periodo);
+      setPeriodoSemestreCurso(periodo);
+      setCodigoCursoSemestre(codigoCurso);
+      setCodigoCursoEstudiantes(codigoCurso);
+      setCodigoDocuSecciones(codigoCurso);
+      setCodigoCursoRubrosDefault(codigoCurso);
+      setCarnetsEstudiantes(row["Carnets Estudiantes"]);
+      setNumeroGrupoEstudiantes(row["Número Grupo"]);
+
+    }
+  };
+  reader.readAsBinaryString(file);
+};
+
   return (
     <div className={styles.container}>
       <h1 className="text-center mb-2">CE Digital</h1>
@@ -350,10 +386,14 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
       <p style={{ marginTop: "10px", color: "#555" }}>
       <strong>Nota:</strong> Para visualizar o eliminar un curso, solo es necesario ingresar el <strong>código del curso</strong>.
       </p>
-    </form>
 
-        <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+      <h2 className={styles.title} style={{ marginTop: "3rem" }}>
         Inicializar Semestre
+      </h2>
+
+    </form>
+        <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+        Crear Semestre
       </h3>
       <form>
         <label className={styles.label}>Año:</label>
@@ -505,6 +545,16 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
             </button>
           </div>
         </form>
+
+        <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+          Cargar Excel para Inicializar Semestre
+        </h3>
+        <input
+          type="file"
+          accept=".xlsx, .xls"
+          onChange={handleExcelUpload}
+          className={styles.input}
+        />
 
     </div>
   );
