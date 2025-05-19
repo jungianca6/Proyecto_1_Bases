@@ -28,38 +28,36 @@ if (app.Environment.IsDevelopment())
  * convierte cada fila del resultado en un objeto Student_model, y luego imprime la información.
  */
 
-// Crear la conexión
-SQL_connection sql = new SQL_connection();
 
-// Definir la consulta
-sql.query = "SELECT student_id, name, last_name FROM Student";
 
-// Variable para recibir la conexión abierta
-SqlConnection connection;
+
+
+SQL_connection db = new SQL_connection();
+
+string query1 = "SELECT name FROM Course";
+SqlConnection connection1;
 
 try
 {
-    // Ejecutar la consulta
-    using (SqlDataReader reader = sql.Execute_query(out connection))
+    using (SqlDataReader reader = db.Execute_query(query1, out connection1))
     {
-        // Leer cada fila del resultado
+        Console.WriteLine("Lista de cursos:");
+
         while (reader.Read())
         {
-            // Obtener los valores por nombre de columna
-            string id = reader["student_id"].ToString();
-            string name = reader["name"].ToString();
-            string lastName = reader["last_name"].ToString();
-
-            // Mostrar datos
-            Console.WriteLine($"Estudiante: {id} - {name} {lastName}");
+            // Leer el campo 'Name'
+            string courseName = reader["Name"].ToString();
+            Console.WriteLine("- " + courseName);
         }
-    } // Al cerrar el reader, también se cierra la conexión
+
+        reader.Close(); // Esto cerrará también la conexión automáticamente
+    }
 }
 catch (Exception ex)
 {
-    // Mostrar error si ocurre
-    Console.WriteLine("Error al ejecutar la consulta: " + ex.Message);
+    Console.WriteLine("Ocurrió un error al ejecutar la consulta: " + ex.Message);
 }
+
 
 
 /*

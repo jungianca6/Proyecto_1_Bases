@@ -1,4 +1,5 @@
 // Clase de servicio para consultas
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 public class MongoDbQueryService
@@ -39,6 +40,25 @@ public class MongoDbQueryService
         var collection = _database.GetCollection<Professor>("Professor");
         var filter = Builders<Professor>.Filter.Eq(p => p.username, name);
         return await collection.Find(filter).FirstOrDefaultAsync();
+    }
+
+    public async Task<(BsonDocument?, string)> FindUser(string username, string password)
+    {
+        var studentCollection = _database.GetCollection<BsonDocument>("Student");
+        var studentFilter = Builders<BsonDocument>.Filter.Eq("username", username) &
+                            Builders<BsonDocument>.Filter.Eq("password", password);
+
+        var studentDoc = await studentCollection.Find(studentFilter).FirstOrDefaultAsync();
+        if (studentDoc != null) return (studentDoc, "Student");
+
+        var professorCollection = _database.GetCollection<BsonDocument>("Professor");
+        var professorFilter = Builders<BsonDocument>.Filter.Eq("username", username) &
+                              Builders<BsonDocument>.Filter.Eq("password", password);
+
+        var professorDoc = await professorCollection.Find(professorFilter).FirstOrDefaultAsync();
+        if (professorDoc != null) return (professorDoc, "Professor");
+
+        return (null, "");
     }
 }
 

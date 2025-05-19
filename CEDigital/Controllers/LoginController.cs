@@ -3,6 +3,8 @@ using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using CEDigital.Data_input_models;
 using CEDigital.Data_output_models;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace CEDigital.Controllers
 {
@@ -11,10 +13,12 @@ namespace CEDigital.Controllers
     public class LoginController : ControllerBase
     {
 
+        private readonly MongoDbQueryService _mongoService;
         private Api_response response;
 
         public LoginController()
         {
+            _mongoService = new MongoDbQueryService(); // Si no usas inyección de dependencias aún
             response = new Api_response("OK", null);  // Inicializando la respuesta por defecto
         }
 
@@ -28,7 +32,7 @@ namespace CEDigital.Controllers
         }
 
         [HttpPost("user")]
-        public IActionResult PostUser([FromBody] Data_input_login message)
+        public async Task<IActionResult> PostUser([FromBody] Data_input_login message)
         {
 
             if (string.IsNullOrEmpty(message.username))
@@ -38,23 +42,26 @@ namespace CEDigital.Controllers
                 return Ok(response);
             }
 
-            /*
-             * #######Logica para completar la clase message con la informacion del SQL Y MongoDBB#######
-             */
+            var (userDoc, userType) = await _mongoService.FindUser(message.username, message.password);
 
-            Data_output_login data_Output_Login = new Data_output_login();
+            if (userDoc == null)
+            {
+                response.status = "ERROR";
+                response.message = "Usuario no encontrado o contraseña incorrecta.";
+                return Ok(response);
+            }
 
-
-            /*
-             * #######Envio de la respuesta#######
-             */
+            Data_output_login data_Output_Login = new Data_output_login()
+            {
+                username = userDoc.GetValue("username", "").AsString,
+                password = userDoc.GetValue("password","").AsString,
+                user_type = userDoc.GetValue("user_type", "").AsString,
+                primary_key = userDoc.GetValue("_id", "").AsString
+            };
 
             response.status = "OK";
             response.message = data_Output_Login;
             return Ok(response);
         }
-
-
-
     }
 }
