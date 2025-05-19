@@ -8,11 +8,8 @@ namespace CEDigital.Utilities
         // Cadena de conexión a la base de datos
         public string connection_string = "Server=localhost;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
 
-        // Consulta que se desea ejecutar
-        public string query { get; set; }
-
         // Ejecuta la consulta y devuelve un SqlDataReader con los resultados
-        public SqlDataReader Execute_query(out SqlConnection connection)
+        public SqlDataReader Execute_query(string query, out SqlConnection connection)
         {
             // Validar que la consulta no esté vacía
             if (string.IsNullOrEmpty(query))
