@@ -1,50 +1,30 @@
 ﻿using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using MongoDB.Driver.Core.Configuration;
 namespace CEDigital.Utilities
 {
     public class SQL_connection
     {
         // Cadena de conexión a la base de datos
-        public string connection_string = "Server=localhost;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
+        public string connection_string = "Server=DESKTOP-THMT4VL\\SQLEXPRESS;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
 
         // Ejecuta la consulta y devuelve un SqlDataReader con los resultados
-        public SqlDataReader Execute_query(string query, out SqlConnection connection)
+        public SqlDataReader Execute_query(SqlCommand command, out SqlConnection connection)
         {
-            // Validar que la consulta no esté vacía
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new ArgumentException("La consulta no puede ser nula o vacía.");
-            }
-
-            // Crear la conexión
             connection = new SqlConnection(connection_string);
+            command.Connection = connection;
+            connection.Open();
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
+        }
 
-            // Crear el comando con la consulta
-            SqlCommand command = new SqlCommand(query, connection);
-
-            try
+        public void Execute_non_query(SqlCommand command)
+        {
+            using (var connection = new SqlConnection(connection_string))
             {
-                // Abrir la conexión
+                command.Connection = connection;
                 connection.Open();
-                Console.WriteLine("Base conectada: " + connection.Database);
-
-                // Ejecutar la consulta y devolver el lector (reader)
-                return command.ExecuteReader(CommandBehavior.CloseConnection); // la conexión se cierra al cerrar el reader
-            }
-            catch (SqlException sqlEx)
-            {
-                // Capturar errores específicos de SQL
-                Console.WriteLine($"Error de SQL: {sqlEx.Message}");
-                connection.Dispose();
-                throw; // volver a lanzar el error
-            }
-            catch (Exception ex)
-            {
-                // Capturar otros errores generales
-                Console.WriteLine($"Error: {ex.Message}");
-                connection.Dispose();
-                throw; // volver a lanzar el error
+                command.ExecuteNonQuery();
             }
         }
     }

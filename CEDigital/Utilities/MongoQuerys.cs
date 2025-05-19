@@ -12,36 +12,6 @@ public class MongoDbQueryService
         _database = client.GetDatabase(databaseName);
     }
 
-    // Consultar todos los estudiantes
-    public async Task<List<Student>> GetAllStudents()
-    {
-        var collection = _database.GetCollection<Student>("Student");
-        return await collection.Find(_ => true).ToListAsync();
-    }
-
-    // Consultar todos los profesores
-    public async Task<List<Professor>> GetAllProfessors()
-    {
-        var collection = _database.GetCollection<Professor>("Professor");
-        return await collection.Find(_ => true).ToListAsync();
-    }
-
-    // Buscar estudiante por nombre
-    public async Task<List<Student>> FindStudentsByName(string name)
-    {
-        var collection = _database.GetCollection<Student>("Student");
-        var filter = Builders<Student>.Filter.Eq(s => s.name, name);
-        return await collection.Find(filter).ToListAsync();
-    }
-
-    // Buscar profesor por nombre de usuario
-    public async Task<Professor> FindProfessorByName(string name)
-    {
-        var collection = _database.GetCollection<Professor>("Professor");
-        var filter = Builders<Professor>.Filter.Eq(p => p.username, name);
-        return await collection.Find(filter).FirstOrDefaultAsync();
-    }
-
     public async Task<(BsonDocument?, string)> FindUser(string username, string password)
     {
         var studentCollection = _database.GetCollection<BsonDocument>("Student");
@@ -60,6 +30,8 @@ public class MongoDbQueryService
 
         return (null, "");
     }
+
+    
 }
 
 

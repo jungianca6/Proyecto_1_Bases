@@ -55,7 +55,7 @@ namespace CEDigital.Controllers
             {
                 username = userDoc.GetValue("username", "").AsString,
                 password = userDoc.GetValue("password","").AsString,
-                user_type = userDoc.GetValue("user_type", "").AsString,
+                user_type = userType,
                 primary_key = userDoc.GetValue("_id", "").AsString
             };
 

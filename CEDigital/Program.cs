@@ -39,18 +39,21 @@ SqlConnection connection1;
 
 try
 {
-    using (SqlDataReader reader = db.Execute_query(query1, out connection1))
+    using (SqlCommand command = new SqlCommand(query1))
     {
-        Console.WriteLine("Lista de cursos:");
-
-        while (reader.Read())
+        using (SqlDataReader reader = db.Execute_query(command, out connection1))
         {
-            // Leer el campo 'Name'
-            string courseName = reader["Name"].ToString();
-            Console.WriteLine("- " + courseName);
-        }
+            Console.WriteLine("Lista de cursos:");
 
-        reader.Close(); // Esto cerrará también la conexión automáticamente
+            while (reader.Read())
+            {
+                // Leer el campo 'name'
+                string courseName = reader["name"].ToString();
+                Console.WriteLine("- " + courseName);
+            }
+
+            reader.Close(); // Esto cerrará también la conexión automáticamente
+        }
     }
 }
 catch (Exception ex)
