@@ -16,6 +16,7 @@ function AdminPg() {
   const [carreraCurso, setCarreraCurso] = useState("");
   const [grupoCurso, setGrupoCurso] = useState("");
   const [cedulasProfesores, setCedulasProfesores] = useState("");
+  const [cursoVisualizado, setCursoVisualizado] = useState(null);
 
     // Estados para semestre
   const [aSemestre, setASemestre] = useState("");
@@ -54,18 +55,16 @@ function AdminPg() {
     .filter(n => !isNaN(n));
 
   const requestData = {
-    data_input_admin_create_course: {
       course_code: codigoCurso,
       name: nombreCurso,
-      credits: parseInt(creditosCurso),
+      credits: creditosCurso,
       career: carreraCurso,
-      group_ids: null,               
+      group_ids: [],               
       professors_ids: listaProfesores
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/CrearCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/create_course", requestData);
 
     if (response.data.status === "OK") {
       alert(response.data.message);
@@ -83,29 +82,29 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_admin_view_course: {
-      course_code: codigoCurso,
-      name: null,
-      credits: null,
-      career: null,
-      group_ids: null,
-      professors_ids: null
-    }
+    course_code: codigoCurso,
+    name: null,
+    credits: null,
+    career: null,
+    group_ids: null,
+    professors_ids: null
   };
 
   try {
     const response = await axios.post("https://localhost:7190/Admin/VisualizarCurso", requestData);
 
     if (response.data.status === "OK") {
-      const curso = response.data.message.data_output_admin_view_course;
+      const curso = response.data.message;
       console.log("Curso encontrado:", curso);
-      alert(`Curso: ${curso.name}\nCódigo: ${curso.course_code}\nCréditos: ${curso.credits}\nCarrera: ${curso.career}\nGrupo: ${curso.group_ids}\nSemestres: ${curso.professors_ids.join(", ")}`);
+      setCursoVisualizado(curso); // 👈 Aquí guardas los datos
     } else {
       alert("Error al visualizar curso: " + (response.data.message || "Error desconocido"));
+      setCursoVisualizado(null); // Limpias si hubo error
     }
   } catch (error) {
     console.error(error);
     alert("Error al conectar con el servidor");
+    setCursoVisualizado(null); // Limpias si hubo error
   }
 };
 
@@ -427,6 +426,19 @@ const enviarDatosFilaPorFila = async (filas) => {
       <p style={{ marginTop: "10px", color: "#555" }}>
       <strong>Nota:</strong> Para visualizar o eliminar un curso, solo es necesario ingresar el <strong>código del curso</strong>.
       </p>
+
+      {cursoVisualizado && (
+        <div className={styles.resultBox} style={{ marginTop: "2rem", background: "#f9f9f9", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
+          <h4 style={{ marginBottom: "1rem" }}>📘 Información del Curso</h4>
+          <p><strong>Código:</strong> {cursoVisualizado.course_code}</p>
+          <p><strong>Nombre:</strong> {cursoVisualizado.name}</p>
+          <p><strong>Créditos:</strong> {cursoVisualizado.credits}</p>
+          <p><strong>Carrera:</strong> {cursoVisualizado.career}</p>
+          <p><strong>Grupos:</strong> {cursoVisualizado.group_ids}</p>
+          <p><strong>Profesores:</strong> {cursoVisualizado.professors_ids.join(", ")}</p>
+        </div>
+      )}
+
 
       <h2 className={styles.title} style={{ marginTop: "3rem" }}>
         Inicializar Semestre
