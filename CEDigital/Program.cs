@@ -12,7 +12,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOriginPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 var app = builder.Build();
+
+// Configuración de CORS (debe ir antes de Authorization)
+app.UseCors("AllowAnyOriginPolicy");
+
+app.UseHttpsRedirection();
+app.UseAuthorization(); // Aquí se autoriza el acceso
+app.MapControllers(); // Mapea los controladores
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
