@@ -80,6 +80,12 @@ function Login({ setUser }) {
 
         if (response.data.status === "OK") {
             const data = response.data.message;
+            
+            console.log("Datos recibidos del backend:", data);
+            console.log("username:", data.username);
+            console.log("password:", data.password);
+            console.log("user_type:", data.user_type);
+            console.log("primary_key:", data.primary_key);
 
             const usuario = {
                 nombre: data.username,
