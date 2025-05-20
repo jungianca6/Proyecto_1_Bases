@@ -103,7 +103,7 @@ function Login({ setUser }) {
                 case "Student":
                     navigate("/estudiante");
                     break;
-                case "Profesor":
+                case "Professor":
                     navigate("/profesor");
                     break;
                 default:
