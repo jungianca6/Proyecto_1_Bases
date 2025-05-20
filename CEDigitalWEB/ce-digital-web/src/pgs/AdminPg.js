@@ -91,7 +91,7 @@ function AdminPg() {
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/VisualizarCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/view_course", requestData);
 
     if (response.data.status === "OK") {
       const curso = response.data.message;
@@ -112,13 +112,11 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_admin_disable_course: {
       course_code: codigoCurso
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/DeshabilitarCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/disable_course", requestData);
 
     if (response.data.status === "OK") {
       alert(response.data.message);
@@ -135,14 +133,12 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_initialize_semester: {
       year: parseInt(aSemestre),
       period: parseInt(periodoSemestre)
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/InicializarSemestre", requestData);
+    const response = await axios.post("https://localhost:7199/Semester/initialize_semester", requestData);
 
     if (response.data.status === "OK") {
       alert("Semestre inicializado correctamente.");
@@ -160,15 +156,13 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_course_to_semester: {
       course_code: codigoCursoSemestre,
       year: parseInt(aSemestreCurso),
       period: parseInt(periodoSemestreCurso)
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", requestData);
+    const response = await axios.post("https://localhost:7199/Semester/add_course_to_semester", requestData);
 
     if (response.data.status === "OK") {
       alert("Curso agregado al semestre correctamente.");
@@ -192,15 +186,13 @@ function AdminPg() {
 
   for (const carnet of listaCarnets) {
     const requestData = {
-      data_input_add_student_to_group: {
         student_card: carnet,
         group_number: parseInt(numeroGrupoEstudiantes),
         course_code: codigoCursoEstudiantes
-      }
     };
 
     try {
-      const response = await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", requestData);
+      const response = await axios.post("https://localhost:7199/Student/add_student_to_group", requestData);
 
       if (response.data.status === "OK") {
         console.log(`Estudiante ${carnet} agregado correctamente.`);
@@ -219,14 +211,12 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_default_document_sections: {
       course_code: codigoDocuSecciones,
       sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", requestData);
+    const response = await axios.post("https://localhost:7199/Course/add_default_document_sections", requestData);
 
     if (response.data.status === "OK") {
       console.log("Secciones agregadas correctamente.");
@@ -242,15 +232,13 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_default_grades: {
       course_code: codigoCursoRubrosDefault,
       sections: ["Quices", "Exámenes", "Proyectos"],
       percentages: [30.0, 30.0, 40.0]
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", requestData);
+    const response = await axios.post("https://localhost:7199/Course/add_default_grades", requestData);
 
     if (response.data.status === "OK") {
       console.log("Rubros por defecto agregados correctamente.");
@@ -310,18 +298,18 @@ const enviarDatosFilaPorFila = async (filas) => {
 
     try {
       // Inicializar semestre (si quieres hacerlo por cada fila)
-      await axios.post("https://localhost:7190/Admin/InicializarSemestre", {
+      await axios.post("https://localhost:7199/Semester/initialize_semester", {
         data_input_initialize_semester: dataSemestre
       });
 
       // Agregar curso
-      await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", {
+      await axios.post("https://localhost:7199/Semester/add_course_to_semester", {
         data_input_add_course_to_semester: dataCurso
       });
 
       // Agregar estudiantes al grupo, uno por uno
       for (const carnet of listaCarnets) {
-        await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", {
+        await axios.post("https://localhost:7199/Student/add_student_to_group", {
           data_input_add_student_to_group: {
             student_card: carnet,
             group_number: parseInt(row["Número Grupo"]),
@@ -331,12 +319,12 @@ const enviarDatosFilaPorFila = async (filas) => {
       }
 
       // Agregar secciones por defecto
-      await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", {
+      await axios.post("https://localhost:7199/Course/add_default_document_sections", {
         data_input_add_default_document_sections: dataSecciones
       });
 
       // Agregar rubros por defecto
-      await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", {
+      await axios.post("https://localhost:7199/Course/add_default_grades", {
         data_input_add_default_grades: dataRubros
       });
 
