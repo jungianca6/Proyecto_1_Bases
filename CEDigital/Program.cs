@@ -2,15 +2,18 @@ using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.Data.SqlClient;
 using CEDigital.Data_Base;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Agregar servicios al contenedor
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddCors(options =>
 {
@@ -23,7 +26,15 @@ builder.Services.AddCors(options =>
 });
 
 
+
 var app = builder.Build();
+
+// Configurar el pipeline HTTP
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configuración de CORS (debe ir antes de Authorization)
 app.UseCors("AllowAnyOriginPolicy");
@@ -31,15 +42,6 @@ app.UseCors("AllowAnyOriginPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization(); // Aquí se autoriza el acceso
 app.MapControllers(); // Mapea los controladores
-
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 
 
