@@ -83,11 +83,11 @@ function AdminPg() {
 
   const requestData = {
     course_code: codigoCurso,
-    name: null,
+    name: "",
     credits: null,
-    career: null,
-    group_ids: null,
-    professors_ids: null
+    career: "",
+    group_ids: [],
+    professors_ids: []
   };
 
   try {
