@@ -143,6 +143,29 @@ namespace CEDigital.Controllers
         }
 
 
+        [HttpPost("view_student_documents")]
+        public IActionResult PostViewStudentDocuments([FromBody] Data_input_view_student_documents message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            Data_output_view_student_documents Data_output_view_student_documents = new Data_output_view_student_documents();
+
+            response.status = "OK";
+            response.message = Data_output_view_student_documents;
+            return Ok(response);
+        }
+
 
 
 

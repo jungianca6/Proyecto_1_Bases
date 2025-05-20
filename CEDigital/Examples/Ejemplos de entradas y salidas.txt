@@ -479,6 +479,8 @@ Ejemplo de salida:
   }
 }
 
+
+
 23) Visualizar documentos del estudiante
 Ejemplo de entrada:
 {
@@ -504,6 +506,9 @@ Ejemplo de salida:
     ]
   }
 }
+
+
+
 
 24) Ver evaluaciones del estudiante 
 Ejemplo de entrada:
@@ -555,6 +560,8 @@ Ejemplo de salida:
   }
 }
 
+
+
 26) Reporte de notas del estudiante 
 
 Ejemplo de entrada:
@@ -581,6 +588,7 @@ Ejemplo de salida:
     ]
   }
 }
+
 
 27) Visualizar noticias
 Ejemplo de entrada:
