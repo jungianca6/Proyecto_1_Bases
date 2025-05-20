@@ -24,10 +24,10 @@ function App() {
                 <Route path="/login" element={<Login setUser={setUser} />} />
                 <Route path="/admin" element={user?.rol === "Admin" ? <AdminPg /> : <Navigate to="/login" />} />
                 {/* Rutas del estudiante */}
-                <Route path="/estudiante" element={user?.rol === "Estudiante" ? <EstudiantePg /> : <Navigate to="/login" />} />
-                <Route path="/estudiante/documentos" element={user?.rol === "Estudiante" ? <DocumentosEstudiantePg /> :
+                <Route path="/estudiante" element={user?.rol === "Student" ? <EstudiantePg /> : <Navigate to="/login" />} />
+                <Route path="/estudiante/documentos" element={user?.rol === "Student" ? <DocumentosEstudiantePg /> :
                     <Navigate to="/login" />} />
-                <Route path="/estudiante/evaluaciones" element={user?.rol === "Estudiante" ? <EvaluacionesEstudiantesPg /> :
+                <Route path="/estudiante/evaluaciones" element={user?.rol === "Student" ? <EvaluacionesEstudiantesPg /> :
                     <Navigate to="/login" />} />
                 {/* Rutas del profesor */}
                 <Route path="/profesor" element={user?.rol === "Profesor" ? <ProfesorPg /> : <Navigate to="/login" />} />

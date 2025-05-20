@@ -4,6 +4,8 @@ import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import React from "react";
 import axios from "axios";
+
+
 import styles from './Login.module.css';
 
 function Login({ setUser }) {
@@ -66,18 +68,18 @@ function Login({ setUser }) {
         // Login real con backend
         try {
         const requestData = {
-            data_input_login: {
-                username: username,
-                password: password,
-                user_type: null,
-                primary_key: null
-            }
+
+            username: username,
+            password: password,
+            user_type: "",
+            primary_key: ""
+
         };
 
-        const response = await axios.post("https://localhost:7190/MenuInicio/Login", requestData);
+        const response = await axios.post("https://localhost:7199/Login/user", requestData);
 
         if (response.data.status === "OK") {
-            const data = response.data.message.data_output_login;
+            const data = response.data.message;
 
             const usuario = {
                 nombre: data.username,
@@ -98,7 +100,7 @@ function Login({ setUser }) {
                 case "Admin":
                     navigate("/admin");
                     break;
-                case "Estudiante":
+                case "Student":
                     navigate("/estudiante");
                     break;
                 case "Profesor":
