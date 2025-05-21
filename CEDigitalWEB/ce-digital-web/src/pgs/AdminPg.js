@@ -19,8 +19,8 @@ function AdminPg() {
   const [cursoVisualizado, setCursoVisualizado] = useState(null);
 
   //Agregar curso
-
-  const [codigoAgregarGrupo, setCodigoAgregarGrupo] = useState("");
+  const [codigoCursoGrupo, setCodigoCursoGrupo] = useState("");
+  const [idProfesorGrupo, setIdProfesorGrupo] = useState("");
 
     // Estados para semestre
   const [aSemestre, setASemestre] = useState("");
@@ -133,9 +133,15 @@ function AdminPg() {
   }
 };
 
- const handleAgregarGrupo = async () => {
+   const handleAgregarGrupoCurso = async () => {
+    const profesoresArray = idProfesorGrupo
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => id !== "");
+
     const requestData = {
-      course_code: codigoAgregarGrupo // Ajusta la clave si tu backend usa otro nombre
+      course_code: codigoCursoGrupo,
+      professor_ids: profesoresArray
     };
 
     try {
@@ -452,27 +458,39 @@ const enviarDatosFilaPorFila = async (filas) => {
         </div>
       )}
 
-      <h3 className={styles.title} style={{ marginTop: "3rem" }}>
-          Agregar grupo a un curso
-        </h3>
-        <form>
-          <label className={styles.label}>Código del Curso:</label>
-          <input
-            type="text"
-            className={styles.input}
-            value={codigoAgregarGrupo}
-            onChange={(e) => setCodigoAgregarGrupo(e.target.value)}
-          />
-          <div className={styles.buttonGroup}>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.success}`}
-              onClick={handleAgregarGrupo}
-            >
-              Agregar Grupo
-            </button>
-          </div>
-        </form>
+       <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+        Agregar grupo a un curso
+      </h3>
+      <form>
+        <label className={styles.label}>Código del Curso:</label>
+        <input
+          type="text"
+          className={styles.input}
+          value={codigoCursoGrupo}
+          onChange={(e) => setCodigoCursoGrupo(e.target.value)}
+        />
+
+        <label className={styles.label}>Cédulas de Profesores Asociados (separar con comas si son varios):</label>
+        <input
+          type="text"
+          className={styles.input}
+          value={idProfesorGrupo}
+          onChange={(e) => {
+            const valorFiltrado = e.target.value.replace(/[^0-9,]/g, "");
+            setIdProfesorGrupo(valorFiltrado);
+          }}
+        />
+
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.success}`}
+            onClick={handleAgregarGrupoCurso}
+          >
+            Agregar Grupo
+          </button>
+        </div>
+      </form>
 
 
       <h2 className={styles.title} style={{ marginTop: "3rem" }}>
