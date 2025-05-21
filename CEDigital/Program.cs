@@ -101,7 +101,7 @@ var student = new Student
     last_name = "Rodriguez",
     id_number = "1122334455",
     email = "carlos.rod@example.com",
-    username = "admin",
+    username = "Juan",
     password = "123456", // puedes usar hashing aquí si lo deseas
     phone = "2222-3333"
 };
