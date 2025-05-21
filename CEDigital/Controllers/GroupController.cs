@@ -49,8 +49,6 @@ namespace CEDigital.Controllers
             response.message = "Mensaje Aqui";
             return Ok(response);
 
-
-
         }
 
 
