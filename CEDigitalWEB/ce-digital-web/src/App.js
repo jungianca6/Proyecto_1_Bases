@@ -30,18 +30,18 @@ function App() {
                 <Route path="/estudiante/evaluaciones" element={user?.rol === "Student" ? <EvaluacionesEstudiantesPg /> :
                     <Navigate to="/login" />} />
                 {/* Rutas del profesor */}
-                <Route path="/profesor" element={user?.rol === "Profesor" ? <ProfesorPg /> : <Navigate to="/login" />} />
-                <Route path="/profesor/noticias" element={user?.rol === "Profesor" ? <NoticiasProfesorPg /> :
+                <Route path="/profesor" element={user?.rol === "Professor" ? <ProfesorPg /> : <Navigate to="/login" />} />
+                <Route path="/profesor/noticias" element={user?.rol === "Professor" ? <NoticiasProfesorPg /> :
                     <Navigate to="/login" />} />
-                <Route path="/profesor/documentos" element={user?.rol === "Profesor" ? <DocumentosProfesorPg /> :
+                <Route path="/profesor/documentos" element={user?.rol === "Professor" ? <DocumentosProfesorPg /> :
                     <Navigate to="/login" />} />
-                <Route path="/profesor/evaluaciones" element={user?.rol === "Profesor" ? <EvaluacionesProfesorPg /> :
+                <Route path="/profesor/evaluaciones" element={user?.rol === "Professor" ? <EvaluacionesProfesorPg /> :
                     <Navigate to="/login" />} />
-                <Route path="/profesor/reportenotas" element={user?.rol === "Profesor" ? <ReporteNotasProfesorPg /> :
+                <Route path="/profesor/reportenotas" element={user?.rol === "Professor" ? <ReporteNotasProfesorPg /> :
                     <Navigate to="/login" />} />
-                <Route path="/profesor/reporteEstudiantes" element={user?.rol === "Profesor" ? <ReporteEstudianteProfesorPg /> :
+                <Route path="/profesor/reporteEstudiantes" element={user?.rol === "Professor" ? <ReporteEstudianteProfesorPg /> :
                     <Navigate to="/login" />} />
-                <Route path="/profesor/rubros" element={user?.rol === "Profesor" ? <RubrosProfesorPg /> :
+                <Route path="/profesor/rubros" element={user?.rol === "Professor" ? <RubrosProfesorPg /> :
                     <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />

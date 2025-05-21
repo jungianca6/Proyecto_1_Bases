@@ -44,7 +44,7 @@ function Login({ setUser }) {
                 nombre: "Profesor Prueba",
                 usuario: "profesor",
                 contrasena: "profesor123",
-                rol: "Profesor"
+                rol: "Professor"
             };
             setUser(profesorUser);
             localStorage.setItem("usuario_actual", JSON.stringify(profesorUser));
@@ -57,7 +57,7 @@ function Login({ setUser }) {
                 nombre: "Estudiante Prueba",
                 usuario: "estudiante",
                 contrasena: "estudiante123",
-                rol: "Estudiante"
+                rol: "Student"
             };
             setUser(estudianteUser);
             localStorage.setItem("usuario_actual", JSON.stringify(estudianteUser));
@@ -80,6 +80,12 @@ function Login({ setUser }) {
 
         if (response.data.status === "OK") {
             const data = response.data.message;
+            
+            console.log("Datos recibidos del backend:", data);
+            console.log("username:", data.username);
+            console.log("password:", data.password);
+            console.log("user_type:", data.user_type);
+            console.log("primary_key:", data.primary_key);
 
             const usuario = {
                 nombre: data.username,
@@ -103,7 +109,7 @@ function Login({ setUser }) {
                 case "Student":
                     navigate("/estudiante");
                     break;
-                case "Profesor":
+                case "Professor":
                     navigate("/profesor");
                     break;
                 default:
