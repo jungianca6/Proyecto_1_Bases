@@ -7,6 +7,6 @@
         public string message { get; set; }
         public DateTime publication_date { get; set; }
         public string author { get; set; }
-        public int course_code { get; set; }
+        public string course_code { get; set; }
     }
 }

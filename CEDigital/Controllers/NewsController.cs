@@ -3,6 +3,7 @@ using CEDigital.Data_output_models;
 using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 namespace CEDigital.Controllers
 {
@@ -27,27 +28,78 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
-
         [HttpPost("add_new")]
         public IActionResult PostAddNew([FromBody] Data_input_manage_news message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
 
+            string checkNewsQuery = "SELECT COUNT(*) FROM News WHERE title = @title AND course_code = @course_code";
+            string checkCourseQuery = "SELECT COUNT(*) FROM Course WHERE course_code = @course_code";
+            string insertQuery = "INSERT INTO News (title, message, publication_date, author, course_code) VALUES (@title, @message, @date, @author, @course)";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+            SqlConnection connection;
 
+            try
+            {
+                // 1. Validar que el curso exista
+                using (SqlCommand checkCourseCommand = new SqlCommand(checkCourseQuery))
+                {
+                    checkCourseCommand.Parameters.AddWithValue("@course_code", message.course_code);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(checkCourseCommand, out connection))
+                    {
+                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
+                        {
+                            response.status = "ERROR";
+                            response.message = "El código del curso especificado no existe.";
+                            return Ok(response);
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                // 2. Verificar si ya existe una noticia con ese título para ese curso
+                using (SqlCommand checkNewsCommand = new SqlCommand(checkNewsQuery))
+                {
+                    checkNewsCommand.Parameters.AddWithValue("@title", message.title);
+                    checkNewsCommand.Parameters.AddWithValue("@course_code", message.course_code);
+
+                    using (SqlDataReader reader = db.Execute_query(checkNewsCommand, out connection))
+                    {
+                        if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
+                        {
+                            response.status = "ERROR";
+                            response.message = "Ya existe una noticia con este título para el curso especificado.";
+                            return Ok(response);
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                // 3. Insertar nueva noticia
+                using (SqlCommand insertCommand = new SqlCommand(insertQuery))
+                {
+                    insertCommand.Parameters.AddWithValue("@title", message.title);
+                    insertCommand.Parameters.AddWithValue("@message", message.message);
+                    insertCommand.Parameters.AddWithValue("@date", message.publication_date);
+                    insertCommand.Parameters.AddWithValue("@author", message.author);
+                    insertCommand.Parameters.AddWithValue("@course", message.course_code);
+
+                    db.Execute_non_query(insertCommand);
+                }
+
+                response.status = "OK";
+                response.message = "Noticia creada exitosamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al crear la noticia: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 

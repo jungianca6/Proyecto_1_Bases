@@ -1,6 +1,4 @@
 
------------------ Creación de las Tablas y sus FKs ----------------------
-
 CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
     group_number int NOT NULL,
@@ -30,11 +28,16 @@ CREATE TABLE Professor(
 );
 
 CREATE TABLE News(
-	news_id int PRIMARY KEY IDENTITY(1,1),
-	message varchar(100),
-	title varchar(50),
-	id_number int
+	news_id INT PRIMARY KEY IDENTITY(1,1),
+	message VARCHAR(100),
+	title VARCHAR(50),
+	course_code VARCHAR(50),
+	publication_date DATETIME,
 );
+
+
+
+
 
 CREATE TABLE Folder(
 	folder_id int PRIMARY KEY IDENTITY(1,1),
