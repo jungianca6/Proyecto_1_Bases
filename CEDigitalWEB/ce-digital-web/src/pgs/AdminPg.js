@@ -18,6 +18,10 @@ function AdminPg() {
   const [cedulasProfesores, setCedulasProfesores] = useState("");
   const [cursoVisualizado, setCursoVisualizado] = useState(null);
 
+  //Agregar curso
+
+  const [codigoAgregarGrupo, setCodigoAgregarGrupo] = useState("");
+
     // Estados para semestre
   const [aSemestre, setASemestre] = useState("");
   const [periodoSemestre, setPeriodoSemestre] = useState("");
@@ -128,6 +132,27 @@ function AdminPg() {
     alert("Error al conectar con el servidor");
   }
 };
+
+ const handleAgregarGrupo = async () => {
+    const requestData = {
+      course_code: codigoAgregarGrupo // Ajusta la clave si tu backend usa otro nombre
+    };
+
+    try {
+      const response = await axios.post("https://localhost:7199/Course/add_group", requestData);
+
+      if (response.data.status === "OK") {
+        alert("Grupo agregado correctamente.");
+        console.log("Respuesta:", response.data.message);
+      } else {
+        alert("Error al agregar grupo: " + (response.data.message || "Error desconocido"));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor.");
+    }
+  };
+
 
   const handleInicializarSemestre = async (e) => {
   e.preventDefault();
@@ -426,6 +451,28 @@ const enviarDatosFilaPorFila = async (filas) => {
           <p><strong>Profesores:</strong> {cursoVisualizado.professors_ids.join(", ")}</p>
         </div>
       )}
+
+      <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+          Agregar grupo a un curso
+        </h3>
+        <form>
+          <label className={styles.label}>Código del Curso:</label>
+          <input
+            type="text"
+            className={styles.input}
+            value={codigoAgregarGrupo}
+            onChange={(e) => setCodigoAgregarGrupo(e.target.value)}
+          />
+          <div className={styles.buttonGroup}>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.success}`}
+              onClick={handleAgregarGrupo}
+            >
+              Agregar Grupo
+            </button>
+          </div>
+        </form>
 
 
       <h2 className={styles.title} style={{ marginTop: "3rem" }}>
