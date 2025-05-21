@@ -141,11 +141,11 @@ function AdminPg() {
 
     const requestData = {
       course_code: codigoCursoGrupo,
-      professor_ids: profesoresArray
+      professor_id: profesoresArray
     };
 
     try {
-      const response = await axios.post("https://localhost:7199/Course/add_group", requestData);
+      const response = await axios.post("https://localhost:7199/Group/create_group", requestData);
 
       if (response.data.status === "OK") {
         alert("Grupo agregado correctamente.");
