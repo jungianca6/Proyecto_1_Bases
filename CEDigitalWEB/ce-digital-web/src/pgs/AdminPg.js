@@ -19,8 +19,8 @@ function AdminPg() {
   const [cursoVisualizado, setCursoVisualizado] = useState(null);
 
   //Agregar curso
-
-  const [codigoAgregarGrupo, setCodigoAgregarGrupo] = useState("");
+  const [codigoCursoGrupo, setCodigoCursoGrupo] = useState("");
+  const [idProfesorGrupo, setIdProfesorGrupo] = useState("");
 
     // Estados para semestre
   const [aSemestre, setASemestre] = useState("");
@@ -133,9 +133,15 @@ function AdminPg() {
   }
 };
 
- const handleAgregarGrupo = async () => {
+   const handleAgregarGrupoCurso = async () => {
+    const profesoresArray = idProfesorGrupo
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => id !== "");
+
     const requestData = {
-      course_code: codigoAgregarGrupo // Ajusta la clave si tu backend usa otro nombre
+      course_code: codigoCursoGrupo,
+      professor_ids: profesoresArray
     };
 
     try {
