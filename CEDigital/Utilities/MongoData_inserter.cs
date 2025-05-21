@@ -22,10 +22,16 @@ public class MongoDataInserter
         var collection = _database.GetCollection<Professor>("Professor");
         await collection.InsertOneAsync(professor);
     }
+
+    public async Task InsertAdmin(Admin admin)
+    {
+        var collection = _database.GetCollection<Admin>("Admins");
+        await collection.InsertOneAsync(admin);
+    }
 }
 
 public class Student
-{   
+{
     public string _id { get; set; }
     public string name { get; set; }
     public string last_name { get; set; }
@@ -46,6 +52,12 @@ public class Professor
     public string password { get; set; }
 }
 
+public class Admin
+{
+    public string _id { get; set; }
+    public string username { get; set; }
+    public string password { get; set; }
+}
 
 /*
  * var inserter = new MongoDataInserter();
@@ -71,7 +83,14 @@ public class Professor
             username = "ana123",
             password = "123456"
         };
-        
+
+        var admin = new Admin
+        {
+            username = "superadmin",
+            password = "adminpass"
+        };
+
+        await inserter.InsertAdmin(admin);
         await inserter.InsertStudent(student);
         await inserter.InsertProfessor(professor);
         
