@@ -9,7 +9,7 @@
         //FK de grupo
         public int group_id { get; set; }
 
-        // Relación con documentos
-        public List<int> document_ids { get; set; }
+
+
     }
 }

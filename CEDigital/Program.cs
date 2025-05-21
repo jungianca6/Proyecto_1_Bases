@@ -2,15 +2,19 @@ using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.Data.SqlClient;
 using CEDigital.Data_Base;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using CEDigital.Data_input_models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Agregar servicios al contenedor
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 builder.Services.AddCors(options =>
 {
@@ -23,7 +27,15 @@ builder.Services.AddCors(options =>
 });
 
 
+
 var app = builder.Build();
+
+// Configurar el pipeline HTTP
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 // Configuración de CORS (debe ir antes de Authorization)
 app.UseCors("AllowAnyOriginPolicy");
@@ -31,15 +43,6 @@ app.UseCors("AllowAnyOriginPolicy");
 app.UseHttpsRedirection();
 app.UseAuthorization(); // Aquí se autoriza el acceso
 app.MapControllers(); // Mapea los controladores
-
-
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 
 
@@ -83,12 +86,50 @@ catch (Exception ex)
 
 
 
-/*
- * CODIGO DE UN SOLO USO
+
+ // CODIGO DE UN SOLO USO
 var MongoDB_create = new MongoDB_create();
 await MongoDB_create.CrearBaseYColeccionesAsync();
-*/
 
+/*
+var inserter = new MongoDataInserter();
+
+var student = new Student
+{
+    _id = "20250001",
+    name = "Carlos",
+    last_name = "Rodriguez",
+    id_number = "1122334455",
+    email = "carlos.rod@example.com",
+    username = "Juan",
+    password = "123456", // puedes usar hashing aquí si lo deseas
+    phone = "2222-3333"
+};
+
+var professor = new Professor
+{
+    _id = "99887766",
+    name = "Ana",
+    last_name = "Torres",
+    email = "ana.torres@example.com",
+    username = "ana123",
+    password = "123456"
+};
+
+var admin = new Admin
+{
+    _id = "54352346",
+    username = "superadmin",
+    password = "adminpass"
+};
+
+await inserter.InsertAdmin(admin);
+await inserter.InsertStudent(student);
+await inserter.InsertProfessor(professor);
+
+Console.WriteLine("Datos insertados correctamente.");
+
+*/
 
 app.UseHttpsRedirection();
 

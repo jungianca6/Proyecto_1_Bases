@@ -1,6 +1,6 @@
-// Clase de servicio para consultas
 using MongoDB.Bson;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 public class MongoDbQueryService
 {
@@ -14,6 +14,7 @@ public class MongoDbQueryService
 
     public async Task<(BsonDocument?, string)> FindUser(string username, string password)
     {
+        // Buscar en Student
         var studentCollection = _database.GetCollection<BsonDocument>("Student");
         var studentFilter = Builders<BsonDocument>.Filter.Eq("username", username) &
                             Builders<BsonDocument>.Filter.Eq("password", password);
@@ -21,6 +22,7 @@ public class MongoDbQueryService
         var studentDoc = await studentCollection.Find(studentFilter).FirstOrDefaultAsync();
         if (studentDoc != null) return (studentDoc, "Student");
 
+        // Buscar en Professor
         var professorCollection = _database.GetCollection<BsonDocument>("Professor");
         var professorFilter = Builders<BsonDocument>.Filter.Eq("username", username) &
                               Builders<BsonDocument>.Filter.Eq("password", password);
@@ -28,10 +30,17 @@ public class MongoDbQueryService
         var professorDoc = await professorCollection.Find(professorFilter).FirstOrDefaultAsync();
         if (professorDoc != null) return (professorDoc, "Professor");
 
+        // Buscar en Admins
+        var adminCollection = _database.GetCollection<BsonDocument>("Admins");
+        var adminFilter = Builders<BsonDocument>.Filter.Eq("username", username) &
+                          Builders<BsonDocument>.Filter.Eq("password", password);
+
+        var adminDoc = await adminCollection.Find(adminFilter).FirstOrDefaultAsync();
+        if (adminDoc != null) return (adminDoc, "Admin");
+
+        // No encontrado
         return (null, "");
     }
-
-    
 }
 
 

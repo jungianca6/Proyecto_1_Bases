@@ -7,7 +7,7 @@ namespace CEDigital.Utilities
     public class SQL_connection
     {
         // Cadena de conexión a la base de datos
-        public string connection_string = "Server=PcKoki;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
+        public string connection_string = "Server=DESKTOP-2FN45VG;Database=CEDigital;Trusted_Connection=True;TrustServerCertificate=True;";
 
         // Ejecuta la consulta y devuelve un SqlDataReader con los resultados
         public SqlDataReader Execute_query(SqlCommand command, out SqlConnection connection)

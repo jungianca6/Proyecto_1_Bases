@@ -16,6 +16,11 @@ function AdminPg() {
   const [carreraCurso, setCarreraCurso] = useState("");
   const [grupoCurso, setGrupoCurso] = useState("");
   const [cedulasProfesores, setCedulasProfesores] = useState("");
+  const [cursoVisualizado, setCursoVisualizado] = useState(null);
+
+  //Agregar curso
+  const [codigoCursoGrupo, setCodigoCursoGrupo] = useState("");
+  const [idProfesorGrupo, setIdProfesorGrupo] = useState("");
 
     // Estados para semestre
   const [aSemestre, setASemestre] = useState("");
@@ -54,18 +59,16 @@ function AdminPg() {
     .filter(n => !isNaN(n));
 
   const requestData = {
-    data_input_admin_create_course: {
       course_code: codigoCurso,
       name: nombreCurso,
-      credits: parseInt(creditosCurso),
+      credits: creditosCurso,
       career: carreraCurso,
-      group_ids: null,               
+      group_ids: [],               
       professors_ids: listaProfesores
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/CrearCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/create_course", requestData);
 
     if (response.data.status === "OK") {
       alert(response.data.message);
@@ -83,29 +86,29 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_admin_view_course: {
-      course_code: codigoCurso,
-      name: null,
-      credits: null,
-      career: null,
-      group_ids: null,
-      professors_ids: null
-    }
+    course_code: codigoCurso,
+    name: "",
+    credits: null,
+    career: "",
+    group_ids: [],
+    professors_ids: []
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/VisualizarCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/view_course", requestData);
 
     if (response.data.status === "OK") {
-      const curso = response.data.message.data_output_admin_view_course;
+      const curso = response.data.message;
       console.log("Curso encontrado:", curso);
-      alert(`Curso: ${curso.name}\nCódigo: ${curso.course_code}\nCréditos: ${curso.credits}\nCarrera: ${curso.career}\nGrupo: ${curso.group_ids}\nSemestres: ${curso.professors_ids.join(", ")}`);
+      setCursoVisualizado(curso); // 👈 Aquí guardas los datos
     } else {
       alert("Error al visualizar curso: " + (response.data.message || "Error desconocido"));
+      setCursoVisualizado(null); // Limpias si hubo error
     }
   } catch (error) {
     console.error(error);
     alert("Error al conectar con el servidor");
+    setCursoVisualizado(null); // Limpias si hubo error
   }
 };
 
@@ -113,13 +116,11 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_admin_disable_course: {
       course_code: codigoCurso
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/DeshabilitarCurso", requestData);
+    const response = await axios.post("https://localhost:7199/Course/disable_course", requestData);
 
     if (response.data.status === "OK") {
       alert(response.data.message);
@@ -132,18 +133,43 @@ function AdminPg() {
   }
 };
 
+   const handleAgregarGrupoCurso = async () => {
+    const profesoresArray = idProfesorGrupo
+      .split(",")
+      .map((id) => id.trim())
+      .filter((id) => id !== "");
+
+    const requestData = {
+      course_code: codigoCursoGrupo,
+      professor_ids: profesoresArray
+    };
+
+    try {
+      const response = await axios.post("https://localhost:7199/Course/add_group", requestData);
+
+      if (response.data.status === "OK") {
+        alert("Grupo agregado correctamente.");
+        console.log("Respuesta:", response.data.message);
+      } else {
+        alert("Error al agregar grupo: " + (response.data.message || "Error desconocido"));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al conectar con el servidor.");
+    }
+  };
+
+
   const handleInicializarSemestre = async (e) => {
   e.preventDefault();
 
   const requestData = {
-    data_input_initialize_semester: {
       year: parseInt(aSemestre),
       period: parseInt(periodoSemestre)
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/InicializarSemestre", requestData);
+    const response = await axios.post("https://localhost:7199/Semester/initialize_semester", requestData);
 
     if (response.data.status === "OK") {
       alert("Semestre inicializado correctamente.");
@@ -161,15 +187,13 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_course_to_semester: {
       course_code: codigoCursoSemestre,
       year: parseInt(aSemestreCurso),
       period: parseInt(periodoSemestreCurso)
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", requestData);
+    const response = await axios.post("https://localhost:7199/Semester/add_course_to_semester", requestData);
 
     if (response.data.status === "OK") {
       alert("Curso agregado al semestre correctamente.");
@@ -193,15 +217,13 @@ function AdminPg() {
 
   for (const carnet of listaCarnets) {
     const requestData = {
-      data_input_add_student_to_group: {
         student_card: carnet,
         group_number: parseInt(numeroGrupoEstudiantes),
         course_code: codigoCursoEstudiantes
-      }
     };
 
     try {
-      const response = await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", requestData);
+      const response = await axios.post("https://localhost:7199/Student/add_student_to_group", requestData);
 
       if (response.data.status === "OK") {
         console.log(`Estudiante ${carnet} agregado correctamente.`);
@@ -220,14 +242,12 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_default_document_sections: {
       course_code: codigoDocuSecciones,
       sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", requestData);
+    const response = await axios.post("https://localhost:7199/Course/add_default_document_sections", requestData);
 
     if (response.data.status === "OK") {
       console.log("Secciones agregadas correctamente.");
@@ -243,15 +263,13 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
   e.preventDefault();
 
   const requestData = {
-    data_input_add_default_grades: {
       course_code: codigoCursoRubrosDefault,
       sections: ["Quices", "Exámenes", "Proyectos"],
       percentages: [30.0, 30.0, 40.0]
-    }
   };
 
   try {
-    const response = await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", requestData);
+    const response = await axios.post("https://localhost:7199/Course/add_default_grades", requestData);
 
     if (response.data.status === "OK") {
       console.log("Rubros por defecto agregados correctamente.");
@@ -311,18 +329,18 @@ const enviarDatosFilaPorFila = async (filas) => {
 
     try {
       // Inicializar semestre (si quieres hacerlo por cada fila)
-      await axios.post("https://localhost:7190/Admin/InicializarSemestre", {
+      await axios.post("https://localhost:7199/Semester/initialize_semester", {
         data_input_initialize_semester: dataSemestre
       });
 
       // Agregar curso
-      await axios.post("https://localhost:7190/Admin/AgregarCursoASemestre", {
+      await axios.post("https://localhost:7199/Semester/add_course_to_semester", {
         data_input_add_course_to_semester: dataCurso
       });
 
       // Agregar estudiantes al grupo, uno por uno
       for (const carnet of listaCarnets) {
-        await axios.post("https://localhost:7190/Admin/AgregarEstudianteAGrupo", {
+        await axios.post("https://localhost:7199/Student/add_student_to_group", {
           data_input_add_student_to_group: {
             student_card: carnet,
             group_number: parseInt(row["Número Grupo"]),
@@ -332,12 +350,12 @@ const enviarDatosFilaPorFila = async (filas) => {
       }
 
       // Agregar secciones por defecto
-      await axios.post("https://localhost:7190/Admin/AgregarSeccionesPorDefecto", {
+      await axios.post("https://localhost:7199/Course/add_default_document_sections", {
         data_input_add_default_document_sections: dataSecciones
       });
 
       // Agregar rubros por defecto
-      await axios.post("https://localhost:7190/Admin/AgregarRubrosPorDefecto", {
+      await axios.post("https://localhost:7199/Course/add_default_grades", {
         data_input_add_default_grades: dataRubros
       });
 
@@ -427,6 +445,53 @@ const enviarDatosFilaPorFila = async (filas) => {
       <p style={{ marginTop: "10px", color: "#555" }}>
       <strong>Nota:</strong> Para visualizar o eliminar un curso, solo es necesario ingresar el <strong>código del curso</strong>.
       </p>
+
+      {cursoVisualizado && (
+        <div className={styles.resultBox} style={{ marginTop: "2rem", background: "#f9f9f9", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
+          <h4 style={{ marginBottom: "1rem" }}>📘 Información del Curso</h4>
+          <p><strong>Código:</strong> {cursoVisualizado.course_code}</p>
+          <p><strong>Nombre:</strong> {cursoVisualizado.name}</p>
+          <p><strong>Créditos:</strong> {cursoVisualizado.credits}</p>
+          <p><strong>Carrera:</strong> {cursoVisualizado.career}</p>
+          <p><strong>Grupos:</strong> {cursoVisualizado.group_ids}</p>
+          <p><strong>Profesores:</strong> {cursoVisualizado.professors_ids.join(", ")}</p>
+        </div>
+      )}
+
+       <h3 className={styles.title} style={{ marginTop: "3rem" }}>
+        Agregar grupo a un curso
+      </h3>
+      <form>
+        <label className={styles.label}>Código del Curso:</label>
+        <input
+          type="text"
+          className={styles.input}
+          value={codigoCursoGrupo}
+          onChange={(e) => setCodigoCursoGrupo(e.target.value)}
+        />
+
+        <label className={styles.label}>Cédulas de Profesores Asociados (separar con comas si son varios):</label>
+        <input
+          type="text"
+          className={styles.input}
+          value={idProfesorGrupo}
+          onChange={(e) => {
+            const valorFiltrado = e.target.value.replace(/[^0-9,]/g, "");
+            setIdProfesorGrupo(valorFiltrado);
+          }}
+        />
+
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            className={`${styles.btn} ${styles.success}`}
+            onClick={handleAgregarGrupoCurso}
+          >
+            Agregar Grupo
+          </button>
+        </div>
+      </form>
+
 
       <h2 className={styles.title} style={{ marginTop: "3rem" }}>
         Inicializar Semestre

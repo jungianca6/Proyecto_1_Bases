@@ -4,6 +4,8 @@ import { FaRegUser } from "react-icons/fa";
 import { MdLockOutline } from "react-icons/md";
 import React from "react";
 import axios from "axios";
+
+
 import styles from './Login.module.css';
 
 function Login({ setUser }) {
@@ -42,7 +44,7 @@ function Login({ setUser }) {
                 nombre: "Profesor Prueba",
                 usuario: "profesor",
                 contrasena: "profesor123",
-                rol: "Profesor"
+                rol: "Professor"
             };
             setUser(profesorUser);
             localStorage.setItem("usuario_actual", JSON.stringify(profesorUser));
@@ -55,7 +57,7 @@ function Login({ setUser }) {
                 nombre: "Estudiante Prueba",
                 usuario: "estudiante",
                 contrasena: "estudiante123",
-                rol: "Estudiante"
+                rol: "Student"
             };
             setUser(estudianteUser);
             localStorage.setItem("usuario_actual", JSON.stringify(estudianteUser));
@@ -66,18 +68,24 @@ function Login({ setUser }) {
         // Login real con backend
         try {
         const requestData = {
-            data_input_login: {
-                username: username,
-                password: password,
-                user_type: null,
-                primary_key: null
-            }
+
+            username: username,
+            password: password,
+            user_type: "",
+            primary_key: ""
+
         };
 
-        const response = await axios.post("https://localhost:7190/MenuInicio/Login", requestData);
+        const response = await axios.post("https://localhost:7199/Login/user", requestData);
 
         if (response.data.status === "OK") {
-            const data = response.data.message.data_output_login;
+            const data = response.data.message;
+            
+            console.log("Datos recibidos del backend:", data);
+            console.log("username:", data.username);
+            console.log("password:", data.password);
+            console.log("user_type:", data.user_type);
+            console.log("primary_key:", data.primary_key);
 
             const usuario = {
                 nombre: data.username,
@@ -98,10 +106,10 @@ function Login({ setUser }) {
                 case "Admin":
                     navigate("/admin");
                     break;
-                case "Estudiante":
+                case "Student":
                     navigate("/estudiante");
                     break;
-                case "Profesor":
+                case "Professor":
                     navigate("/profesor");
                     break;
                 default:

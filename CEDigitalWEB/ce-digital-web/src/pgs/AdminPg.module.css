@@ -70,3 +70,17 @@
 .danger:hover {
   background-color: #c82333;
 }
+
+.resultBox {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-top: 2rem;
+  border-radius: 8px;
+  color: #333;
+}
+
+.resultBox h4 {
+  margin-bottom: 1rem;
+  color: #007bff;
+}

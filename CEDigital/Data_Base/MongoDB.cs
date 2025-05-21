@@ -20,6 +20,7 @@ namespace CEDigital.Data_Base
             // Crear colecciones (si no existen, CreateCollectionAsync las crea)
             await _database.CreateCollectionAsync("Student");
             await _database.CreateCollectionAsync("Professor");
+            await _database.CreateCollectionAsync("Admins");
 
             Console.WriteLine("Base de datos y colecciones creadas correctamente.");
         }

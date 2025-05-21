@@ -85,7 +85,7 @@ function NoticiasProfesorPg() {
                     <Form.Group className="mb-3">
                         <Form.Label>Fecha de Publicación</Form.Label>
                         <Form.Control
-                            type="date"
+                            type="text"
                             name="fechaPublicacion"
                             value={formData.fechaPublicacion}
                             onChange={handleChange}
@@ -103,12 +103,26 @@ function NoticiasProfesorPg() {
                         />
                     </Form.Group>
 
-                    <Button
-                        variant="primary"
-                        onClick={handlePublicarNoticia}
-                        className={styles.publicarButton}>
-                        Publicar Noticia
-                    </Button>
+                    <div className={styles.buttonGroup}>
+                        <Button
+                            variant="primary"
+                            onClick={handlePublicarNoticia}
+                            className={styles.actionButton}>
+                            Publicar
+                        </Button>
+
+                        <Button
+                            variant="primary"
+                            className={styles.actionButton}>
+                            Editar
+                        </Button>
+
+                        <Button
+                            variant="primary"
+                            className={styles.actionButton}>
+                            Eliminar
+                        </Button>
+                    </div>
                 </Card.Body>
             </Card>
         </div>

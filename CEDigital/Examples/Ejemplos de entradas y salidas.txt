@@ -89,7 +89,6 @@ Ejemplo de salida:
 {
   "status": "OK",
   "message": {
-    "data_output_admin_view_course": {
       "course_id": 1,
       "course_code": "MAT101",
       "name": "Mathematics I",
@@ -97,7 +96,6 @@ Ejemplo de salida:
       "career": "Engineering",
       "group_id": 2,
       "semester_ids": [1, 2]
-    }
   }
 }
 
@@ -503,6 +501,39 @@ Ejemplo de salida:
         "file_path": "/docs/2021056789/pago_marzo.pdf",
         "upload_date": "2024-03-02T09:00:00"
       }
+
+      Los documentos estan asignados a una seccion de documentos.
+
+      Necesito que me pase esa seccion dentro de "documents": como si
+      fuese otro titulo, Ej: "Examenes": . Ahi en ese otro titulo, se meten
+      toda la info de los docus que ya estan creadas pero dentro de su
+      respectiva seccion.
+
+      Ej general:
+
+      "documents": [
+
+      "Certificados":[
+      {
+        "title": "Certificado de matrícula",
+        "file_name": "cert_matricula.pdf",
+        "file_path": "/docs/2021056789/cert_matricula.pdf",
+        "upload_date": "2024-03-01T10:30:00"
+      },
+      {
+        "title": "Comprobante de pago",
+        "file_name": "pago_marzo.pdf",
+        "file_path": "/docs/2021056789/pago_marzo.pdf",
+        "upload_date": "2024-03-02T09:00:00"
+      }]
+
+      "Examenes":[
+      ...
+      ]
+
+      ETC para las secciones de documentos que hayan.
+     ]
+
     ]
   }
 }
@@ -535,6 +566,18 @@ Ejemplo de salida:
         "feedback": "Excelente presentación",
         "is_public": true,
         "evaluation_date": "2024-05-10T15:30:00"
+        
+
+        Necesito=> 1) Que me ponga el nombre del archivo adjunto 
+                    a la evaluacion (instrucciones de la evaluacion)
+
+                    2) Que me ponga tambien la ruta de ese archivo adjunto.
+
+                    3) El codigo de curso asociado a la evaluacion.
+
+                    4) El numero de grupo asociado a la evaluacion.
+
+
       }
     ]
   }
