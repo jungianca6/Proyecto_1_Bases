@@ -15,8 +15,9 @@ CREATE TABLE Course(
 );
 
 CREATE TABLE Semester(
-	semester_id int PRIMARY KEY IDENTITY(1,1),
-	year int NOT NULL
+    semester_id int PRIMARY KEY IDENTITY(1,1),
+    year int NOT NULL,
+    period int NOT NULL
 );
 
 CREATE TABLE Student(
@@ -28,12 +29,14 @@ CREATE TABLE Professor(
 );
 
 CREATE TABLE News(
-	news_id INT PRIMARY KEY IDENTITY(1,1),
-	message VARCHAR(100),
-	title VARCHAR(50),
-	course_code VARCHAR(50),
-	publication_date DATETIME,
+	news_id int PRIMARY KEY IDENTITY(1,1),
+	message varchar(100),
+	title varchar(50),
+	course_code varchar(20),
+	publication_date datetime,
+	author varchar(100)
 );
+
 
 
 
