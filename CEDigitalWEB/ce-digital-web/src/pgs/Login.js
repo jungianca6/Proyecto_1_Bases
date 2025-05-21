@@ -44,7 +44,7 @@ function Login({ setUser }) {
                 nombre: "Profesor Prueba",
                 usuario: "profesor",
                 contrasena: "profesor123",
-                rol: "Profesor"
+                rol: "Professor"
             };
             setUser(profesorUser);
             localStorage.setItem("usuario_actual", JSON.stringify(profesorUser));
@@ -57,7 +57,7 @@ function Login({ setUser }) {
                 nombre: "Estudiante Prueba",
                 usuario: "estudiante",
                 contrasena: "estudiante123",
-                rol: "Estudiante"
+                rol: "Student"
             };
             setUser(estudianteUser);
             localStorage.setItem("usuario_actual", JSON.stringify(estudianteUser));
