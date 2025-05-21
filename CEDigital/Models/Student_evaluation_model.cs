@@ -8,5 +8,10 @@
         public string feedback { get; set; }
         public bool is_public { get; set; }
         public DateTime evaluation_date { get; set; }
+
+        public string data_base_path { get; set; }
+
+        public string filename { get; set; }
+
     }
 }
