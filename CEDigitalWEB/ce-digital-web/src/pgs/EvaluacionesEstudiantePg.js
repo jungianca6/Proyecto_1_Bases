@@ -95,7 +95,7 @@ function EvaluacionesEstudiantesPg() {
             {cuenta && <h3 className={styles.listaEvaluacion}>Estudiante: {cuenta.username}</h3>}
 
             <Card className={styles.notasSection}>
-                <Card.Header as="h5">Notas</Card.Header>
+                <Card.Header as="h5">Evaluaciones</Card.Header>
                 <Card.Body>
                     {evaluaciones.length === 0 ? (
                         <p>No hay evaluaciones públicas disponibles.</p>

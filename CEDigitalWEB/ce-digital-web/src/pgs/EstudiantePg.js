@@ -42,10 +42,6 @@ function EstudiantePg() {
 };
 
 
-    const handleCursosClick = () => {
-        alert("Navegando a Cursos");
-    };
-
     const handleEvaluacionesClick = () => {
         navigate('/estudiante/evaluaciones');
     };
@@ -82,9 +78,9 @@ function EstudiantePg() {
             {/* Botones de navegación */}
             <Button
                 variant="dark"
-                className={styles.cursosButton}
-                onClick={handleCursosClick}>
-                Cursos
+                className={styles.reporteNotasButton}
+                onClick={() => navigate('/estudiante/reportenotas')}>
+                Reporte de Notas
             </Button>
 
             <Button
