@@ -65,3 +65,58 @@
     bottom: 600px;
     color: #ffffff;
 }
+
+.sectionTitle {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.evaluacionItem {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: rgba(40, 40, 40, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.inputArchivo {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.entregarButton {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.entregarButton:hover:not(:disabled) {
+    background-color: #333;
+    border-color: #666;
+    transform: translateY(-1px);
+}
+
+.entregarButton:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.textoBlanco {
+    color: #ffffff;
+}
+
