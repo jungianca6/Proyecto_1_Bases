@@ -616,7 +616,7 @@ const enviarDatosFilaPorFila = async (filas) => {
           </form>
 
           <h3 className={styles.title} style={{ marginTop: "3rem" }}>
-          Agregar Secciones de Documentos por Defecto a Curso
+          Agregar Secciones de Documentos Default a Curso
         </h3>
         <form>
           <label className={styles.label}>Código del Curso:</label>
