@@ -4,6 +4,8 @@ using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 
 namespace CEDigital.Controllers
@@ -102,45 +104,96 @@ namespace CEDigital.Controllers
         [HttpPost("add_default_document_sections")]
         public IActionResult PostAddDefaultDocumentSections([FromBody] Data_input_add_default_document_sections message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                // Insertar secciones en SQL (tabla Folder)
+                string insertSectionQuery = "INSERT INTO Folder (group_id, name) VALUES (@code, @section)";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                foreach (var section in message.sections)
+                {
+                    using (SqlCommand insertCmd = new SqlCommand(insertSectionQuery))
+                    {
+                        insertCmd.Parameters.AddWithValue("@code", message.group_id);
+                        insertCmd.Parameters.AddWithValue("@section", section);
+                        db.Execute_non_query(insertCmd);
+                    }
+                }
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                response.status = "OK";
+                response.message = "Secciones creadas exitosamente para el curso " + message.group_id;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al crear secciones: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 
         [HttpPost("add_default_grades")]
         public IActionResult PostAddDefaultGrades([FromBody] Data_input_add_default_grades message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            string checkCourseQuery = "SELECT COUNT(*) FROM Course WHERE course_code = @code";
+            string insertQuery = "INSERT INTO Course_Percentages (course_code, section, percentage) VALUES (@code, @section, @percentage)";
+            SqlConnection connection;
 
+            try
+            {
+                // Verificar que el curso exista
+                using (SqlCommand checkCmd = new SqlCommand(checkCourseQuery))
+                {
+                    checkCmd.Parameters.AddWithValue("@code", message.course_code);
+                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
+                    {
+                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
+                        {
+                            reader.Close();
+                            response.status = "ERROR";
+                            response.message = "El curso no existe.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // Validar que listas tengan misma longitud
+                if (message.sections.Count != message.percentages.Count)
+                {
+                    response.status = "ERROR";
+                    response.message = "Las listas de secciones y porcentajes no tienen la misma cantidad de elementos.";
+                    return Ok(response);
+                }
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                // Insertar cada sección con su porcentaje
+                for (int i = 0; i < message.sections.Count; i++)
+                {
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery))
+                    {
+                        insertCmd.Parameters.AddWithValue("@code", message.course_code);
+                        insertCmd.Parameters.AddWithValue("@section", message.sections[i]);
+                        insertCmd.Parameters.AddWithValue("@percentage", message.percentages[i]);
+                        db.Execute_non_query(insertCmd);
+                    }
+                }
+
+                response.status = "OK";
+                response.message = "Porcentajes por defecto añadidos correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al insertar porcentajes: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
 
         [HttpPost("show_grading_item")]
