@@ -1,3 +1,4 @@
+CREATE DATABASE CEDigital;
 
 ----------------- Creaci�n de las Tablas y sus FKs ----------------------
 
@@ -5,7 +6,6 @@ CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
 	course_id int NOT NULL,
     group_number int NOT NULL,
-	student_id int
 );
 
 CREATE TABLE Course(
@@ -24,6 +24,7 @@ CREATE TABLE Semester(
 
 CREATE TABLE Student(
 	student_id int NOT NULL PRIMARY KEY
+
 );
 
 CREATE TABLE Professor(
@@ -90,6 +91,11 @@ CREATE TABLE Professor_Group(
 
 );
 
+CREATE TABLE Student_Group(
+	student_id int,
+	group_id int,
+	PRIMARY KEY (student_id, group_id)
+);
 
 -- FKs de Las tablas --
 -- Para las 1:1 y 1:N --
@@ -103,11 +109,6 @@ ALTER TABLE Groups
 ADD CONSTRAINT FK_Grupo_Curso
 FOREIGN KEY (course_id)
 REFERENCES Course(course_id);
-
-ALTER TABLE News
-ADD CONSTRAINT FK_Noticia_Profesor
-FOREIGN KEY (id_number)
-REFERENCES Professor(id_number);
 
 ALTER TABLE Folder
 ADD CONSTRAINT FK_Carpeta_Grupo
