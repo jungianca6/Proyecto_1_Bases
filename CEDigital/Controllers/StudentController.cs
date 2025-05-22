@@ -39,7 +39,7 @@ namespace CEDigital.Controllers
         }
 
         [HttpPost("view_student_courses")]
-        public IActionResult PostViewStudentCourses([FromBody] Data_input_add_student_to_group message)
+        public IActionResult PostViewStudentCourses([FromBody] Data_input_view_student_courses message)
         {
             /*
              * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
