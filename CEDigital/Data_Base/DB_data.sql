@@ -92,7 +92,13 @@ CREATE TABLE Professor_Group(
 	PRIMARY KEY (id_number, group_id)
 
 );
-
+CREATE TABLE Course_Percentages (
+    course_code VARCHAR(20),
+    section VARCHAR(100),
+    percentage FLOAT,
+    PRIMARY KEY (course_code, section),
+    FOREIGN KEY (course_code) REFERENCES Course(course_code)
+);
 CREATE TABLE Student_Group(
 	student_id int,
 	group_id int,
