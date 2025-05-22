@@ -35,33 +35,16 @@ namespace CEDigital.Controllers
         {
             SQL_connection db = new SQL_connection();
             SqlConnection connection;
-
+            
             try
             {
-                // 1. Verificación en SQL: curso existe
-                string checkCourseQuery = "SELECT COUNT(*) FROM Course WHERE course_code = @code";
-                using (SqlCommand checkCmd = new SqlCommand(checkCourseQuery))
-                {
-                    checkCmd.Parameters.AddWithValue("@code", message.course_code);
-
-                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
-                    {
-                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
-                        {
-                            response.status = "ERROR";
-                            response.message = "El curso no existe en SQL.";
-                            return Ok(response);
-                        }
-                        reader.Close();
-                    }
-                }
-
-                // 3. Obtener folder_id
+                /*
                 int folderId = -1;
-                string getFolderQuery = "SELECT folder_id FROM Folder WHERE course_code = @code AND section_name = @section";
+                string getFolderQuery = "SELECT folder_id FROM Folder WHERE group_id = @code AND name = @section";
+
                 using (SqlCommand folderCmd = new SqlCommand(getFolderQuery))
                 {
-                    folderCmd.Parameters.AddWithValue("@code", message.course_code);
+                    folderCmd.Parameters.AddWithValue("@code", message.group_id);
                     folderCmd.Parameters.AddWithValue("@section", message.document_section);
 
                     using (SqlDataReader reader = db.Execute_query(folderCmd, out connection))
@@ -80,7 +63,6 @@ namespace CEDigital.Controllers
                     }
                 }
 
-                // 4. Insertar el documento
                 string insertDocumentQuery = @"
             INSERT INTO Document (filename, path, upload_date, uploaded_by_professor, folder_id)
             VALUES (@filename, @path, @upload_date, @uploaded_by_professor, @folder_id)";
@@ -88,17 +70,17 @@ namespace CEDigital.Controllers
                 using (SqlCommand insertCmd = new SqlCommand(insertDocumentQuery))
                 {
                     insertCmd.Parameters.AddWithValue("@filename", message.file_name);
-                    insertCmd.Parameters.AddWithValue("@path", "Data_base_files/Documents"); // Ruta por defecto o lógica según tu diseño
+                    insertCmd.Parameters.AddWithValue("@path", "Data_base_files/Documents"); // Ruta lógica
                     insertCmd.Parameters.AddWithValue("@upload_date", DateTime.Now.Date);
                     insertCmd.Parameters.AddWithValue("@uploaded_by_professor", message.uploaded_by_professor);
                     insertCmd.Parameters.AddWithValue("@folder_id", folderId);
 
                     db.Execute_non_query(insertCmd);
                 }
-
+                */
                 response.status = "OK";
                 response.message = "Documento agregado correctamente.";
-                return Ok(response);    
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -106,6 +88,7 @@ namespace CEDigital.Controllers
                 response.message = "Error al agregar el documento: " + ex.Message;
                 return StatusCode(500, response);
             }
+            
         }
 
         [HttpPost("delete_document")]
