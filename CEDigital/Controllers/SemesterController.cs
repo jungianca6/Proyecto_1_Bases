@@ -126,7 +126,7 @@ namespace CEDigital.Controllers
                     }
                 }
 
-                // 3. Verificar si ya existe esa relación
+                // 3. Verificar si ya existe esa relaciï¿½n
                 using (SqlCommand checkExistCmd = new SqlCommand(checkExistenceQuery))
                 {
                     checkExistCmd.Parameters.AddWithValue("@code", message.course_code);
@@ -137,7 +137,7 @@ namespace CEDigital.Controllers
                         if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
                         {
                             response.status = "ERROR";
-                            response.message = "El curso ya está asignado a ese semestre.";
+                            response.message = "El curso ya estï¿½ asignado a ese semestre.";
                             return Ok(response);
                         }
 

@@ -1,3 +1,6 @@
+CREATE DATABASE CEDigital
+USE CEDigital
+
 
 ----------------- Creaci�n de las Tablas y sus FKs ----------------------
 
@@ -219,3 +222,97 @@ INSERT INTO Course (name, course_code, credits) VALUES
 ('Electiva III', 'CE5901', 3),
 ('Seminario De Estudios Costarricenses', 'CS4402', 2),
 ('Trabajo Final De Graduacion', 'CE5601', 12);
+
+
+-- Semesters
+INSERT INTO Semester (year, period) VALUES (2024, 1);
+INSERT INTO Semester (year, period) VALUES (2024, 2);
+INSERT INTO Semester (year, period) VALUES (2025, 1);
+
+-- Courses
+INSERT INTO Course (course_code, name, credits, career) VALUES 
+('MA1101', 'Cálculo Diferencial', 4, 'Ingenieria en Computadores'),
+('FI1402', 'Física General I', 4, 'Ingenieria en Computadores'),
+('CE3102', 'Arquitectura de Computadores', 3, 'Ingenieria en Computadores');
+
+-- Students
+INSERT INTO Student (student_id) VALUES 
+(20231001), 
+(20231002), 
+(20231003);
+
+-- Professors
+INSERT INTO Professor (id_number) VALUES 
+(1001), 
+(1002);
+
+-- Groups
+INSERT INTO Groups (course_code, group_number) VALUES 
+('MA1101', 1),
+('FI1402', 2),
+('CE3102', 1);
+
+-- Student_Group
+INSERT INTO Student_Group (student_id, group_id) VALUES 
+(20231001, 1),
+(20231001, 2),
+(20231002, 2),
+(20231003, 3);
+
+-- Professor_Group
+INSERT INTO Professor_Group (id_number, group_id) VALUES 
+(1001, 1),
+(1001, 2),
+(1002, 3);
+
+-- Course_Semester
+INSERT INTO Course_Semester (course_code, semester_id) VALUES 
+('MA1101', 1),
+('FI1402', 2),
+('CE3102', 3);
+
+-- Folders
+INSERT INTO Folder (name, group_id) VALUES 
+('Material Semana 1', 1),
+('Tareas', 2),
+('Proyectos', 3);
+
+-- Documents
+INSERT INTO Document (filename, path, upload_date, uploaded_by_professor, folder_id) VALUES 
+('Guía_Integrales.pdf', '/docs/mat1', '2024-03-01', 1, 1),
+('Tarea1_Fisica.docx', '/docs/fi2', '2024-04-10', 0, 2),
+('ProyectoFinal.zip', '/docs/ce3', '2024-05-15', 1, 3);
+
+-- Grading Items
+INSERT INTO Grading_item (name, percentage, group_id) VALUES 
+('Examen 1', 30, 1),
+('Tarea 1', 10, 2),
+('Proyecto Final', 40, 3);
+
+-- Submissions
+INSERT INTO Submission (delivery_date, delivery_time, is_group, grading_item_id) VALUES 
+('2024-03-15', '10:30:00', 0, 1),
+('2024-04-20', '12:00:00', 0, 2),
+('2024-05-30', '14:45:00', 1, 3);
+
+-- Admins
+INSERT INTO Admin (username, password) VALUES 
+('admin01', 'admin123'),
+('admin02', 'admin456');
+
+-- News
+INSERT INTO News (message, title, course_code, publication_date, author) VALUES 
+('Se publicaron los resultados del Examen 1.', 'Resultados Examen', 'MA1101', '2024-04-01', 'Prof. Pérez'),
+('Recuerden entregar la tarea antes del viernes.', 'Recordatorio', 'FI1402', '2024-04-05', 'Prof. Gómez'),
+('Subido el documento del proyecto final.', 'Proyecto Final', 'CE3102', '2024-05-20', 'Prof. Ramírez');
+
+SELECT c.course_code, c.name AS course_name, g.group_number
+FROM Student_Group sg
+JOIN Groups g ON sg.group_id = g.group_id
+JOIN Course c ON g.course_code = c.course_code
+WHERE sg.student_id = 20231001
+
+SELECT s.*
+FROM Student s
+JOIN Student_Group sg ON s.student_id = sg.student_id
+WHERE sg.student_id = 20231001 AND sg.group_id = 1;
