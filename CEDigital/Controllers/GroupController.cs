@@ -4,6 +4,8 @@ using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 
 namespace CEDigital.Controllers
@@ -102,22 +104,34 @@ namespace CEDigital.Controllers
         [HttpPost("add_default_document_sections")]
         public IActionResult PostAddDefaultDocumentSections([FromBody] Data_input_add_default_document_sections message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                // Insertar secciones en SQL (tabla Folder)
+                string insertSectionQuery = "INSERT INTO Folder (group_id, name) VALUES (@code, @section)";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                foreach (var section in message.sections)
+                {
+                    using (SqlCommand insertCmd = new SqlCommand(insertSectionQuery))
+                    {
+                        insertCmd.Parameters.AddWithValue("@code", message.group_id);
+                        insertCmd.Parameters.AddWithValue("@section", section);
+                        db.Execute_non_query(insertCmd);
+                    }
+                }
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                response.status = "OK";
+                response.message = "Secciones creadas exitosamente para el curso " + message.group_id;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al crear secciones: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 
