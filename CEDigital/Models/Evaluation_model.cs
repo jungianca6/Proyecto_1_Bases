@@ -1,9 +1,9 @@
 ﻿namespace CEDigital.Models
 {
     //Clase que representa una entrega de tarea
-    public class Submission_model
+    public class Evaluation_model
     {
-        public int submission_id { get; set; }
+        public string evaluation_id { get; set; }
         public string filename { get; set; }
 
         public string path { get; set; }

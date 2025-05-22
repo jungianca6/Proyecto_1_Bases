@@ -2,95 +2,114 @@ CREATE DATABASE CEDigital
 USE CEDigital
 
 ----------------- Creaci�n de las Tablas y sus FKs ----------------------
-
-CREATE TABLE Groups(
-    group_id int PRIMARY KEY IDENTITY(1,1),
-	course_code varchar(20) NOT NULL,
-    group_number int NOT NULL,
-	student_id int
-);
-
-CREATE TABLE Course(
-	name varchar(60) NOT NULL,
-	course_code varchar(20) NOT NULL PRIMARY KEY,
-	credits int NOT NULL,
-	career varchar(50) NOT NULL DEFAULT 'Ingenieria en Computadores',
-);
-
-CREATE TABLE Semester(
-    semester_id int PRIMARY KEY IDENTITY(1,1),
-    year int NOT NULL,
-    period int NOT NULL
-);
-
 CREATE TABLE Student(
-	student_id int NOT NULL PRIMARY KEY
-
+    student_id INT NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE Professor(
-	id_number int NOT NULL PRIMARY KEY
-);
-
-CREATE TABLE News(
-    news_id int PRIMARY KEY IDENTITY(1,1),
-    message varchar(100),
-    title varchar(50),
-    course_code varchar(20),
-    publication_date datetime,
-    author varchar(100)
-);
-
-CREATE TABLE Folder(
-	folder_id int PRIMARY KEY IDENTITY(1,1),
-	name varchar(50) NOT NULL,
-	group_id int
-);
-
-CREATE TABLE Document(
-	document_id int PRIMARY KEY IDENTITY(1,1),
-	filename varchar(60) NOT NULL,
-	path varchar(20) NOT NULL,
-	upload_date DATE NOT NULL,
-	uploaded_by_professor BIT,
-	folder_id int
-);
-
-CREATE TABLE Grading_item(
-	grading_item_id int PRIMARY KEY IDENTITY(1,1),
-	name varchar(60) NOT NULL,
-	percentage int NOT NULL,
-	group_id int
-);
-
-CREATE TABLE Submission(
-	submission_id int PRIMARY KEY IDENTITY(1,1),
-	filename varchar(50),
-	path varchar(200),
-	delivery_date DATE,
-	delivery_time TIME,
-	is_group BIT,
-	grading_item_id int
+    id_number INT NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE Admin(
-	admin_id int PRIMARY KEY IDENTITY(1,1),
-	username varchar(50) NOT NULL,
-	password varchar(50) NOT NULL,
+    admin_id INT PRIMARY KEY IDENTITY(1,1),
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(50) NOT NULL
 );
+
+CREATE TABLE Semester(
+    semester_id INT PRIMARY KEY IDENTITY(1,1),
+    year INT NOT NULL,
+    period INT NOT NULL
+);
+
+CREATE TABLE Course(
+    name VARCHAR(60) NOT NULL,
+    course_code VARCHAR(20) NOT NULL PRIMARY KEY,
+    credits INT NOT NULL,
+    career VARCHAR(50) NOT NULL DEFAULT 'Ingenieria en Computadores'
+);
+
+CREATE TABLE Groups(
+    group_id INT PRIMARY KEY IDENTITY(1,1),
+    course_code VARCHAR(20) NOT NULL,
+    group_number INT NOT NULL,
+    student_id INT,
+    FOREIGN KEY (course_code) REFERENCES Course(course_code),
+    FOREIGN KEY (student_id) REFERENCES Student(student_id)
+);
+
+CREATE TABLE News(
+    news_id INT PRIMARY KEY IDENTITY(1,1),
+    message VARCHAR(100),
+    title VARCHAR(50),
+    course_code VARCHAR(20),
+    publication_date DATETIME,
+    author VARCHAR(100),
+    FOREIGN KEY (course_code) REFERENCES Course(course_code)
+);
+
+CREATE TABLE Folder(
+    folder_id INT PRIMARY KEY IDENTITY(1,1),
+    name VARCHAR(50) NOT NULL,
+    group_id INT,
+    FOREIGN KEY (group_id) REFERENCES Groups(group_id)
+);
+
+CREATE TABLE Document(
+    document_id INT PRIMARY KEY IDENTITY(1,1),
+    filename VARCHAR(60) NOT NULL,
+    path VARCHAR(200) NOT NULL,
+    upload_date DATE NOT NULL,
+    uploaded_by_professor BIT,
+    folder_id INT,
+    FOREIGN KEY (folder_id) REFERENCES Folder(folder_id)
+);
+
+CREATE TABLE Grading_item(
+    grading_item_id INT PRIMARY KEY IDENTITY(1,1),
+    name VARCHAR(60) NOT NULL,
+    percentage INT NOT NULL,
+    group_id INT,
+    FOREIGN KEY (group_id) REFERENCES Groups(group_id)
+);
+
+CREATE TABLE Evaluation(
+    evaluation_id INT PRIMARY KEY IDENTITY(1,1),
+    filename VARCHAR(50),
+    path VARCHAR(200),
+    delivery_date DATE,
+    delivery_time TIME,
+    is_group BIT,
+    grading_item_id INT,
+    FOREIGN KEY (grading_item_id) REFERENCES Grading_item(grading_item_id)
+);
+
 -- Tablas N:M --
+
 CREATE TABLE Course_Semester(
-	course_code varchar(20) ,
-	semester_id int,
-	PRIMARY KEY (course_code, semester_id)
+    course_code VARCHAR(20),
+    semester_id INT,
+    PRIMARY KEY (course_code, semester_id),
+    FOREIGN KEY (course_code) REFERENCES Course(course_code),
+    FOREIGN KEY (semester_id) REFERENCES Semester(semester_id)
 );
 
 CREATE TABLE Professor_Group(
-	id_number int,
-	group_id int,
-	PRIMARY KEY (id_number, group_id)
-
+    id_number INT,
+    group_id INT,
+    PRIMARY KEY (id_number, group_id),
+    FOREIGN KEY (id_number) REFERENCES Professor(id_number),
+    FOREIGN KEY (group_id) REFERENCES Groups(group_id)
 );
+
+CREATE TABLE Student_Group(
+    student_id INT,
+    group_id INT,
+    PRIMARY KEY (student_id, group_id),
+    FOREIGN KEY (student_id) REFERENCES Student(student_id),
+    FOREIGN KEY (group_id) REFERENCES Groups(group_id)
+);
+
 CREATE TABLE Group_Section_Percentage (
     id INT IDENTITY(1,1) PRIMARY KEY,
     group_id INT NOT NULL,
@@ -98,70 +117,9 @@ CREATE TABLE Group_Section_Percentage (
     percentage FLOAT NOT NULL,
     FOREIGN KEY (group_id) REFERENCES Groups(group_id)
 );
-CREATE TABLE Student_Group(
-	student_id int,
-	group_id int,
-	PRIMARY KEY (student_id, group_id)
-);
-
--- FKs de Las tablas --
--- Para las 1:1 y 1:N --
-
-ALTER TABLE Groups
-ADD CONSTRAINT FK_Group_student
-FOREIGN KEY (student_id)
-REFERENCES Student(student_id);
-
-ALTER TABLE Groups
-ADD CONSTRAINT FK_Grupo_Curso
-FOREIGN KEY (course_code)
-REFERENCES Course(course_code);
-
-ALTER TABLE Folder
-ADD CONSTRAINT FK_Carpeta_Grupo
-FOREIGN KEY (group_id)
-REFERENCES Groups(group_id);
-
-ALTER TABLE Document
-ADD CONSTRAINT FK_Documento_Carpeta
-FOREIGN KEY (folder_id)
-REFERENCES Folder(folder_id);
-
-ALTER TABLE Grading_item
-ADD CONSTRAINT FK_Rubro_Grupo
-FOREIGN KEY (group_id)
-REFERENCES Groups(group_id);
-
-ALTER TABLE Submission
-ADD CONSTRAINT FK_Entrega_Rubro
-FOREIGN KEY (grading_item_id)
-REFERENCES Grading_item(grading_item_id);
-
-
--- Para las N:M --
-ALTER TABLE Course_Semester
-ADD CONSTRAINT FK_Curso_Semestre_Curso
-FOREIGN KEY (course_code)
-REFERENCES Course(course_code);
-
-ALTER TABLE Course_Semester
-ADD CONSTRAINT FK_Curso_Semestre_Semestre
-FOREIGN KEY (semester_id)
-REFERENCES Semester(semester_id);
-
-
-ALTER TABLE Professor_Group
-ADD CONSTRAINT FK_Profesor_Grupo_Profesor
-FOREIGN KEY (id_number)
-REFERENCES Professor(id_number);
-
-ALTER TABLE Professor_Group
-ADD CONSTRAINT FK_Profesor_Grupo_Grupo
-FOREIGN KEY (group_id)
-REFERENCES Groups(group_id);
-
 ---------------------------- Datos a insertar ---------------------------
 
+-- Courses
 INSERT INTO Course (name, course_code, credits) VALUES
 ('Prueba Avanzada Ingles', 'CI0205', 0),
 ('Matematica General', 'MA0101', 2),
@@ -220,30 +178,19 @@ INSERT INTO Course (name, course_code, credits) VALUES
 ('Electiva II', 'CE5801', 3),
 ('Electiva III', 'CE5901', 3),
 ('Seminario De Estudios Costarricenses', 'CS4402', 2),
-('Trabajo Final De Graduacion', 'CE5601', 12);
-
+('Trabajo Final De Graduacion', 'CE5601', 12),
+('Cálculo Diferencial', 'MA1101', 4),
+('Física General I', 'FI1402', 4),
+('Arquitectura de Computadores', 'CE3102', 3);
 
 -- Semesters
-INSERT INTO Semester (year, period) VALUES (2024, 1);
-INSERT INTO Semester (year, period) VALUES (2024, 2);
-INSERT INTO Semester (year, period) VALUES (2025, 1);
-
--- Courses
-INSERT INTO Course (course_code, name, credits, career) VALUES 
-('MA1101', 'Cálculo Diferencial', 4, 'Ingenieria en Computadores'),
-('FI1402', 'Física General I', 4, 'Ingenieria en Computadores'),
-('CE3102', 'Arquitectura de Computadores', 3, 'Ingenieria en Computadores');
+INSERT INTO Semester (year, period) VALUES (2024, 1), (2024, 2), (2025, 1);
 
 -- Students
-INSERT INTO Student (student_id) VALUES 
-(20231001), 
-(20231002), 
-(20231003);
+INSERT INTO Student (student_id) VALUES (20231001), (20231002), (20231003);
 
 -- Professors
-INSERT INTO Professor (id_number) VALUES 
-(1001), 
-(1002);
+INSERT INTO Professor (id_number) VALUES (1001), (1002);
 
 -- Groups
 INSERT INTO Groups (course_code, group_number) VALUES 
@@ -288,8 +235,8 @@ INSERT INTO Grading_item (name, percentage, group_id) VALUES
 ('Tarea 1', 10, 2),
 ('Proyecto Final', 40, 3);
 
--- Submissions
-INSERT INTO Submission (delivery_date, delivery_time, is_group, grading_item_id) VALUES 
+-- Evaluations
+INSERT INTO Evaluation (delivery_date, delivery_time, is_group, grading_item_id) VALUES 
 ('2024-03-15', '10:30:00', 0, 1),
 ('2024-04-20', '12:00:00', 0, 2),
 ('2024-05-30', '14:45:00', 1, 3);
@@ -304,6 +251,8 @@ INSERT INTO News (message, title, course_code, publication_date, author) VALUES
 ('Se publicaron los resultados del Examen 1.', 'Resultados Examen', 'MA1101', '2024-04-01', 'Prof. Pérez'),
 ('Recuerden entregar la tarea antes del viernes.', 'Recordatorio', 'FI1402', '2024-04-05', 'Prof. Gómez'),
 ('Subido el documento del proyecto final.', 'Proyecto Final', 'CE3102', '2024-05-20', 'Prof. Ramírez');
+
+
 
 SELECT c.course_code, c.name AS course_name, g.group_number
 FROM Student_Group sg
