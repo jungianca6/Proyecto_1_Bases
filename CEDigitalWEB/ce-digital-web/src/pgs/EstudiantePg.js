@@ -9,17 +9,42 @@ import styles from './EstudiantePg.module.css';
 
 function EstudiantePg() {
     const [cuenta, setCuenta] = useState(null);
-    const [noticias, setNoticias] = useState([]); // ← NUEVO
+    const [noticias, setNoticias] = useState([]); 
+    const [cursos, setCursos] = useState([]);
+    const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const cuentaGuardada = JSON.parse(localStorage.getItem("cuenta_actual"));
+    const cuentaGuardada = JSON.parse(localStorage.getItem("cuenta_actual"));
         if (cuentaGuardada) {
             setCuenta(cuentaGuardada);
             console.log("Datos de cuenta:", cuentaGuardada);
-            fetchNoticias(cuentaGuardada.primary_key); // ← obtener noticias
+            fetchNoticias(cuentaGuardada.primary_key);
+            fetchCursos(cuentaGuardada.primary_key); 
         }
+
+        // Cargar curso previamente seleccionado (si existe)
+        const cursoGuardado = JSON.parse(localStorage.getItem("curso_seleccionado"));
+        if (cursoGuardado) setCursoSeleccionado(cursoGuardado);
+
     }, []);
+
+    const fetchCursos = async (studentId) => {
+    try {
+        const response = await axios.post("https://localhost:7199/Student/view_student_courses", {
+            student_id: studentId
+        });
+
+        if (response.data.status === "success" || response.data.status === "OK") {
+            setCursos(response.data.message.courses || []);
+            console.log("Cursos del estudiante:", response.data.message.courses);
+        } else {
+            console.warn("No se pudieron obtener cursos.");
+        }
+    } catch (error) {
+        console.error("Error al obtener cursos:", error);
+    }
+};
 
     const fetchNoticias = async (studentId) => {
     try {
@@ -41,6 +66,13 @@ function EstudiantePg() {
     }
 };
 
+    const handleCursoSeleccionado = (e) => {
+        const index = e.target.value;
+        const curso = cursos[index];
+        setCursoSeleccionado(curso);
+        localStorage.setItem("curso_seleccionado", JSON.stringify(curso));
+        console.log("Curso seleccionado:", curso);
+    };
 
     const handleEvaluacionesClick = () => {
         navigate('/estudiante/evaluaciones');
@@ -54,6 +86,31 @@ function EstudiantePg() {
         <div className={styles.estudianteWrapper}>
             <h1 className={styles.title}>CE Digital</h1>
             <h3 className={styles.subtitle}>Estudiante</h3>
+
+            {/* Dropdown de cursos */}
+            {cursos.length > 0 && (
+    <div className={styles.cursoDropdownWrapper}>
+        <label htmlFor="cursosSelect" className={styles.cursoDropdownLabel}>Seleccionar Curso:</label>
+        <select
+            id="cursosSelect"
+            className={styles.cursoDropdownSelect}
+            value={
+                cursoSeleccionado
+                    ? cursos.findIndex(c => c.course_code === cursoSeleccionado.course_code && c.group_number === cursoSeleccionado.group_number)
+                    : ""
+            }
+            onChange={handleCursoSeleccionado}
+        >
+            <option value="">-- Selecciona un curso --</option>
+            {cursos.map((curso, index) => (
+                <option key={index} value={index}>
+                    {curso.course_code}: {curso.course_name} Grupo: {curso.group_number}
+                </option>
+            ))}
+        </select>
+    </div>
+)}
+
 
             {/* Sección Noticias */}
             <Card className={styles.noticiasSection}>
