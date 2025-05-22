@@ -29,6 +29,7 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
+
         [HttpPost("create_course")]
         public IActionResult PostCreateCourse([FromBody] Data_input_admin_create_course message)
         {
