@@ -141,11 +141,11 @@ function AdminPg() {
 
     const requestData = {
       course_code: codigoCursoGrupo,
-      professor_ids: profesoresArray
+      professor_id: profesoresArray
     };
 
     try {
-      const response = await axios.post("https://localhost:7199/Course/add_group", requestData);
+      const response = await axios.post("https://localhost:7199/Group/create_group", requestData);
 
       if (response.data.status === "OK") {
         alert("Grupo agregado correctamente.");
@@ -616,7 +616,7 @@ const enviarDatosFilaPorFila = async (filas) => {
           </form>
 
           <h3 className={styles.title} style={{ marginTop: "3rem" }}>
-          Agregar Secciones de Documentos por Defecto a Curso
+          Agregar Secciones de Documentos Default a Curso
         </h3>
         <form>
           <label className={styles.label}>Código del Curso:</label>

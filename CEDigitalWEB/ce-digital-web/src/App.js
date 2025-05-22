@@ -10,6 +10,7 @@ import NoticiasProfesorPg from "./pgs/NoticiasProfesorPg";
 import DocumentosProfesorPg from "./pgs/DocumentosProfesorPg";
 import EvaluacionesProfesorPg from "./pgs/EvaluacionesProfesorPg";
 import ReporteNotasProfesorPg from "./pgs/ReporteNotasProfesorPg";
+import ReporteNotasEstudiantePg from "./pgs/ReporteNotasEstudiantePg";
 import ReporteEstudianteProfesorPg from "./pgs/ReporteEstudianteProfesorPg";
 import RubrosProfesorPg from "./pgs/RubrosProfesorPg";
 
@@ -28,6 +29,8 @@ function App() {
                 <Route path="/estudiante/documentos" element={user?.rol === "Student" ? <DocumentosEstudiantePg /> :
                     <Navigate to="/login" />} />
                 <Route path="/estudiante/evaluaciones" element={user?.rol === "Student" ? <EvaluacionesEstudiantesPg /> :
+                    <Navigate to="/login" />} />
+                <Route path="/estudiante/reportenotas" element={user?.rol === "Student" ? <ReporteNotasEstudiantePg /> :
                     <Navigate to="/login" />} />
                 {/* Rutas del profesor */}
                 <Route path="/profesor" element={user?.rol === "Professor" ? <ProfesorPg /> : <Navigate to="/login" />} />

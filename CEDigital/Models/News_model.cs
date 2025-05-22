@@ -6,9 +6,11 @@
         public int news_id { get; set; }
         public string message { get; set; }
         public string title { get; set; }
+        public string course_code { get; set; }
 
-        //FK de profesor
-        public string professor_id { get; set; }
+        public DateTime publication_date { get; set; }
+
+        public string author { get; set; }
     }
 
 }
