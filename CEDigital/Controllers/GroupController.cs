@@ -202,25 +202,54 @@ namespace CEDigital.Controllers
         [HttpPost("show_grading_item")]
         public IActionResult PostShowGradingItem([FromBody] Data_input_show_grading_items message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            string query = "SELECT section_name, percentage FROM Group_Section_Percentage WHERE group_id = @group_id";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+            Data_output_show_grading_items data_Output_Show_Grading_Item = new Data_output_show_grading_items
+            {
+                sections = new List<string>(),
+                percentages = new List<double>()
+            };
 
-            Data_output_show_grading_items data_Output_Show_Grading_Item = new Data_output_show_grading_items();
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Parameters.AddWithValue("@group_id", message.group_number);
 
-            response.status = "OK";
-            response.message = data_Output_Show_Grading_Item;
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (!reader.HasRows)
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontraron secciones para el grupo.";
+                            return Ok(response);
+                        }
+
+                        while (reader.Read())
+                        {
+                            data_Output_Show_Grading_Item.sections.Add(reader["section_name"].ToString());
+                            data_Output_Show_Grading_Item.percentages.Add(Convert.ToDouble(reader["percentage"]));
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                response.status = "OK";
+                response.message = data_Output_Show_Grading_Item;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al consultar los ítems de evaluación: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
         [HttpPost("modify_grading_item")]
         public IActionResult PostShowGradingItem([FromBody] Data_input_update_grade message)

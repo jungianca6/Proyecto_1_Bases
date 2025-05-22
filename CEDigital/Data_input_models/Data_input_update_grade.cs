@@ -3,7 +3,6 @@
     // Input para el 2do botón (actualizar nota y observaciones)
     public class Data_input_update_grade
     {
-        public int course_code { get; set; }
         public int group_number { get; set; }
         public string grading_item_name { get; set; }
         public string evaluation_name { get; set; }
