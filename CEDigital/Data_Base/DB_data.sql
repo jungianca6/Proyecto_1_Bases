@@ -1,5 +1,5 @@
 CREATE DATABASE CEDigital;
-
+USE CEDigital
 ----------------- Creaci�n de las Tablas y sus FKs ----------------------
 
 CREATE TABLE Groups(
@@ -78,9 +78,9 @@ CREATE TABLE Admin(
 
 -- Tablas N:M --
 CREATE TABLE Course_Semester(
-	course_id int ,
+	course_code varchar(20) ,
 	semester_id int,
-	PRIMARY KEY (course_id, semester_id)
+	PRIMARY KEY (course_code, semester_id)
 );
 
 CREATE TABLE Professor_Group(
