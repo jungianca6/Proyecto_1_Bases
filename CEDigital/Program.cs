@@ -86,10 +86,12 @@ catch (Exception ex)
 
 
 
-
+/*
  // CODIGO DE UN SOLO USO
 var MongoDB_create = new MongoDB_create();
 await MongoDB_create.CrearBaseYColeccionesAsync();
+
+*/
 
 /*
 var inserter = new MongoDataInserter();
