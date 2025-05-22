@@ -1,8 +1,9 @@
 
------------------ Creación de las Tablas y sus FKs ----------------------
+----------------- Creaciï¿½n de las Tablas y sus FKs ----------------------
 
 CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
+	course_id int NOT NULL,
     group_number int NOT NULL,
 	student_id int
 );
@@ -13,7 +14,6 @@ CREATE TABLE Course(
 	course_code varchar(20) NOT NULL,
 	credits int NOT NULL,
 	career varchar(50) NOT NULL DEFAULT 'Ingenieria en Computadores',
-	group_id int
 );
 
 CREATE TABLE Semester(
@@ -99,10 +99,10 @@ ADD CONSTRAINT FK_Group_student
 FOREIGN KEY (student_id)
 REFERENCES Student(student_id);
 
-ALTER TABLE Course
-ADD CONSTRAINT FK_Curso_Grupo
-FOREIGN KEY (group_id)
-REFERENCES Groups(group_id);
+ALTER TABLE Groups
+ADD CONSTRAINT FK_Grupo_Curso
+FOREIGN KEY (course_id)
+REFERENCES Course(course_id);
 
 ALTER TABLE News
 ADD CONSTRAINT FK_Noticia_Profesor

@@ -38,6 +38,27 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
+        [HttpPost("view_student_courses")]
+        public IActionResult PostViewStudentCourses([FromBody] Data_input_add_student_to_group message)
+        {
+            /*
+             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
+             */
+
+
+            /*
+             * #######Envio de la respuesta#######
+             * 
+             * En caso postivo enviar Ok
+             * En caso negativo enviar el error corrspondiente
+             * 
+             */
+
+            response.status = "OK";
+            response.message = "Mensaje Aqui";
+            return Ok(response);
+        }
+
     }
 
 }

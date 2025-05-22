@@ -9,9 +9,6 @@
         public string career { get; set; }
         public int credits { get; set; }
 
-        // Relación 1:1 con grupo
-        public int group_id { get; set; }
-
         // Relación con semestres
         public List<int> semester_ids { get; set; }
     }
