@@ -54,8 +54,10 @@ namespace CEDigital.Controllers
              * 
              */
 
+            Data_output_view_student_courses data_Output_View_Student_Courses = new Data_output_view_student_courses();
+
             response.status = "OK";
-            response.message = "Mensaje Aqui";
+            response.message = data_Output_View_Student_Courses;
             return Ok(response);
         }
 

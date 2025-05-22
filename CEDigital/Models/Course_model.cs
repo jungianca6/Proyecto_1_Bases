@@ -3,7 +3,6 @@
     //Clase que representa un curso
     public class Course_model
     {
-        public int course_id { get; set; }
         public string name { get; set; }
         public string course_code { get; set; }
         public string career { get; set; }

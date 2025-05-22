@@ -4,14 +4,13 @@ CREATE DATABASE CEDigital;
 
 CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
-	course_id int NOT NULL,
+	course_code varchar(20) NOT NULL,
     group_number int NOT NULL,
 );
 
 CREATE TABLE Course(
-	course_id int PRIMARY KEY IDENTITY(1,1),
 	name varchar(60) NOT NULL,
-	course_code varchar(20) NOT NULL,
+	course_code varchar(20) NOT NULL PRIMARY KEY,
 	credits int NOT NULL,
 	career varchar(50) NOT NULL DEFAULT 'Ingenieria en Computadores',
 );

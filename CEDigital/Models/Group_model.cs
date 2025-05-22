@@ -5,7 +5,7 @@
     {
         public int group_id { get; set; }
 
-        public int course_id { get; set; }
+        public string course_code { get; set; }
         public string group_number { get; set; }
 
         // Relación con estudiantes
