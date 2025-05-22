@@ -73,19 +73,21 @@ CREATE TABLE Grading_item(
     FOREIGN KEY (group_id) REFERENCES Groups(group_id)
 );
 
-CREATE TABLE Evaluation(
+CREATE TABLE Evaluation (
     evaluation_id INT PRIMARY KEY IDENTITY(1,1),
+    evaluation_title VARCHAR(100),            -- título de la evaluación
     evaluation_filename VARCHAR(50),
-	professor_filename VARCHAR(50),
-    data_base_path_evaluation VARCHAR(200),
-	data_base_path_professor VARCHAR(200),
-    delivery_date DATE,
-    delivery_time TIME,
+    professor_filename VARCHAR(50),
+    data_base_path_evalution VARCHAR(200),
+    data_base_path_professor VARCHAR(200),
+    evaluation_date DATETIME,                  -- fecha y hora de la evaluación
     is_group BIT,
+    grade FLOAT,                              -- nota obtenida
+    feedback VARCHAR(MAX),                    -- retroalimentación, texto libre
+    is_public BIT,                           -- si la evaluación es pública
     grading_item_id INT,
     FOREIGN KEY (grading_item_id) REFERENCES Grading_item(grading_item_id)
 );
-
 -- Tablas N:M --
 
 CREATE TABLE Course_Semester(
@@ -239,19 +241,23 @@ INSERT INTO Grading_item (name, percentage, group_id) VALUES
 
 -- Insert evaluations
 INSERT INTO Evaluation (
+    evaluation_title,
     evaluation_filename,
     professor_filename,
-    data_base_path_evaluation,
+    data_base_path_evalution,
     data_base_path_professor,
-    delivery_date,
-    delivery_time,
+    evaluation_date,
     is_group,
+    grade,
+    feedback,
+    is_public,
     grading_item_id
-) VALUES 
-('Eval_Examen1.pdf', 'Prof_Examen1.pdf', '/eval/ex1', '/prof/ex1', '2024-03-15', '10:30:00', 0, 1),
-('Eval_Tarea1.pdf', 'Prof_Tarea1.pdf', '/eval/t1', '/prof/t1', '2024-04-20', '12:00:00', 0, 2),
-('Eval_Proyecto.zip', 'Prof_Proyecto.zip', '/eval/pf', '/prof/pf', '2024-05-30', '14:45:00', 1, 3);
-
+) VALUES
+('Examen Parcial MA1101', 'examen_ma1101_2024.pdf', 'prof_ma1101.pdf', '/evaluations/ma1101/', '/professors/1001/', '2024-03-15', 0, 88.5, 'Buen desempeño, mejorar en álgebra.', 1, 1),
+('Tarea 1 FI1402', 'tarea1_fi1402_2024.docx', 'prof_fi1402.pdf', '/evaluations/fi1402/', '/professors/1001/', '2024-04-10', 0, 92.0, 'Entrega puntual y correcta.', 1, 2),
+('Proyecto Final CE3102', 'proyecto_final_ce3102.zip', 'prof_ce3102.pdf', '/evaluations/ce3102/', '/professors/1002/', '2024-05-20', 1, 95.0, 'Excelente trabajo en equipo.', 1, 3),
+('Examen Parcial MA1101 - Otro Estudiante', 'examen_ma1101_2024_2.pdf', 'prof_ma1101.pdf', '/evaluations/ma1101/', '/professors/1001/', '2024-03-15', 0, 76.0, 'Requiere repasar conceptos.', 0, 1),
+('Tarea 1 FI1402 - Otro Estudiante', 'tarea1_fi1402_2024_2.docx', 'prof_fi1402.pdf', '/evaluations/fi1402/', '/professors/1001/', '2024-04-10', 0, 85.0, 'Buen esfuerzo.', 0, 2);
 
 -- Admins
 INSERT INTO Admin (username, password) VALUES 

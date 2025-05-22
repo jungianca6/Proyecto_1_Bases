@@ -70,7 +70,7 @@ namespace CEDigital.Controllers
                         reader.Close();
                     }
 
-                    // 2. Verificar si el estudiante ya está en el grupo
+                    // 2. Verificar si el estudiante ya estï¿½ en el grupo
                     string checkStudentQuery = "SELECT COUNT(*) FROM Student_Group WHERE student_id = @student_id AND group_id = @group_id";
 
                     using (SqlCommand checkStudentCmd = new SqlCommand(checkStudentQuery))
@@ -83,7 +83,7 @@ namespace CEDigital.Controllers
                             if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
                             {
                                 response.status = "ERROR";
-                                response.message = "El estudiante ya está en el grupo.";
+                                response.message = "El estudiante ya estï¿½ en el grupo.";
                                 return Ok(response);
                             }
 
@@ -171,7 +171,7 @@ namespace CEDigital.Controllers
                     connection.Close();
 
                 response.status = "ERROR";
-                response.message = "Ocurrió un error al obtener los cursos del estudiante: " + ex.Message;
+                response.message = "Ocurriï¿½ un error al obtener los cursos del estudiante: " + ex.Message;
                 return StatusCode(500, response);
 
             }
