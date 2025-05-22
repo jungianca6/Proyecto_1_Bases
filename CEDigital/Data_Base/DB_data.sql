@@ -1,11 +1,11 @@
-CREATE DATABASE CEDigital;
-USE CEDigital
+
 ----------------- Creaci�n de las Tablas y sus FKs ----------------------
 
 CREATE TABLE Groups(
     group_id int PRIMARY KEY IDENTITY(1,1),
 	course_code varchar(20) NOT NULL,
     group_number int NOT NULL,
+	student_id int
 );
 
 CREATE TABLE Course(
@@ -133,8 +133,8 @@ REFERENCES Grading_item(grading_item_id);
 -- Para las N:M --
 ALTER TABLE Course_Semester
 ADD CONSTRAINT FK_Curso_Semestre_Curso
-FOREIGN KEY (course_id)
-REFERENCES Course(course_id);
+FOREIGN KEY (course_code)
+REFERENCES Course(course_code);
 
 ALTER TABLE Course_Semester
 ADD CONSTRAINT FK_Curso_Semestre_Semestre
