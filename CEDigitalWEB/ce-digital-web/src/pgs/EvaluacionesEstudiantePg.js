@@ -7,12 +7,21 @@ function EvaluacionesEstudiantesPg() {
   const [evaluaciones, setEvaluaciones] = useState([]);
   const [archivos, setArchivos] = useState({});
   const [entregasCompletadas, setEntregasCompletadas] = useState({});
+  const [cursoSeleccionado, setCursoSeleccionado] = useState(null);
 
   useEffect(() => {
     const cuentaGuardada = JSON.parse(localStorage.getItem("cuenta_actual"));
+    const cursoGuardado = JSON.parse(localStorage.getItem("curso_seleccionado"));
     if (cuentaGuardada) {
       setCuenta(cuentaGuardada);
       fetchEvaluaciones(cuentaGuardada.primary_key);
+    }
+
+    if (cursoGuardado) {
+    setCursoSeleccionado(cursoGuardado);
+    console.log("Curso activo:", cursoGuardado);
+    } else {
+      alert("Por favor selecciona un curso desde el menú principal.");
     }
   }, []);
 
@@ -56,8 +65,8 @@ function EvaluacionesEstudiantesPg() {
 
       const payload = {
         student_id: cuenta.primary_key,
-        course_code: "",
-        group_number: null,
+        course_code: cursoSeleccionado.course_code,
+        group_number: cursoSeleccionado.group_number,
         grading_item_name: evaluacion.rubric_name,
         evaluation_title: evaluacion.evaluation_title,
         file_name: archivo.name,
