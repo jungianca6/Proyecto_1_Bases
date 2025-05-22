@@ -106,8 +106,8 @@ REFERENCES Student(student_id);
 
 ALTER TABLE Groups
 ADD CONSTRAINT FK_Grupo_Curso
-FOREIGN KEY (course_id)
-REFERENCES Course(course_id);
+FOREIGN KEY (course_code)
+REFERENCES Course(course_code);
 
 ALTER TABLE Folder
 ADD CONSTRAINT FK_Carpeta_Grupo
