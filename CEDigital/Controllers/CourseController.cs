@@ -29,7 +29,6 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
-
         [HttpPost("create_course")]
         public IActionResult PostCreateCourse([FromBody] Data_input_admin_create_course message)
         {
@@ -136,7 +135,7 @@ namespace CEDigital.Controllers
             SQL_connection db = new SQL_connection();
 
             // Consulta sin filtrar por IsActive porque no existe esa columna
-            string query = "SELECT course_id, course_code, name, credits, career FROM Course WHERE course_code = @code";
+            string query = "SELECT course_code, name, credits, career FROM Course WHERE course_code = @code";
 
             SqlConnection connection;
 
@@ -152,7 +151,6 @@ namespace CEDigital.Controllers
                         {
                             var course = new Data_output_admin_view_course()
                             {
-                                course_id = Convert.ToInt32(reader["course_id"]),
                                 course_code = reader["course_code"].ToString(),
                                 name = reader["name"].ToString(),
                                 credits = Convert.ToInt32(reader["credits"]),
