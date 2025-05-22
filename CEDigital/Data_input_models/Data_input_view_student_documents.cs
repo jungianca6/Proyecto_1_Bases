@@ -3,5 +3,8 @@
     public class Data_input_view_student_documents
     {
         public string student_id { get; set; } // Carnet del estudiante
+        public string course_code { get; set; } // Carnet del estudiante
+        public string group_number { get; set; } // Carnet del estudiante
+
     }
 }
