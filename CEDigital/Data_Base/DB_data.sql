@@ -75,8 +75,10 @@ CREATE TABLE Grading_item(
 
 CREATE TABLE Evaluation(
     evaluation_id INT PRIMARY KEY IDENTITY(1,1),
-    filename VARCHAR(50),
-    path VARCHAR(200),
+    evaluation_filename VARCHAR(50),
+	professor_filename VARCHAR(50),
+    data_base_path_evalution VARCHAR(200),
+	data_base_path_professor VARCHAR(200),
     delivery_date DATE,
     delivery_time TIME,
     is_group BIT,
