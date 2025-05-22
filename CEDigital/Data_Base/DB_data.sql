@@ -17,8 +17,9 @@ CREATE TABLE Course(
 );
 
 CREATE TABLE Semester(
-	semester_id int PRIMARY KEY IDENTITY(1,1),
-	year int NOT NULL
+    semester_id int PRIMARY KEY IDENTITY(1,1),
+    year int NOT NULL,
+    period int NOT NULL
 );
 
 CREATE TABLE Student(
@@ -30,10 +31,12 @@ CREATE TABLE Professor(
 );
 
 CREATE TABLE News(
-	news_id int PRIMARY KEY IDENTITY(1,1),
-	message varchar(100),
-	title varchar(50),
-	id_number int
+    news_id int PRIMARY KEY IDENTITY(1,1),
+    message varchar(100),
+    title varchar(50),
+    course_code varchar(20),
+    publication_date datetime,
+    author varchar(100)
 );
 
 CREATE TABLE Folder(
@@ -44,9 +47,8 @@ CREATE TABLE Folder(
 
 CREATE TABLE Document(
 	document_id int PRIMARY KEY IDENTITY(1,1),
-	name varchar(60) NOT NULL,
+	filename varchar(60) NOT NULL,
 	path varchar(20) NOT NULL,
-	size varchar(50) NOT NULL,
 	upload_date DATE NOT NULL,
 	uploaded_by_professor BIT,
 	folder_id int
@@ -61,8 +63,6 @@ CREATE TABLE Grading_item(
 
 CREATE TABLE Submission(
 	submission_id int PRIMARY KEY IDENTITY(1,1),
-	[file] varbinary(MAX) NOT NULL,
-	weight varchar(20) NOT NULL,
 	delivery_date DATE,
 	delivery_time TIME,
 	is_group BIT,
