@@ -8,7 +8,3 @@ namespace CEDigital.Data_input_models
 
     }
 }
-los cursos
-    codigo de curso
-    numero de grupo
-    nombre del curso
