@@ -139,63 +139,60 @@ namespace CEDigital.Controllers
         public IActionResult PostAddDefaultGrades([FromBody] Data_input_add_default_grades message)
         {
             SQL_connection db = new SQL_connection();
+            string checkCourseQuery = "SELECT COUNT(*) FROM Course WHERE course_code = @code";
+            string insertQuery = "INSERT INTO Course_Percentages (course_code, section, percentage) VALUES (@code, @section, @percentage)";
             SqlConnection connection;
-
-            // Validación básica
-            if (message.sections.Count != message.percentages.Count)
-            {
-                response.status = "ERROR";
-                response.message = "La cantidad de secciones no coincide con la cantidad de porcentajes.";
-                return Ok(response);
-            }
-
-            string checkGroupQuery = "SELECT COUNT(*) FROM Groups WHERE group_id = @group_id";
-            string insertQuery = "INSERT INTO Group_Section_Percentage (group_id, section_name, percentage) VALUES (@group_id, @section_name, @percentage)";
 
             try
             {
-                // Verificar si el group_id existe
-                using (SqlCommand checkCommand = new SqlCommand(checkGroupQuery))
+                // Verificar que el curso exista
+                using (SqlCommand checkCmd = new SqlCommand(checkCourseQuery))
                 {
-                    checkCommand.Parameters.AddWithValue("@group_id", message.group_id);
-
-                    using (SqlDataReader reader = db.Execute_query(checkCommand, out connection))
+                    checkCmd.Parameters.AddWithValue("@code", message.course_code);
+                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
                     {
                         if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
                         {
+                            reader.Close();
                             response.status = "ERROR";
-                            response.message = "El grupo especificado no existe.";
+                            response.message = "El curso no existe.";
                             return Ok(response);
                         }
                         reader.Close();
                     }
                 }
 
+                // Validar que listas tengan misma longitud
+                if (message.sections.Count != message.percentages.Count)
+                {
+                    response.status = "ERROR";
+                    response.message = "Las listas de secciones y porcentajes no tienen la misma cantidad de elementos.";
+                    return Ok(response);
+                }
+
                 // Insertar cada sección con su porcentaje
                 for (int i = 0; i < message.sections.Count; i++)
                 {
-                    using (SqlCommand insertCommand = new SqlCommand(insertQuery))
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery))
                     {
-                        insertCommand.Parameters.AddWithValue("@group_id", message.group_id);
-                        insertCommand.Parameters.AddWithValue("@section_name", message.sections[i]);
-                        insertCommand.Parameters.AddWithValue("@percentage", message.percentages[i]);
-
-                        db.Execute_non_query(insertCommand);
+                        insertCmd.Parameters.AddWithValue("@code", message.course_code);
+                        insertCmd.Parameters.AddWithValue("@section", message.sections[i]);
+                        insertCmd.Parameters.AddWithValue("@percentage", message.percentages[i]);
+                        db.Execute_non_query(insertCmd);
                     }
                 }
 
                 response.status = "OK";
-                response.message = "Secciones y porcentajes añadidos correctamente al grupo.";
+                response.message = "Porcentajes por defecto añadidos correctamente.";
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 response.status = "ERROR";
-                response.message = "Error al agregar las secciones: " + ex.Message;
+                response.message = "Error al insertar porcentajes: " + ex.Message;
                 return StatusCode(500, response);
             }
         }
-
 
 
 
