@@ -237,11 +237,21 @@ INSERT INTO Grading_item (name, percentage, group_id) VALUES
 ('Tarea 1', 10, 2),
 ('Proyecto Final', 40, 3);
 
--- Evaluations
-INSERT INTO Evaluation (delivery_date, delivery_time, is_group, grading_item_id) VALUES 
-('2024-03-15', '10:30:00', 0, 1),
-('2024-04-20', '12:00:00', 0, 2),
-('2024-05-30', '14:45:00', 1, 3);
+-- Insert evaluations
+INSERT INTO Evaluation (
+    evaluation_filename,
+    professor_filename,
+    data_base_path_evaluation,
+    data_base_path_professor,
+    delivery_date,
+    delivery_time,
+    is_group,
+    grading_item_id
+) VALUES 
+('Eval_Examen1.pdf', 'Prof_Examen1.pdf', '/eval/ex1', '/prof/ex1', '2024-03-15', '10:30:00', 0, 1),
+('Eval_Tarea1.pdf', 'Prof_Tarea1.pdf', '/eval/t1', '/prof/t1', '2024-04-20', '12:00:00', 0, 2),
+('Eval_Proyecto.zip', 'Prof_Proyecto.zip', '/eval/pf', '/prof/pf', '2024-05-30', '14:45:00', 1, 3);
+
 
 -- Admins
 INSERT INTO Admin (username, password) VALUES 
