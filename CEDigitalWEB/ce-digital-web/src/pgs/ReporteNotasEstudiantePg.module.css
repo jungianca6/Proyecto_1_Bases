@@ -72,3 +72,33 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
     transform: translateY(-2px);
 }
+
+.listaNotas {
+    position: absolute;
+    top: 150px;
+    width: 85%;
+    max-height: 60vh;
+    overflow-y: auto;
+    background-color: rgba(40, 40, 40, 0.95);
+    color: #f0f0f0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Estilo individual para cada evaluación */
+.notaItem {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #444;
+}
+
+.notaItem p {
+    margin: 4px 0;
+    font-size: 16px;
+    color: #e0e0e0;
+}
+
+.notaItem p strong {
+    color: #ffffff;
+}
