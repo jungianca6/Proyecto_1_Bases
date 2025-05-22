@@ -66,6 +66,8 @@ CREATE TABLE Grading_item(
 
 CREATE TABLE Submission(
 	submission_id int PRIMARY KEY IDENTITY(1,1),
+	filename varchar(50),
+	path varchar(200),
 	delivery_date DATE,
 	delivery_time TIME,
 	is_group BIT,

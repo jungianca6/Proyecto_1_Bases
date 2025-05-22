@@ -4,7 +4,9 @@
     public class Submission_model
     {
         public int submission_id { get; set; }
-        public string file { get; set; }
+        public string filename { get; set; }
+
+        public string path { get; set; }
         public string delivery_date { get; set; } // Formato: DD/MM/YYYY
         public string delivery_time { get; set; } // Formato: HH:MM
         public bool is_group { get; set; }
