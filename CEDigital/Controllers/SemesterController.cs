@@ -74,81 +74,88 @@ namespace CEDigital.Controllers
         {
             SQL_connection db = new SQL_connection();
 
-            string getCourseIdQuery = "SELECT course_id FROM Course WHERE course_code = @course_code";
+            string checkCourseQuery = "SELECT COUNT(*) FROM Course WHERE course_code = @code";
             string getSemesterIdQuery = "SELECT semester_id FROM Semester WHERE year = @year AND period = @period";
-            string checkExistenceQuery = "SELECT COUNT(*) FROM Course_Semester WHERE course_id = @course_id AND semester_id = @semester_id";
-            string insertQuery = "INSERT INTO Course_Semester (course_id, semester_id) VALUES (@course_id, @semester_id)";
+            string checkExistenceQuery = "SELECT COUNT(*) FROM Course_Semester WHERE course_code = @code AND semester_id = @semester_id";
+            string insertQuery = "INSERT INTO Course_Semester (course_code, semester_id) VALUES (@code, @semester_id)";
 
             SqlConnection connection;
-            int courseId = -1;
-            int semesterId = -1;
 
             try
             {
-                // 1. Obtener course_id desde Course
-                using (SqlCommand courseCmd = new SqlCommand(getCourseIdQuery))
+                // 1. Verificar si el curso existe
+                using (SqlCommand checkCourseCmd = new SqlCommand(checkCourseQuery))
                 {
-                    courseCmd.Parameters.AddWithValue("@course_code", message.course_code);
-                    using (SqlDataReader reader = db.Execute_query(courseCmd, out connection))
+                    checkCourseCmd.Parameters.AddWithValue("@code", message.course_code);
+
+                    using (SqlDataReader reader = db.Execute_query(checkCourseCmd, out connection))
                     {
-                        if (reader.Read())
-                            courseId = Convert.ToInt32(reader["course_id"]);
-                        else
+                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
                         {
                             response.status = "ERROR";
                             response.message = "El curso no existe.";
                             return Ok(response);
                         }
+
                         reader.Close();
                     }
                 }
 
-                // 2. Obtener semester_id desde Semester
-                using (SqlCommand semesterCmd = new SqlCommand(getSemesterIdQuery))
+                int semesterId = -1;
+
+                // 2. Obtener el semester_id correspondiente
+                using (SqlCommand getSemesterCmd = new SqlCommand(getSemesterIdQuery))
                 {
-                    semesterCmd.Parameters.AddWithValue("@year", message.year);
-                    semesterCmd.Parameters.AddWithValue("@period", message.period);
-                    using (SqlDataReader reader = db.Execute_query(semesterCmd, out connection))
+                    getSemesterCmd.Parameters.AddWithValue("@year", message.year);
+                    getSemesterCmd.Parameters.AddWithValue("@period", message.period);
+
+                    using (SqlDataReader reader = db.Execute_query(getSemesterCmd, out connection))
                     {
                         if (reader.Read())
+                        {
                             semesterId = Convert.ToInt32(reader["semester_id"]);
+                        }
                         else
                         {
                             response.status = "ERROR";
                             response.message = "El semestre no existe.";
                             return Ok(response);
                         }
+
                         reader.Close();
                     }
                 }
 
-                // 3. Verificar que la relación no exista
-                using (SqlCommand checkCmd = new SqlCommand(checkExistenceQuery))
+                // 3. Verificar si ya existe esa relación
+                using (SqlCommand checkExistCmd = new SqlCommand(checkExistenceQuery))
                 {
-                    checkCmd.Parameters.AddWithValue("@course_id", courseId);
-                    checkCmd.Parameters.AddWithValue("@semester_id", semesterId);
-                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
+                    checkExistCmd.Parameters.AddWithValue("@code", message.course_code);
+                    checkExistCmd.Parameters.AddWithValue("@semester_id", semesterId);
+
+                    using (SqlDataReader reader = db.Execute_query(checkExistCmd, out connection))
                     {
                         if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
                         {
                             response.status = "ERROR";
-                            response.message = "El curso ya está asignado a este semestre.";
+                            response.message = "El curso ya está asignado a ese semestre.";
                             return Ok(response);
                         }
+
                         reader.Close();
                     }
                 }
 
-                // 4. Insertar la relación en Course_Semester
+                // 4. Insertar en Course_Semester
                 using (SqlCommand insertCmd = new SqlCommand(insertQuery))
                 {
-                    insertCmd.Parameters.AddWithValue("@course_id", courseId);
+                    insertCmd.Parameters.AddWithValue("@code", message.course_code);
                     insertCmd.Parameters.AddWithValue("@semester_id", semesterId);
+
                     db.Execute_non_query(insertCmd);
                 }
 
                 response.status = "OK";
-                response.message = "Curso asignado correctamente al semestre.";
+                response.message = "Curso asignado al semestre exitosamente.";
                 return Ok(response);
             }
             catch (Exception ex)
@@ -158,6 +165,7 @@ namespace CEDigital.Controllers
                 return StatusCode(500, response);
             }
         }
+
 
 
     }
