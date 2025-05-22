@@ -22,6 +22,9 @@
   <ItemGroup>
     <Folder Include="Data_base_files\Evaluations\" />
     <Folder Include="Data_base_files\Documents\" />
+    <Folder Include="Data_base_files\Documents\" />
+    <Folder Include="Data_base_files\Evaluations\" />
+    <Folder Include="Data_base_files\Professor_evaluations\" />
   </ItemGroup>
 
 </Project>
