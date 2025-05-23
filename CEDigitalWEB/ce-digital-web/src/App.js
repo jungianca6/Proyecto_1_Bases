@@ -12,7 +12,7 @@ import EvaluacionesProfesorPg from "./pgs/EvaluacionesProfesorPg";
 import ReporteNotasProfesorPg from "./pgs/ReporteNotasProfesorPg";
 import ReporteNotasEstudiantePg from "./pgs/ReporteNotasEstudiantePg";
 import ReporteEstudianteProfesorPg from "./pgs/ReporteEstudianteProfesorPg";
-import RubrosProfesorPg from "./pgs/RubrosProfesorPg";
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -43,8 +43,6 @@ function App() {
                 <Route path="/profesor/reportenotas" element={user?.rol === "Professor" ? <ReporteNotasProfesorPg /> :
                     <Navigate to="/login" />} />
                 <Route path="/profesor/reporteEstudiantes" element={user?.rol === "Professor" ? <ReporteEstudianteProfesorPg /> :
-                    <Navigate to="/login" />} />
-                <Route path="/profesor/rubros" element={user?.rol === "Professor" ? <RubrosProfesorPg /> :
                     <Navigate to="/login" />} />
 
                 <Route path="*" element={<Navigate to="/login" />} />

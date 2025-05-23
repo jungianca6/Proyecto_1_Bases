@@ -26,10 +26,6 @@ function ProfesorPg() {
         navigate('/profesor/reportenotas');
     }
 
-    const handlerubrosClick = () => {
-        navigate('/profesor/rubros');
-    }
-
     const handlerepEstudiantesClick = () => {
         navigate('/profesor/reporteEstudiantes');
     }
@@ -55,12 +51,6 @@ function ProfesorPg() {
                 className={styles.documentosButton}
                 onClick={handleDocumentosClick}>
                 Documentos
-            </Button>
-
-            <Button
-                className={styles.rubrosButton}
-                onClick={handlerubrosClick}>
-                Rubros
             </Button>
 
             <Button
