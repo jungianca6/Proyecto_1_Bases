@@ -3,13 +3,14 @@ import { MdLockOutline } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Button, Card, Form } from 'react-bootstrap';
+import axios from "axios";
 import styles from './NoticiasProfesorPg.module.css';
 
 function NoticiasProfesorPg() {
     const [formData, setFormData] = useState({
         tituloNoticia: "",
         mensajeNoticia: "",
-        fechaPublicacion: "",
+        autor: "",
         cursoAsociado: ""
     });
 
@@ -21,21 +22,63 @@ function NoticiasProfesorPg() {
         }));
     };
 
-    const handlePublicarNoticia = () => {
-        const { tituloNoticia, mensajeNoticia, fechaPublicacion, cursoAsociado } = formData;
+    const handlePublicarNoticia = async () => {
+        const { tituloNoticia, mensajeNoticia, autor, cursoAsociado } = formData;
 
-        if (!tituloNoticia || !mensajeNoticia || !fechaPublicacion || !cursoAsociado) {
+        if (!tituloNoticia || !mensajeNoticia || !autor || !cursoAsociado) {
             alert("Por favor complete todos los campos");
             return;
         }
 
-        alert(`Noticia "${tituloNoticia}" creada para el curso ${cursoAsociado}`);
-        setFormData({
-            tituloNoticia: "",
-            mensajeNoticia: "",
-            fechaPublicacion: "",
-            cursoAsociado: ""
-        });
+        const noticia = {
+            title: tituloNoticia,
+            message: mensajeNoticia,
+            publication_date: new Date().toISOString(),
+            author: autor,
+            course_code: cursoAsociado
+        };
+
+        try {
+            await axios.post("https://localhost:7199/News/add_new", noticia);
+            alert(`Noticia "${tituloNoticia}" creada correctamente.`);
+            setFormData({
+                tituloNoticia: "",
+                mensajeNoticia: "",
+                autor: "",
+                cursoAsociado: ""
+            });
+        } catch (error) {
+            console.error("Error al publicar noticia:", error);
+            alert("Ocurrió un error al publicar la noticia.");
+        }
+    };
+
+    const handleEliminarNoticia = async () => {
+        const { tituloNoticia, cursoAsociado } = formData;
+
+        if (!tituloNoticia || !cursoAsociado) {
+            alert("Para eliminar una noticia, complete el título y el código del curso.");
+            return;
+        }
+
+        const payload = {
+            title: tituloNoticia,
+            course_code: cursoAsociado
+        };
+
+        try {
+            await axios.post("https://localhost:7199/News/delete_new", payload);
+            alert(`Noticia "${tituloNoticia}" eliminada correctamente.`);
+            setFormData({
+                tituloNoticia: "",
+                mensajeNoticia: "",
+                autor: "",
+                cursoAsociado: ""
+            });
+        } catch (error) {
+            console.error("Error al eliminar noticia:", error);
+            alert("Ocurrió un error al eliminar la noticia.");
+        }
     };
 
     return (
@@ -83,12 +126,13 @@ function NoticiasProfesorPg() {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Fecha de Publicación</Form.Label>
+                        <Form.Label>Autor</Form.Label>
                         <Form.Control
                             type="text"
-                            name="fechaPublicacion"
-                            value={formData.fechaPublicacion}
+                            name="autor"
+                            value={formData.autor}
                             onChange={handleChange}
+                            placeholder="Nombre del autor"
                         />
                     </Form.Group>
 
@@ -102,6 +146,10 @@ function NoticiasProfesorPg() {
                             placeholder="Código del curso"
                         />
                     </Form.Group>
+
+                    <Form.Text className="text-muted">
+                        Para eliminar una noticia, solo es necesario rellenar el título y el curso asociado.
+                    </Form.Text>
 
                     <div className={styles.buttonGroup}>
                         <Button
@@ -118,7 +166,8 @@ function NoticiasProfesorPg() {
                         </Button>
 
                         <Button
-                            variant="primary"
+                            variant="danger"
+                            onClick={handleEliminarNoticia}
                             className={styles.actionButton}>
                             Eliminar
                         </Button>
