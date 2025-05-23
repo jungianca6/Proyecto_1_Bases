@@ -217,25 +217,106 @@ namespace CEDigital.Controllers
         [HttpPost("view_news")]
         public IActionResult PostView([FromBody] Data_input_view_news message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
-
-
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
-
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
             Data_output_view_news data_Output_View_News = new Data_output_view_news();
-             
-            response.status = "OK";
-            response.message = data_Output_View_News;
-            return Ok(response);
+            data_Output_View_News.news_list = new List<News_model>();
+
+            try
+            {
+                // Lista para guardar los course_codes a consultar
+                List<string> courseCodes = new List<string>();
+
+                // Si se especifica el course_code directamente, se agrega y se omite búsqueda en grupos
+                if (!string.IsNullOrEmpty(message.course_code))
+                {
+                    courseCodes.Add(message.course_code);
+                }
+                else
+                {
+                    // Buscar los grupos donde está el estudiante
+                    string groupQuery = @"
+                SELECT DISTINCT G.course_code
+                FROM Student_Group SG
+                INNER JOIN Groups G ON SG.group_id = G.group_id
+                WHERE SG.student_id = @student_id";
+
+                    using (SqlCommand groupCommand = new SqlCommand(groupQuery))
+                    {
+                        groupCommand.Parameters.AddWithValue("@student_id", message.student_id);
+
+                        using (SqlDataReader reader = db.Execute_query(groupCommand, out connection))
+                        {
+                            while (reader.Read())
+                            {
+                                string code = reader["course_code"].ToString();
+                                if (!string.IsNullOrEmpty(code))
+                                {
+                                    courseCodes.Add(code);
+                                }
+                            }
+
+                            reader.Close();
+                        }
+                    }
+
+                    // Si no está en ningún grupo, no tiene sentido continuar
+                    if (courseCodes.Count == 0)
+                    {
+                        response.status = "ERROR";
+                        response.message = "El estudiante no está asociado a ningún grupo.";
+                        return Ok(response);
+                    }
+                }
+
+                // Buscar las noticias asociadas a los courseCodes encontrados
+                string formattedInClause = string.Join(",", courseCodes.Select((c, i) => $"@code{i}"));
+                string newsQuery = $@"
+            SELECT news_id, message, title, course_code, publication_date, author
+            FROM News
+            WHERE course_code IN ({formattedInClause})
+            ORDER BY publication_date DESC";
+
+                using (SqlCommand newsCommand = new SqlCommand(newsQuery))
+                {
+                    for (int i = 0; i < courseCodes.Count; i++)
+                    {
+                        newsCommand.Parameters.AddWithValue($"@code{i}", courseCodes[i]);
+                    }
+
+                    using (SqlDataReader reader = db.Execute_query(newsCommand, out connection))
+                    {
+                        while (reader.Read())
+                        {
+                            News_model news = new News_model
+                            {
+                                news_id = Convert.ToInt32(reader["news_id"]),
+                                message = reader["message"].ToString(),
+                                title = reader["title"].ToString(),
+                                course_code = reader["course_code"].ToString(),
+                                publication_date = Convert.ToDateTime(reader["publication_date"]),
+                                author = reader["author"].ToString()
+                            };
+
+                            data_Output_View_News.news_list.Add(news);
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                response.status = "OK";
+                response.message = data_Output_View_News;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al obtener las noticias: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
 
     }
