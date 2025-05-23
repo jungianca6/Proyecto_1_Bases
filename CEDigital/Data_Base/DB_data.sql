@@ -75,19 +75,28 @@ CREATE TABLE Grading_item(
 
 CREATE TABLE Evaluation (
     evaluation_id INT PRIMARY KEY IDENTITY(1,1),
-    evaluation_title VARCHAR(100),            -- título de la evaluación
+    evaluation_title VARCHAR(100),
     evaluation_filename VARCHAR(50),
     professor_filename VARCHAR(50),
     data_base_path_evalution VARCHAR(200),
     data_base_path_professor VARCHAR(200),
-    evaluation_date DATETIME,                  -- fecha y hora de la evaluación
+    evaluation_date DATETIME,
     is_group BIT,
-    grade FLOAT,                              -- nota obtenida
-    feedback VARCHAR(MAX),                    -- retroalimentación, texto libre
-    is_public BIT,                           -- si la evaluación es pública
-    grading_item_id INT,
+    grade FLOAT,
+    feedback VARCHAR(MAX),
+    is_public BIT,
+    grading_item_id INT NOT NULL,
     FOREIGN KEY (grading_item_id) REFERENCES Grading_item(grading_item_id)
 );
+
+CREATE TABLE Evaluation_Student (
+    evaluation_id INT NOT NULL,
+    student_id INT NOT NULL,
+    PRIMARY KEY (evaluation_id, student_id),
+    FOREIGN KEY (evaluation_id) REFERENCES Evaluation(evaluation_id),
+    FOREIGN KEY (student_id) REFERENCES Student(student_id)
+);
+
 -- Tablas N:M --
 
 CREATE TABLE Course_Semester(
@@ -240,6 +249,9 @@ INSERT INTO Grading_item (name, percentage, group_id) VALUES
 ('Proyecto Final', 40, 3);
 
 -- Insert evaluations
+
+
+-- Insertar todas las evaluaciones en un solo insert
 INSERT INTO Evaluation (
     evaluation_title,
     evaluation_filename,
@@ -253,11 +265,120 @@ INSERT INTO Evaluation (
     is_public,
     grading_item_id
 ) VALUES
-('Examen Parcial MA1101', 'examen_ma1101_2024.pdf', 'prof_ma1101.pdf', '/evaluations/ma1101/', '/professors/1001/', '2024-03-15', 0, 88.5, 'Buen desempeño, mejorar en álgebra.', 1, 1),
-('Tarea 1 FI1402', 'tarea1_fi1402_2024.docx', 'prof_fi1402.pdf', '/evaluations/fi1402/', '/professors/1001/', '2024-04-10', 0, 92.0, 'Entrega puntual y correcta.', 1, 2),
-('Proyecto Final CE3102', 'proyecto_final_ce3102.zip', 'prof_ce3102.pdf', '/evaluations/ce3102/', '/professors/1002/', '2024-05-20', 1, 95.0, 'Excelente trabajo en equipo.', 1, 3),
-('Examen Parcial MA1101 - Otro Estudiante', 'examen_ma1101_2024_2.pdf', 'prof_ma1101.pdf', '/evaluations/ma1101/', '/professors/1001/', '2024-03-15', 0, 76.0, 'Requiere repasar conceptos.', 0, 1),
-('Tarea 1 FI1402 - Otro Estudiante', 'tarea1_fi1402_2024_2.docx', 'prof_fi1402.pdf', '/evaluations/fi1402/', '/professors/1001/', '2024-04-10', 0, 85.0, 'Buen esfuerzo.', 0, 2);
+(
+    'Examen Parcial 1',
+    'examen1_ma1101.pdf',
+    'prof_ma1101.pdf',
+    '/evaluations/ma1101/examen1',
+    '/professors/ma1101',
+    '2024-04-15 10:00:00',
+    1,
+    85.0,
+    'Buen desempeño general, algunas preguntas con dificultad.',
+    1,
+    1
+),
+(
+    'Tarea 1 Física',
+    'tarea1_fi1402.docx',
+    'prof_fi1402.pdf',
+    '/evaluations/fi1402/tarea1',
+    '/professors/fi1402',
+    '2024-04-20 23:59:59',
+    0,
+    92.5,
+    'Muy buenos resultados en general.',
+    1,
+    2
+),
+(
+    'Proyecto Final Ingeniería',
+    'proyecto_final_ce3102.zip',
+    'prof_ce3102.pdf',
+    '/evaluations/ce3102/proyecto_final',
+    '/professors/ce3102',
+    '2024-05-30 17:00:00',
+    1,
+    88.0,
+    'Proyecto bien realizado, aunque con detalles a mejorar.',
+    1,
+    3
+);
+
+-- Insertar todas las relaciones evaluación-estudiante en un solo insert
+INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
+(1, 20231001),
+(2, 20231001),
+(2, 20231002),
+(3, 20231003);
+
+-- Evaluación 4: Laboratorio 2, curso MA1101, grupo 1
+INSERT INTO Evaluation (
+    evaluation_title,
+    evaluation_filename,
+    professor_filename,
+    data_base_path_evalution,
+    data_base_path_professor,
+    evaluation_date,
+    is_group,
+    grade,
+    feedback,
+    is_public,
+    grading_item_id
+) VALUES (
+    'Laboratorio 2',
+    'lab2_ma1101.pdf',
+    'prof_ma1101_lab.pdf',
+    '/evaluations/ma1101/lab2',
+    '/professors/ma1101',
+    '2024-04-25 15:00:00',
+    0, -- individual
+    90.0,
+    'Muy buen manejo de los conceptos prácticos.',
+    1,
+    1 -- mismo grading_item_id para grupo 1 MA1101, ejemplo
+);
+
+-- Evaluación 5: Quiz 1, curso FI1402, grupo 2
+INSERT INTO Evaluation (
+    evaluation_title,
+    evaluation_filename,
+    professor_filename,
+    data_base_path_evalution,
+    data_base_path_professor,
+    evaluation_date,
+    is_group,
+    grade,
+    feedback,
+    is_public,
+    grading_item_id
+) VALUES (
+    'Quiz 1',
+    'quiz1_fi1402.pdf',
+    'prof_fi1402.pdf',
+    '/evaluations/fi1402/quiz1',
+    '/professors/fi1402',
+    '2024-04-18 12:00:00',
+    0, -- individual
+    88.5,
+    'Buen desempeño en preguntas rápidas.',
+    1,
+    2 -- grading_item_id para FI1402 grupo 2
+);
+
+-- Asociar evaluaciones al estudiante 20231001
+INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
+(4, 20231001),
+(5, 20231001);
+
+
+
+-- Eliminar todos los registros de Evaluation_Student (tabla dependiente)
+DELETE FROM Evaluation_Student;
+
+-- Eliminar todos los registros de Evaluation (tabla principal)
+DELETE FROM Evaluation;
+
 
 -- Admins
 INSERT INTO Admin (username, password) VALUES 
@@ -282,3 +403,47 @@ SELECT s.*
 FROM Student s
 JOIN Student_Group sg ON s.student_id = sg.student_id
 WHERE sg.student_id = 20231001 AND sg.group_id = 1;
+
+
+SELECT 
+    gi.name AS rubric_name,
+    e.evaluation_title,
+    e.grade,
+    e.feedback,
+    e.is_public,
+    e.evaluation_date,
+    e.data_base_path_evalution,
+    e.data_base_path_professor,
+    e.evaluation_filename,
+    e.professor_filename
+FROM Evaluation e
+INNER JOIN Grading_item gi ON e.grading_item_id = gi.grading_item_id
+INNER JOIN Evaluation_Student es ON e.evaluation_id = es.evaluation_id
+INNER JOIN Groups g ON gi.group_id = g.group_id
+WHERE es.student_id = 20231001
+  AND g.course_code = 'MA1101'
+  AND g.group_number = 1
+ORDER BY e.evaluation_date DESC;
+
+
+
+
+
+-- 1. Visualizar todos los ítems de calificación para un curso y grupo específico
+SELECT gi.grading_item_id, gi.name, gi.percentage, gi.group_id, g.course_code, g.group_number
+FROM Grading_item gi
+INNER JOIN Groups g ON gi.group_id = g.group_id
+WHERE g.course_code = 'MA1101' AND g.group_number = 1;
+
+-- 2. Visualizar un ítem específico de calificación por su ID para un curso y grupo
+SELECT gi.grading_item_id, gi.name, gi.percentage, gi.group_id, g.course_code, g.group_number
+FROM Grading_item gi
+INNER JOIN Groups g ON gi.group_id = g.group_id
+WHERE gi.grading_item_id = 5 AND g.course_code = 'CS101' AND g.group_number = 1;
+
+-- 3. Visualizar ítems por nombre para confirmar antes de eliminar
+SELECT gi.grading_item_id, gi.name, gi.percentage, gi.group_id
+FROM Grading_item gi
+INNER JOIN Groups g ON gi.group_id = g.group_id
+WHERE g.course_code = 'MA1101' AND g.group_number = 1
+  AND gi.name IN ('Quiz 1 - Updated', 'Midterm Exam');
