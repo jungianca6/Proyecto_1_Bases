@@ -38,7 +38,7 @@ function AdminPg() {
 
   //Estado para agregar secciones default de secciones de documentos
 
-  const [codigoDocuSecciones, setCodigoDocuSecciones] = useState("");
+  const [groupIdDocuSecciones, setGroupIdDocuSecciones] = useState("");
 
   //Estado para agregar rubros default en las evaluaciones de curso
 
@@ -242,19 +242,21 @@ function AdminPg() {
   e.preventDefault();
 
   const requestData = {
-      course_code: codigoDocuSecciones,
-      sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
+    group_id: groupIdDocuSecciones,
+    sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
   };
 
   try {
-    const response = await axios.post("https://localhost:7199/Course/add_default_document_sections", requestData);
+    const response = await axios.post("https://localhost:7199/Group/add_default_document_sections", requestData);
 
     if (response.data.status === "OK") {
-      console.log("Secciones agregadas correctamente.");
+      alert("Secciones default agregadas correctamente.");
+      console.log("Secciones default agregadas correctamente.");
     } else {
       console.warn("Error al agregar secciones:", response.data.message);
     }
   } catch (error) {
+    console.log("Group ID:", groupIdDocuSecciones);
     console.error("Error al conectar con el servidor:", error);
   }
 };
@@ -272,6 +274,7 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
     const response = await axios.post("https://localhost:7199/Course/add_default_grades", requestData);
 
     if (response.data.status === "OK") {
+      alert("Rubros default agregados correctamente.");
       console.log("Rubros por defecto agregados correctamente.");
     } else {
       console.warn("Error al agregar rubros:", response.data.message);
@@ -576,6 +579,7 @@ const enviarDatosFilaPorFila = async (filas) => {
         </div>
       </form>
 
+
         <h3 className={styles.title} style={{ marginTop: "3rem" }}>
         Agregar Estudiantes a Grupo
       </h3>
@@ -615,27 +619,29 @@ const enviarDatosFilaPorFila = async (filas) => {
           </div>
           </form>
 
+
           <h3 className={styles.title} style={{ marginTop: "3rem" }}>
-          Agregar Secciones de Documentos Default a Curso
-        </h3>
-        <form>
-          <label className={styles.label}>Código del Curso:</label>
-          <input
-            type="text"
-            className={styles.input}
-            value={codigoDocuSecciones}
-            onChange={(e) => setCodigoDocuSecciones(e.target.value)}
-          />
-          <div className={styles.buttonGroup}>
-            <button
-              type="button"
-              className={`${styles.btn} ${styles.success}`}
-              onClick={handleAgregarDocuSeccionesPorDefecto}
-            >
-              Agregar Secciones
-            </button>
-          </div>
-        </form>
+            Agregar Secciones de Documentos Default a Grupo
+          </h3>
+          <form>
+            <label className={styles.label}>ID del Grupo:</label>
+            <input
+              type="number"
+              className={styles.input}
+              value={groupIdDocuSecciones}
+              onChange={(e) => setGroupIdDocuSecciones(e.target.value)}
+            />
+            <div className={styles.buttonGroup}>
+              <button
+                type="button"
+                className={`${styles.btn} ${styles.success}`}
+                onClick={handleAgregarDocuSeccionesPorDefecto}
+              >
+                Agregar Secciones Default
+              </button>
+            </div>
+          </form>
+
 
         <h3 className={styles.title} style={{ marginTop: "3rem" }}>
           Agregar Rubros Default a Curso
