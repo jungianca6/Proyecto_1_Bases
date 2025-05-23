@@ -247,69 +247,208 @@ namespace CEDigital.Controllers
             }
         }
 
-
         [HttpPost("modify_grading_item")]
-        public IActionResult PostShowGradingItem([FromBody] Data_input_update_grade message)
+        public IActionResult PostModifyGradingItem([FromBody] Data_input_update_grading_items message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                foreach (var item in message.grading_items)
+                {
+                    string checkExistsQuery = @"
+                    SELECT COUNT(*) 
+                    FROM Grading_item gi
+                    INNER JOIN Groups g ON gi.group_id = g.group_id
+                    WHERE gi.grading_item_id = @grading_item_id 
+                    AND g.course_code = @course_code
+                    AND g.group_number = @group_number";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                    using (SqlCommand checkCmd = new SqlCommand(checkExistsQuery))
+                    {
+                        checkCmd.Parameters.AddWithValue("@grading_item_id", item.grading_item_id);
+                        checkCmd.Parameters.AddWithValue("@course_code", message.course_code);
+                        checkCmd.Parameters.AddWithValue("@group_number", message.group_number);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                        using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
+                        {
+                            if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
+                            {
+                                reader.Close();
+                                response.status = "ERROR";
+                                response.message = $"El ítem con ID {item.grading_item_id} no existe para el curso {message.course_code} y grupo {message.group_number}.";
+                                return Ok(response);
+                            }
+                            reader.Close();
+                        }
+                    }
+
+                    List<string> setClauses = new List<string>();
+                    if (!string.IsNullOrWhiteSpace(item.name))
+                        setClauses.Add("name = @name");
+                    if (item.percentage != 0f)
+                        setClauses.Add("percentage = @percentage");
+
+                    if (setClauses.Count == 0)
+                        continue;
+
+                    string updateQuery = $"UPDATE Grading_item SET {string.Join(", ", setClauses)} WHERE grading_item_id = @grading_item_id";
+
+                    using (SqlCommand updateCmd = new SqlCommand(updateQuery))
+                    {
+                        updateCmd.Parameters.AddWithValue("@grading_item_id", item.grading_item_id);
+                        if (setClauses.Contains("name = @name"))
+                            updateCmd.Parameters.AddWithValue("@name", item.name);
+                        if (setClauses.Contains("percentage = @percentage"))
+                            updateCmd.Parameters.AddWithValue("@percentage", item.percentage);
+
+                        int affected = db.Execute_non_query(updateCmd, out connection);
+                        if (affected == 0)
+                        {
+                            response.status = "ERROR";
+                            response.message = $"No se pudo modificar el ítem con ID {item.grading_item_id}.";
+                            return Ok(response);
+                        }
+                    }
+                }
+
+                response.status = "OK";
+                response.message = "Ítems modificados correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error en el servidor: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
-        [HttpPost("add_grading_item")]
-        public IActionResult PostAddGradingItem([FromBody] Data_input_update_grade message)
+        [HttpPost("add_grading_items")]
+        public IActionResult PostAddGradingItems([FromBody] Data_input_update_grading_items message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                // Obtener el group_id a partir de course_code y group_number
+                string getGroupIdQuery = @"
+            SELECT group_id 
+            FROM Groups 
+            WHERE course_code = @course_code AND group_number = @group_number";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                int? groupId = null;
+                using (SqlCommand getGroupCmd = new SqlCommand(getGroupIdQuery))
+                {
+                    getGroupCmd.Parameters.AddWithValue("@course_code", message.course_code);
+                    getGroupCmd.Parameters.AddWithValue("@group_number", message.group_number);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                    using (var reader = db.Execute_query(getGroupCmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            groupId = reader.GetInt32(0);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = $"No existe el grupo {message.group_number} para el curso {message.course_code}.";
+                            return Ok(response);
+                        }
+                    }
+                }
+
+                // Insertar cada grading item con el group_id obtenido
+                string insertQuery = @"
+            INSERT INTO Grading_item (name, percentage, group_id)
+            VALUES (@name, @percentage, @group_id)";
+
+                foreach (var item in message.grading_items)
+                {
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery))
+                    {
+                        insertCmd.Parameters.AddWithValue("@name", item.name);
+                        insertCmd.Parameters.AddWithValue("@percentage", item.percentage);
+                        insertCmd.Parameters.AddWithValue("@group_id", groupId.Value);
+
+                        db.Execute_non_query(insertCmd);  // método sin retorno
+                    }
+                }
+
+                response.status = "OK";
+                response.message = "Ítems agregados correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error en el servidor: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
         [HttpPost("delete_grading_item")]
-        public IActionResult PostDeleteGradingItem([FromBody] Data_input_show_grading_items message)
+        public IActionResult PostDeleteGradingItemsByName([FromBody] Data_input_delete_grading_item message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                if (message.name_grading_items == null || message.name_grading_items.Count == 0)
+                {
+                    response.status = "ERROR";
+                    response.message = "No se proporcionaron ítems para eliminar.";
+                    return Ok(response);
+                }
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // Crear lista de parámetros para el IN
+                List<string> parameterNames = new List<string>();
+                for (int i = 0; i < message.name_grading_items.Count; i++)
+                {
+                    parameterNames.Add($"@name{i}");
+                }
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                string deleteQuery = $@"
+                DELETE gi FROM Grading_item gi
+                INNER JOIN Groups g ON gi.group_id = g.group_id
+                WHERE gi.name IN ({string.Join(", ", parameterNames)})
+                AND g.course_code = @course_code
+                AND g.group_number = @group_number";
+
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery))
+                {
+                    for (int i = 0; i < message.name_grading_items.Count; i++)
+                    {
+                        deleteCmd.Parameters.AddWithValue(parameterNames[i], message.name_grading_items[i]);
+                    }
+                    deleteCmd.Parameters.AddWithValue("@course_code", message.course_code);
+                    deleteCmd.Parameters.AddWithValue("@group_number", message.group_number);
+
+                    int affected = db.Execute_non_query(deleteCmd, out connection);
+                    if (affected == 0)
+                    {
+                        response.status = "ERROR";
+                        response.message = "No se pudo eliminar ningún ítem con los nombres proporcionados.";
+                        return Ok(response);
+                    }
+                }
+
+                response.status = "OK";
+                response.message = "Ítems eliminados correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error en el servidor: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
         [HttpPost("assign_evaluation")]
         public IActionResult PostAssingEvalutaion([FromBody] Data_input_assign_evaluation message)
@@ -333,7 +472,7 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
-        [HttpPost("evaluate_submission")]
+        [HttpPost("evaluate_evaluation")]
         public IActionResult PostEvaluateSubmission([FromBody] Data_input_submit_grade_and_request_file message)
         {
             /*
@@ -356,7 +495,7 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
-        [HttpPost("update_submission")]
+        [HttpPost("update_evaluation")]
         public IActionResult PostUpdateSubmission([FromBody] Data_input_update_grade message)
         {
             /*

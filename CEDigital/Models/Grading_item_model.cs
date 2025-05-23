@@ -10,7 +10,5 @@
         //FK de grupo
         public int group_id { get; set; }
 
-        // Relación con entregas
-        public List<int> submission_ids { get; set; }
     }
 }

@@ -7,7 +7,7 @@
         public int group_number { get; set; }             // Número de grupo
         public string grading_item_name { get; set; }     // Nombre del rubro
         public string evaluation_title { get; set; }      // Título de la evaluación
-        public string file_name { get; set; }             // Nombre del archivo
-        public string file_path { get; set; }             // Ruta donde se almacenó el archivo
+        public string filename_evaluation { get; set; }             // Nombre del archivo
+        public string evaluation_filename { get; set; }             // Ruta donde se almacenó el archivo
     }
 }

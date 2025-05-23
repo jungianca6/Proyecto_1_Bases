@@ -297,30 +297,59 @@ Ejemplo de salida:
   }
 }
 
+#########################################################
+
 16)Modificar rubros (agregar, editar, eliminar)
 
 Ejemplo de entrada:
+// ====== Inserción (Agregar ítems de calificación) ======
 {
-  "data_input_update_grading_items": {
-    "course_code": "CS101",
-    "group_number": 2,
-    "grading_items": [
-      {
-        "grading_item_id": 1,
-        "name": "Proyecto Final Modificado",
-        "percentage": 50.0,
-        "group_id": 2,
-        "submission_ids": [101]
-      },
-      {
-        "grading_item_id": 0,
-        "name": "Nuevo Rubro",
-        "percentage": 10.0,
-        "group_id": 2,
-        "submission_ids": []
-      }
-    ]
-  }
+  "course_code": "MA1101",
+  "group_number": 1,
+  "grading_items": [
+    {
+      "grading_item_id": 0,
+      "name": "Quiz 1",
+      "percentage": 10.0,
+      "group_id": 1
+    },
+    {
+      "grading_item_id": 0,
+      "name": "Midterm Exam",
+      "percentage": 30.0,
+      "group_id": 1
+    }
+  ]
+}
+
+// ====== Modificación (Modificar ítems de calificación) ======
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "grading_items": [
+    {
+      "grading_item_id": 5,
+      "name": "Quiz 1 - Updated",
+      "percentage": 15.0,
+      "group_id": 1
+    },
+    {
+      "grading_item_id": 6,
+      "name": "",
+      "percentage": 35.0,
+      "group_id": 1
+    }
+  ]
+}
+
+// ====== Eliminación (Eliminar ítems por nombre) ======
+{
+  "course_code": "CS101",
+  "group_number": 1,
+  "name_grading_items": [
+    "Quiz 1 - Updated",
+    "Midterm Exam"
+  ]
 }
 
 Ejemplo de salida:
@@ -329,6 +358,7 @@ Ejemplo de salida:
   "message": "Rubros actualizados correctamente"
 }
 
+#########################################################
 
 17) Asignar evaluación a un rubro
 Ejemplo de entrada:
@@ -350,6 +380,8 @@ Ejemplo de salida:
   "status": "success",
   "message": "Evaluación asignada correctamente"
 }
+
+#########################################################
 
 18)Evaluar entregables
 

@@ -27,6 +27,16 @@ namespace CEDigital.Utilities
                 command.ExecuteNonQuery();
             }
         }
+
+        //Meotodo sobrecargado para las modificaciones
+        public int Execute_non_query(SqlCommand command, out SqlConnection connection)
+        {
+            connection = new SqlConnection(connection_string);
+            command.Connection = connection;
+            connection.Open();
+            int rowsAffected = command.ExecuteNonQuery();
+            return rowsAffected;
+        }
     }
 
 
