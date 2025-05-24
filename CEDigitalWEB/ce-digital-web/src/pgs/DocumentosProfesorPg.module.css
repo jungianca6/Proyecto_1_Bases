@@ -31,7 +31,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     left: -250px;
-    top: 50px;
+    top: -50px;
     width: 300px;
     height: 300px;
     margin-left: auto;
@@ -45,7 +45,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     left: 450px;
-    top: -400px !important;
+    top: -500px !important;
     width: 400px;
     height: 300px;
     margin-left: auto;

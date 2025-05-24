@@ -9,6 +9,7 @@ function DocumentosProfesorPg() {
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
+        cursoCodigo: "",
         grupoID: "",
         seccionDocumento: "",
         nombreArchivo: "",
@@ -76,7 +77,31 @@ function DocumentosProfesorPg() {
 
             // Limpiar el input de archivo
             document.getElementById("pdfUpload").value = "";
+        } catch (err) {
+            console.log("Error al subir el archivo: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleDelete = async () => {
+        setLoading(true);
 
+        try {
+            const response = await axios.post("https://localhost:7199/Document/delete_document", {
+                course_code: "",
+                group_id: formData.grupoID,
+                document_section: formData.seccionDocumento,
+                file_name: formData.nombreArchivo,
+            });
+
+            if (response.data.status === "OK") {
+                const data = response.data.message;
+                console.log("Datos recibidos del backend:", data);
+
+            } else {
+                const data = response.data.message;
+                console.log("Error:", data);
+            }
         } catch (err) {
             console.log("Error al subir el archivo: " + err.message);
         } finally {
@@ -129,7 +154,6 @@ function DocumentosProfesorPg() {
                             name="nombreArchivo"
                             value={formData.nombreArchivo}
                             onChange={handleChange}
-                            readOnly
                             placeholder="Nombre del archivo"
                         />
                     </Form.Group>
@@ -158,6 +182,13 @@ function DocumentosProfesorPg() {
                             className={styles.uploadButton}
                         >
                             {loading ? "Subiendo..." : "Subir documento"}
+                        </Button>
+
+                        <Button
+                            onClick={handleDelete}
+                            className={styles.uploadButton}
+                        >
+                            {loading ? "Eliminando..." : "Eliminar documento"}
                         </Button>
                     </div>
                 </Card.Body>
