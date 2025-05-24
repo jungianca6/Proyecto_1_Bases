@@ -31,7 +31,7 @@ function DocumentosProfesorPg() {
                 // Actualiza el nombreArchivo con el nombre del archivo (sin la extensión .pdf)
                 setFormData(prev => ({
                     ...prev,
-                    nombreArchivo: file.name.replace(/\.pdf$/i, '')
+                    nombreArchivo: file.name.replace(/\.pdf$/i, '') + ".pdf"
                 }));
             } else {
                 setSelectedFile(null);
