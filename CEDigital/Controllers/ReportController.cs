@@ -3,6 +3,8 @@ using CEDigital.Data_output_models;
 using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using MongoDB.Driver;
 
 namespace CEDigital.Controllers
 {
@@ -42,28 +44,65 @@ namespace CEDigital.Controllers
             return Ok(response);
         }
 
-
         [HttpPost("enrolled_students_report")]
         public IActionResult PostEnrolledStudentsReport([FromBody] Data_input_enrolled_students_report message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            Data_output_enrolled_students_report output = new Data_output_enrolled_students_report();
+            output.students = new List<Student>();
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+            try
+            {
+                // 1. Obtener los Mongo IDs desde SQL
+                List<string> mongoStudentIds = new List<string>();
+                string getStudentsQuery = @"
+                SELECT student_id
+                FROM Student_Group 
+                WHERE group_id = @group AND course_code = @course";
 
-            Data_output_enrolled_students_report data_Output_Enrolled_Students_Report = new Data_output_enrolled_students_report();
+                using (SqlCommand getStudentsCmd = new SqlCommand(getStudentsQuery))
+                {
+                    getStudentsCmd.Parameters.AddWithValue("@group", message.group_number);
+                    getStudentsCmd.Parameters.AddWithValue("@course", message.course_code);
 
-            response.status = "OK";
-            response.message = data_Output_Enrolled_Students_Report;
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(getStudentsCmd, out connection))
+                    {
+                        while (reader.Read())
+                        {
+                            mongoStudentIds.Add(reader.GetInt32(0).ToString());
+                        }
+                    }
+                }
+
+                if (mongoStudentIds.Count == 0)
+                {
+                    response.status = "OK";
+                    response.message = "No hay estudiantes inscritos en el grupo o curso especificado.";
+                    return Ok(response);
+                }
+
+                // 2. Obtener los datos desde MongoDB
+                var client = new MongoClient("mongodb://localhost:27017");
+                var database = client.GetDatabase("CEDigital");
+                var collection = database.GetCollection<Student>("Student");
+
+                var filter = Builders<Student>.Filter.In("_id", mongoStudentIds);
+                var studentsList = collection.Find(filter).ToList();
+
+                output.students = studentsList;
+
+                response.status = "OK";
+                response.message = output;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al generar el reporte: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
         [HttpPost("student_grades_report")]
