@@ -179,47 +179,93 @@ namespace CEDigital.Controllers
         [HttpPost("add_document_section")]
         public IActionResult PostAddDocumentSection([FromBody] Data_input_create_document_section message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // Insertar nueva sección en la tabla Folder
+                string insertSectionQuery = "INSERT INTO Folder (group_id, name) VALUES (@group, @name)";
+                using (SqlCommand insertCmd = new SqlCommand(insertSectionQuery))
+                {
+                    insertCmd.Parameters.AddWithValue("@group", message.group_number);
+                    insertCmd.Parameters.AddWithValue("@name", message.section_name);
+                    db.Execute_non_query(insertCmd);
+                }
 
-
-
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                // Enviar respuesta positiva
+                response.status = "OK";
+                response.message = "Sección agregada correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al agregar la sección: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
         [HttpPost("delete_document_section")]
         public IActionResult PostDeleteDocumentSection([FromBody] Data_input_delete_document_section message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // Verificar si la sección existe
+                int folderId = -1;
+                string getFolderQuery = "SELECT folder_id FROM Folder WHERE group_id = @group AND name = @section";
+                using (SqlCommand folderCmd = new SqlCommand(getFolderQuery))
+                {
+                    folderCmd.Parameters.AddWithValue("@group", message.group_id);
+                    folderCmd.Parameters.AddWithValue("@section", message.document_section);
 
+                    using (SqlDataReader reader = db.Execute_query(folderCmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            folderId = Convert.ToInt32(reader["folder_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró la sección del documento para ese grupo.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
 
+                // Eliminar documentos vinculados
+                string deleteDocsQuery = "DELETE FROM Document WHERE folder_id = @folder";
+                using (SqlCommand delDocsCmd = new SqlCommand(deleteDocsQuery))
+                {
+                    delDocsCmd.Parameters.AddWithValue("@folder", folderId);
+                    db.Execute_non_query(delDocsCmd);
+                }
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                // Eliminar la carpeta (sección)
+                string deleteFolderQuery = "DELETE FROM Folder WHERE folder_id = @folder";
+                using (SqlCommand delFolderCmd = new SqlCommand(deleteFolderQuery))
+                {
+                    delFolderCmd.Parameters.AddWithValue("@folder", folderId);
+                    db.Execute_non_query(delFolderCmd);
+                }
+
+                response.status = "OK";
+                response.message = "Sección eliminada correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al eliminar la sección: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 
