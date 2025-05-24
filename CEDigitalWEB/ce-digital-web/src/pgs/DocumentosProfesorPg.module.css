@@ -1,5 +1,5 @@
 .documentosProfeWrapper {
-    position: relative;
+    position: absolute;
     min-height: 100vh;
     width: 100%;
     background-color: #1a1a1a;
@@ -18,22 +18,40 @@
 .subtitle {
     position: absolute;
     font-size: 25px;
-    right: 30px;
-    top: 20px;
+    left: 900px;
+    bottom: 650px;
     color: #ffffff;
 }
 
 /* Tarjetas */
-.uploadCard, .documentsCard {
+.uploadCard {
+    position: absolute;
     margin-top: 80px;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
+    left: 200px;
+    top: 50px;
+    width: 300px;
+    height: 300px;
     margin-left: auto;
     margin-right: auto;
 }
+
+.documentsCard {
+    position: absolute;
+    margin-top: 80px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    left: 550px;
+    top: -200px;
+    width: 300px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 
 .documentsCard {
     margin-top: 30px;

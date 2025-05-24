@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { Button, Card, ListGroup, Alert } from 'react-bootstrap';
+import { Button, Card, ListGroup } from 'react-bootstrap';
 import styles from './DocumentosProfesorPg.module.css';
 import axios from "axios";
 
 function DocumentosProfesorPg() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadedDocuments, setUploadedDocuments] = useState([]);
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
     const handleFileChange = (e) => {
@@ -14,9 +13,8 @@ function DocumentosProfesorPg() {
         if (file) {
             if (file.type === "application/pdf") {
                 setSelectedFile(file);
-                setError(null);
+
             } else {
-                setError("Por favor, seleccione un archivo PDF");
                 setSelectedFile(null);
             }
         }
@@ -24,12 +22,12 @@ function DocumentosProfesorPg() {
 
     const handleUpload = async () => {
         if (!selectedFile) {
-            setError("Por favor, seleccione un archivo PDF primero");
+            alert("Por favor, seleccione un archivo PDF primero");
             return;
         }
 
         setLoading(true);
-        setError(null);
+
 
         try {
             // Simulamos la subida al backend (en producción usarías axios o fetch)
@@ -49,7 +47,7 @@ function DocumentosProfesorPg() {
             document.getElementById("pdfUpload").value = "";
 
         } catch (err) {
-            setError("Error al subir el archivo: " + err.message);
+            console.log("Error al subir el archivo: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -96,7 +94,6 @@ function DocumentosProfesorPg() {
                             {loading ? "Subiendo..." : "Subir documento"}
                         </Button>
                     </div>
-                    {error && <Alert variant="danger" className={styles.alert}>{error}</Alert>}
                 </Card.Body>
             </Card>
 
