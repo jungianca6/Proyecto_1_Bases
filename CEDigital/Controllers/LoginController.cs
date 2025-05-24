@@ -42,7 +42,9 @@ namespace CEDigital.Controllers
                 return Ok(response);
             }
 
-            var (userDoc, userType) = await _mongoService.FindUser(message.username, message.password);
+            string encryptedPassword = Encriptador.ObtenerHashMD5(message.password);
+
+            var (userDoc, userType) = await _mongoService.FindUser(message.username, encryptedPassword);
 
             if (userDoc == null)
             {
