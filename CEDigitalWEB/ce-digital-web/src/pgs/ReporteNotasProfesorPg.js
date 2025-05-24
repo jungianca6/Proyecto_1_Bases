@@ -43,10 +43,11 @@ function ReporteNotasProfesorPg() {
 
                 const data = response.data.message;
                 console.log("Datos recibidos del backend:", data);
+                console.log("Notas:", data.grades);
 
 
-                if (response.data.message.students) {
-                    const reporteFormateado = formatReport(response.data.message.students);
+                if (response.data.message.grades) {
+                    const reporteFormateado = formatReport(response.data.message.grades);
                     setReporteNotas(reporteFormateado);
                 } else {
                     setReporteNotas("No se encontraron estudiantes para este grupo.");
