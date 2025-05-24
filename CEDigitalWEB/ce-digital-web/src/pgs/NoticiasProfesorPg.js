@@ -1,6 +1,3 @@
-import { FaRegUser } from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Button, Card, Form } from 'react-bootstrap';
 import axios from "axios";

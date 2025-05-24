@@ -1,5 +1,3 @@
-import { FaRegUser } from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
 import React from "react";
 import { Button, Card, Form } from 'react-bootstrap';
 import styles from './EvaluacionesProfesorPg.module.css';
