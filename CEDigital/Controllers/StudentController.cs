@@ -126,11 +126,18 @@ namespace CEDigital.Controllers
             SqlConnection connection = null;
 
             string query = @"
-            SELECT c.course_code, c.name AS course_name, g.group_number
-            FROM Student_Group sg
-            JOIN Groups g ON sg.group_id = g.group_id
-            JOIN Course c ON g.course_code = c.course_code
-            WHERE sg.student_id = @student_id
+                SELECT 
+                    c.course_code, 
+                    c.name AS course_name, 
+                    g.group_number
+                FROM 
+                    Student_Group sg
+                JOIN 
+                    Course c ON sg.course_code = c.course_code
+                JOIN 
+                    Groups g ON sg.group_id = g.group_id
+                WHERE 
+                    sg.student_id = @student_id;
             ";
 
             try
