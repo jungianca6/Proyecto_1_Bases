@@ -12,25 +12,26 @@ function EvaluacionesEstudiantesPg() {
   useEffect(() => {
     const cuentaGuardada = JSON.parse(localStorage.getItem("cuenta_actual"));
     const cursoGuardado = JSON.parse(localStorage.getItem("curso_seleccionado"));
+
     if (cuentaGuardada) {
       setCuenta(cuentaGuardada);
-      fetchEvaluaciones(cuentaGuardada.primary_key);
     }
 
     if (cursoGuardado) {
-    setCursoSeleccionado(cursoGuardado);
-    console.log("Curso activo:", cursoGuardado);
+      setCursoSeleccionado(cursoGuardado);
+      console.log("Curso activo:", cursoGuardado);
     } else {
       alert("Por favor selecciona un curso desde el menú principal.");
     }
   }, []);
 
-  const fetchEvaluaciones = async (studentId) => {
-    if (!cursoSeleccionado) {
-      alert("Curso no seleccionado.");
-      return;
+  useEffect(() => {
+    if (cuenta && cursoSeleccionado) {
+      fetchEvaluaciones(cuenta.primary_key);
     }
+  }, [cuenta, cursoSeleccionado]);
 
+  const fetchEvaluaciones = async (studentId) => {
     const payload = {
       student_id: studentId,
       course_code: cursoSeleccionado.course_code,
@@ -51,7 +52,6 @@ function EvaluacionesEstudiantesPg() {
       console.error("Error al obtener evaluaciones:", error);
     }
   };
-
 
   const handleFileChange = (event, titulo) => {
     setArchivos(prev => ({
@@ -104,82 +104,94 @@ function EvaluacionesEstudiantesPg() {
     reader.readAsDataURL(archivo);
   };
 
-  
-
-  {evaluaciones.map((eva, index) => {
-  const yaEntregado = eva.data_base_path_evalution && eva.evaluation_filename;
-
   return (
-    <div key={index} className={styles.evaluacionItem}>
-      <h5>{eva.evaluation_title} ({eva.rubric_name})</h5>
-      <p><strong>Nota:</strong> {eva.grade}/100</p>
-      <p><strong>Comentarios:</strong> {eva.feedback}</p>
-      <p><strong>Fecha:</strong> {new Date(eva.evaluation_date).toLocaleDateString()}</p>
+    <div className={styles.evaluacionesWrapper}>
+      <h1 className={styles.title}>CE Digital</h1>
+      <h3 className={styles.subtitle}>Evaluaciones</h3>
+      {cuenta && <h3 className={styles.listaEvaluacion}>Estudiante: {cuenta.username}</h3>}
 
-      <p>
-        <strong>Instrucciones:</strong>{" "}
-        {eva.data_base_path_professor && eva.professor_filename ? (
-          <a
-            href={eva.data_base_path_professor}
-            download={eva.professor_filename}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkArchivo}
-          >
-            Descargar {eva.professor_filename}
-          </a>
-        ) : "No disponibles"}
-      </p>
+      <div className={styles.notasSection}>
+        <h4 className={styles.sectionTitle}>Evaluaciones</h4>
 
-      {yaEntregado ? (
-        <p>
-          <strong>Archivo entregado:</strong>{" "}
-          <a
-            href={eva.data_base_path_evalution}
-            download={eva.evaluation_filename}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.linkArchivo}
-          >
-            {eva.evaluation_filename}
-          </a>
-        </p>
-      ) : (
-        new Date(eva.evaluation_date) >= new Date() ? (
-          <>
-            <label htmlFor={`archivo-${index}`}>Entregar archivo:</label>
-            <input
-              id={`archivo-${index}`}
-              type="file"
-              className={styles.inputArchivo}
-              onChange={(e) => handleFileChange(e, eva.evaluation_title)}
-            />
-            <button
-              className={styles.entregarButton}
-              onClick={() => handleSubmitArchivo(eva.evaluation_title)}
-              disabled={!archivos[eva.evaluation_title]}
-            >
-              Enviar entrega
-            </button>
-          </>
+        {evaluaciones.length === 0 ? (
+          <p className={styles.textoBlanco}>No hay evaluaciones públicas disponibles.</p>
         ) : (
-          <p style={{ color: "orange", marginTop: "0.5rem" }}>
-            ⏳ Fecha límite vencida. No se puede realizar la entrega.
-          </p>
-        )
-      )}
+          evaluaciones.map((eva, index) => {
+            const yaEntregado = eva.data_base_path_evalution && eva.evaluation_filename;
+            const vencida = new Date(eva.evaluation_date) < new Date();
 
-      {entregasCompletadas[eva.evaluation_title] && (
-        <p style={{ color: "lightgreen", marginTop: "0.5rem" }}>
-          ✅ Entrega enviada correctamente.
-        </p>
-      )}
+            return (
+              <div key={index} className={styles.evaluacionItem}>
+                <h5>{eva.evaluation_title} ({eva.rubric_name})</h5>
+                <p><strong>Nota:</strong> {eva.grade}/100</p>
+                <p><strong>Comentarios:</strong> {eva.feedback}</p>
+                <p><strong>Fecha límite:</strong> {new Date(eva.evaluation_date).toLocaleDateString()}</p>
 
-      <hr />
+                <p>
+                  <strong>Instrucciones:</strong>{" "}
+                  {eva.data_base_path_professor && eva.professor_filename ? (
+                    <a
+                      href={eva.data_base_path_professor}
+                      download={eva.professor_filename}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.linkArchivo}
+                    >
+                      Descargar {eva.professor_filename}
+                    </a>
+                  ) : "No disponibles"}
+                </p>
+
+                {yaEntregado ? (
+                  <p>
+                    <strong>Archivo entregado:</strong>{" "}
+                    <a
+                      href={eva.data_base_path_evalution}
+                      download={eva.evaluation_filename}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.linkArchivo}
+                    >
+                      {eva.evaluation_filename}
+                    </a>
+                  </p>
+                ) : vencida ? (
+                  <p style={{ color: "orange", marginTop: "0.5rem" }}>
+                    ⏳ Fecha límite vencida. No se puede realizar la entrega.
+                  </p>
+                ) : (
+                  <>
+                    <label htmlFor={`archivo-${index}`}>Entregar archivo:</label>
+                    <input
+                      id={`archivo-${index}`}
+                      type="file"
+                      className={styles.inputArchivo}
+                      onChange={(e) => handleFileChange(e, eva.evaluation_title)}
+                    />
+                    <button
+                      className={styles.entregarButton}
+                      onClick={() => handleSubmitArchivo(eva.evaluation_title)}
+                      disabled={!archivos[eva.evaluation_title]}
+                    >
+                      Enviar entrega
+                    </button>
+                  </>
+                )}
+
+                {entregasCompletadas[eva.evaluation_title] && (
+                  <p style={{ color: "lightgreen", marginTop: "0.5rem" }}>
+                    ✅ Entrega enviada correctamente.
+                  </p>
+                )}
+
+                <hr />
+              </div>
+            );
+          })
+        )}
+      </div>
     </div>
   );
-})}
-
 }
 
 export default EvaluacionesEstudiantesPg;

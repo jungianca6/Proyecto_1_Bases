@@ -217,7 +217,7 @@ function AdminPg() {
 
   for (const carnet of listaCarnets) {
     const requestData = {
-        student_card: carnet,
+        student_id: carnet,
         group_number: parseInt(numeroGrupoEstudiantes),
         course_code: codigoCursoEstudiantes
     };
@@ -271,7 +271,7 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
   };
 
   try {
-    const response = await axios.post("https://localhost:7199/Course/add_default_grades", requestData);
+    const response = await axios.post("https://localhost:7199/Group/add_default_grades", requestData);
 
     if (response.data.status === "OK") {
       alert("Rubros default agregados correctamente.");
