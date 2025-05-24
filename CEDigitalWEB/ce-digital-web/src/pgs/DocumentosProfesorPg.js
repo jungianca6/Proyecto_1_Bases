@@ -15,6 +15,13 @@ function DocumentosProfesorPg() {
         nombreArchivo: "",
     });
 
+    const [docuData, setDocuData] = useState({
+        cursoCodigo: "",
+        numeroGrupo: "",
+        grupoID: "",
+        seccionDocumento: "",
+    });
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,6 +30,15 @@ function DocumentosProfesorPg() {
             [name]: value
         }));
     };
+
+    const handledocuChange = (e) => {
+        const { name, value } = e.target;
+        setDocuData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    };
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -228,6 +244,71 @@ function DocumentosProfesorPg() {
                     </Card.Body>
                 </Card>
             )}
+            <Card className={styles.docSectionCard}>
+                <Card.Header>Secciones de documento</Card.Header>
+                <Card.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>ID de grupo</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="grupoID"
+                            value={docuData.grupoID}
+                            onChange={handledocuChange}
+                            placeholder="Escriba el ID del grupo"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Sección de documento</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="seccionDocumento"
+                            value={docuData.seccionDocumento}
+                            onChange={handledocuChange}
+                            placeholder="Escriba la sección de documento"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Número de grupo</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="numeroGrupo"
+                            value={docuData.numeroGrupo}
+                            onChange={handledocuChange}
+                            placeholder="Número de grupo"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Código de curso</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="cursoCodigo"
+                            value={docuData.cursoCodigo}
+                            onChange={handledocuChange}
+                            placeholder="Código de curso"
+                        />
+                    </Form.Group>
+
+                    <div className={styles.buttonGroup}>
+                        <Button
+                            variant="primary"
+                            //onClick={handlePublicarNoticia}
+                            className={styles.actionButton}>
+                            Añadir
+                        </Button>
+                        
+                        <Button
+                            variant="danger"
+                            //onClick={handleEliminarNoticia}
+                            className={styles.actionButton}>
+                            Eliminar
+                        </Button>
+                    </div>
+                </Card.Body>
+            </Card>
+
         </div>
     );
 }
