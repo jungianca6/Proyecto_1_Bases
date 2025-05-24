@@ -224,52 +224,40 @@ namespace CEDigital.Controllers
 
             try
             {
-                // Lista para guardar los course_codes a consultar
+                // Obtener todos los course_code directamente desde la tabla Student_Group
                 List<string> courseCodes = new List<string>();
+                string courseQuery = @"
+            SELECT DISTINCT course_code
+            FROM Student_Group
+            WHERE student_id = @student_id";
 
-                // Si se especifica el course_code directamente, se agrega y se omite búsqueda en grupos
-                if (!string.IsNullOrEmpty(message.course_code))
+                using (SqlCommand courseCmd = new SqlCommand(courseQuery))
                 {
-                    courseCodes.Add(message.course_code);
-                }
-                else
-                {
-                    // Buscar los grupos donde está el estudiante
-                    string groupQuery = @"
-                SELECT DISTINCT G.course_code
-                FROM Student_Group SG
-                INNER JOIN Groups G ON SG.group_id = G.group_id
-                WHERE SG.student_id = @student_id";
+                    courseCmd.Parameters.AddWithValue("@student_id", message.student_id);
 
-                    using (SqlCommand groupCommand = new SqlCommand(groupQuery))
+                    using (SqlDataReader reader = db.Execute_query(courseCmd, out connection))
                     {
-                        groupCommand.Parameters.AddWithValue("@student_id", message.student_id);
-
-                        using (SqlDataReader reader = db.Execute_query(groupCommand, out connection))
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            string code = reader["course_code"].ToString();
+                            if (!string.IsNullOrEmpty(code))
                             {
-                                string code = reader["course_code"].ToString();
-                                if (!string.IsNullOrEmpty(code))
-                                {
-                                    courseCodes.Add(code);
-                                }
+                                courseCodes.Add(code);
                             }
-
-                            reader.Close();
                         }
-                    }
 
-                    // Si no está en ningún grupo, no tiene sentido continuar
-                    if (courseCodes.Count == 0)
-                    {
-                        response.status = "ERROR";
-                        response.message = "El estudiante no está asociado a ningún grupo.";
-                        return Ok(response);
+                        reader.Close();
                     }
                 }
 
-                // Buscar las noticias asociadas a los courseCodes encontrados
+                if (courseCodes.Count == 0)
+                {
+                    response.status = "ERROR";
+                    response.message = "El estudiante no está asociado a ningún curso.";
+                    return Ok(response);
+                }
+
+                // Consultar las noticias de los cursos encontrados
                 string formattedInClause = string.Join(",", courseCodes.Select((c, i) => $"@code{i}"));
                 string newsQuery = $@"
             SELECT news_id, message, title, course_code, publication_date, author
@@ -316,6 +304,7 @@ namespace CEDigital.Controllers
                 return StatusCode(500, response);
             }
         }
+
 
 
 

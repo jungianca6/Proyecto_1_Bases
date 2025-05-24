@@ -215,6 +215,13 @@ INSERT INTO Groups (course_code, group_number) VALUES
 ('CE2201', 2),
 ('CE3102', 1);
 
+
+
+INSERT INTO Groups (course_code, group_number) VALUES 
+('MA1101', 1),
+('FI1402', 2),
+('CE3102', 3);
+
 -- Student_Group
 INSERT INTO Student_Group (student_id, group_id, course_code) VALUES 
 (20231001, 1, 'CE1105'),
@@ -222,6 +229,11 @@ INSERT INTO Student_Group (student_id, group_id, course_code) VALUES
 (20231002, 2, 'CE1103'),
 (20231003, 3, 'CE1105');
 
+INSERT INTO Student_Group (student_id, group_id, course_code) VALUES 
+(20231001, 5, 'MA1101'),
+(20231001, 6, 'MA1101'),
+(20231002, 6, 'FI1402'),
+(20231003, 7, 'CE3102');
 
 -- Professor_Group
 INSERT INTO Professor_Group (id_number, group_id) VALUES 
