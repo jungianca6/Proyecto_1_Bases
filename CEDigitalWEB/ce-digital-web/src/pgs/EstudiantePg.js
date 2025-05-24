@@ -143,6 +143,7 @@ function EstudiantePg() {
             </Card>
 
             {/* Botones de navegación */}
+            <div className={styles.botonesWrapper}>
             <Button
                 variant="dark"
                 className={styles.reporteNotasButton}
@@ -163,6 +164,7 @@ function EstudiantePg() {
                 onClick={handleDocumentosClick}>
                 Documentos
             </Button>
+            </div>
         </div>
     );
 }

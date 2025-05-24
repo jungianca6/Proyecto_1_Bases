@@ -1,113 +1,42 @@
 .estudianteWrapper {
-    position: relative;
     height: 100vh;
     width: 100%;
     background-color: #1e1e1e;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    padding: 20px;
+    padding: 40px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
     gap: 20px;
-}
-
-/* Sección Noticias */
-.noticiasSection {
-    grid-column: 1;
-    grid-row: 3;
-    height: 300px;
-    background-color: rgba(40, 40, 40, 0.9);
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    color: #f0f0f0;
-}
-
-/* Áreas de texto */
-.textArea {
-    width: 100%;
-    height: 100%;
-    resize: none;
-    border: 1px solid #444;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: rgba(30, 30, 30, 0.9);
-    color: #e0e0e0;
 }
 
 /* Títulos */
 .title {
-    position: absolute;
+    grid-column: 1 / 3;
+    grid-row: 1;
     font-size: 30px;
-    left: 30px;
-    bottom: 650px;
     color: #ffffff;
+    align-self: center;
 }
 
 .subtitle {
-    position: absolute;
+    grid-column: 3 / 5;
+    grid-row: 1;
     font-size: 25px;
-    left: 900px;
-    bottom: 650px;
     color: #ffffff;
+    align-self: center;
+    justify-self: end;
 }
 
-/* Botones generales en modo oscuro */
-button {
-    color: #ffffff;
-    background-color: #2a2a2a; /* gris más oscuro */
-    border: 1px solid #444444;
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 10px 20px;
-    font-size: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #2c2c2c;
-    border-color: #666666;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    transform: translateY(-2px);
-}
-
-/* Posiciones y dimensiones específicas de los botones */
-
-
-.documentosButton {
-    position: absolute;
-    left: 550px;
-    bottom: 600px;
-    width: 160px;
-    height: 50px;
-}
-
-.evaluacionesButton {
-    position: absolute;
-    left: 750px;
-    bottom: 600px;
-    width: 160px;
-    height: 50px;
-}
-
-.reporteNotasButton {
-    position: absolute;
-    left: 950px;
-    bottom: 600px;
-    width: 160px;
-    height: 50px;
-}
-
+/* Dropdown para curso */
 .cursoDropdownWrapper {
-    position: absolute;
-    left: 30px;
-    bottom: 600px;
-    color: #ffffff;
+    grid-column: 1 / 3;
+    grid-row: 2;
     display: flex;
     flex-direction: column;
+    color: #ffffff;
 }
 
 .cursoDropdownLabel {
@@ -124,14 +53,71 @@ button:hover {
     border-radius: 8px;
     padding: 10px 12px;
     font-size: 16px;
-    width: 300px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
+    width: 100%;
 }
 
-.cursoDropdownSelect:hover {
+/* Contenedor de botones */
+.botonesWrapper {
+    grid-column: 1 / 5;
+    grid-row: 3;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Botones individuales */
+.reporteNotasButton,
+.evaluacionesButton,
+.documentosButton {
+    height: 50px;
+    min-width: 180px;
+    font-size: 16px;
+    flex: 1;
+    color: #ffffff;
+    background-color: #2a2a2a;
+    border: 1px solid #444444;
+    border-radius: 8px;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.reporteNotasButton:hover,
+.evaluacionesButton:hover,
+.documentosButton:hover {
     background-color: #2c2c2c;
     border-color: #666666;
-    transform: translateY(-1px);
-    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Noticias */
+.noticiasSection {
+    grid-column: 1 / 5;
+    grid-row: 4;
+    height: 300px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: #f0f0f0;
+    overflow-y: auto; /* Habilita scroll vertical si el contenido excede */
+    padding: 16px; /* Espacio interno para que el scroll no se superponga */
+}
+
+/* Asegúrate también de que cada noticia tenga márgenes adecuados */
+.noticiaItem {
+    margin-bottom: 20px;
+}
+
+/* Área de texto */
+.textArea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 1px solid #444;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: rgba(30, 30, 30, 0.9);
+    color: #e0e0e0;
 }
