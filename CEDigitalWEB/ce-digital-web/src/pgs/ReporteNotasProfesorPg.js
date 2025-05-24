@@ -40,6 +40,11 @@ function ReporteNotasProfesorPg() {
             });
 
             if (response.data.status === "OK") {
+
+                const data = response.data.message;
+                console.log("Datos recibidos del backend:", data);
+
+
                 if (response.data.message.students) {
                     const reporteFormateado = formatReport(response.data.message.students);
                     setReporteNotas(reporteFormateado);
