@@ -9,8 +9,7 @@ function DocumentosProfesorPg() {
     const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
-        codigoCurso: "",
-        grupoCurso: "",
+        grupoID: "",
         seccionDocumento: "",
         nombreArchivo: "",
     });
@@ -29,9 +28,14 @@ function DocumentosProfesorPg() {
         if (file) {
             if (file.type === "application/pdf") {
                 setSelectedFile(file);
-
+                // Actualiza el nombreArchivo con el nombre del archivo (sin la extensión .pdf)
+                setFormData(prev => ({
+                    ...prev,
+                    nombreArchivo: file.name.replace(/\.pdf$/i, '')
+                }));
             } else {
                 setSelectedFile(null);
+                alert("Por favor, seleccione un archivo PDF");
             }
         }
     };
@@ -44,8 +48,21 @@ function DocumentosProfesorPg() {
         setLoading(true);
 
         try {
-            // Simulamos la subida al backend (en producción usarías axios o fetch)
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await axios.post("https://localhost:7199/Document/add_document", {
+                group_id: formData.grupoID,
+                document_section: formData.seccionDocumento,
+                file_name: formData.nombreArchivo,
+                uploaded_by_professor: 1
+            });
+
+            if (response.data.status === "OK") {
+                const data = response.data.message;
+                console.log("Datos recibidos del backend:", data);
+
+            } else {
+                const data = response.data.message;
+                console.log("Error:", data);
+            }
 
             const newDocument = {
                 name: selectedFile.name,
@@ -84,24 +101,13 @@ function DocumentosProfesorPg() {
                 <Card.Header>Subir nuevo documento</Card.Header>
                 <Card.Body>
                     <Form.Group className="mb-3">
-                        <Form.Label>Código de curso</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="codigoCurso"
-                            value={formData.codigoCurso}
-                            onChange={handleChange}
-                            placeholder="Ingrese el código del curso"
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
                         <Form.Label>Número de grupo</Form.Label>
                         <Form.Control
                             type="text"
-                            name="grupoCurso"
-                            value={formData.grupoCurso}
+                            name="grupoID"
+                            value={formData.grupoID}
                             onChange={handleChange}
-                            placeholder="Escriba el número del grupo"
+                            placeholder="Escriba el ID del grupo"
                         />
                     </Form.Group>
 
@@ -123,6 +129,7 @@ function DocumentosProfesorPg() {
                             name="nombreArchivo"
                             value={formData.nombreArchivo}
                             onChange={handleChange}
+                            readOnly
                             placeholder="Nombre del archivo"
                         />
                     </Form.Group>
