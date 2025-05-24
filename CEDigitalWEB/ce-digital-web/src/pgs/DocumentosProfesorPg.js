@@ -131,6 +131,55 @@ function DocumentosProfesorPg() {
         }
     };
 
+    const handleAddSection = async () => {
+        setLoading(true);
+
+        try {
+            const response = await axios.post("https://localhost:7199/Document/add_document_section", {
+                course_code: docuData.cursoCodigo,
+                group_number: docuData.numeroGrupo,
+                section_name: docuData.seccionDocumento,
+            });
+
+            if (response.data.status === "OK") {
+                const data = response.data.message;
+                console.log("Datos recibidos del backend:", data);
+            } else {
+                const data = response.data.message;
+                console.log("Error:", data);
+            }
+        } catch (err) {
+            console.log("Error al crear la sección de documento: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteSection = async () => {
+        setLoading(true);
+
+        try {
+            const response = await axios.post("https://localhost:7199/Document/delete_document_section", {
+                course_code: docuData.cursoCodigo,
+                group_id: docuData.grupoID,
+                document_section: docuData.seccionDocumento,
+            });
+
+            if (response.data.status === "OK") {
+                const data = response.data.message;
+                console.log("Datos recibidos del backend:", data);
+            } else {
+                const data = response.data.message;
+                console.log("Error:", data);
+            }
+        } catch (err) {
+            console.log("Error al crear la sección de documento: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     const formatFileSize = (bytes) => {
         if (bytes === 0) return "0 Bytes";
         const k = 1024;
@@ -294,14 +343,14 @@ function DocumentosProfesorPg() {
                     <div className={styles.buttonGroup}>
                         <Button
                             variant="primary"
-                            //onClick={handlePublicarNoticia}
+                            onClick={handleAddSection}
                             className={styles.actionButton}>
                             Añadir
                         </Button>
-                        
+
                         <Button
                             variant="danger"
-                            //onClick={handleEliminarNoticia}
+                            onClick={handleDeleteSection}
                             className={styles.actionButton}>
                             Eliminar
                         </Button>
