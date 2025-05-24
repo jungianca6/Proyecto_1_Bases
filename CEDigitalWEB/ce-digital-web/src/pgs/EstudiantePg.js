@@ -57,23 +57,23 @@ function EstudiantePg() {
 };
 
     const fetchNoticias = async (studentId) => {
-    try {
-        const response = await axios.post("https://localhost:7199/News/view_news", {
-            student_id: studentId
-        });
+  try {
+    const response = await axios.post("https://localhost:7199/News/view_news", {
+      student_id: parseInt(studentId)
+    });
 
-        if (response.data.status === "success" || response.data.status === "OK") {
-            const noticiasOrdenadas = (response.data.message.news || []).sort((a, b) =>
-                new Date(b.publish_date) - new Date(a.publish_date)
-            );
-            setNoticias(noticiasOrdenadas);
-            console.log("Noticias recibidas (ordenadas):", noticiasOrdenadas);
-        } else {
-            console.warn("No se pudieron obtener noticias.");
-        }
-    } catch (error) {
-        console.error("Error al obtener noticias:", error);
+    if (response.data.status === "success" || response.data.status === "OK") {
+      const noticiasOrdenadas = (response.data.message.news_list || []).sort(
+        (a, b) => new Date(b.publication_date) - new Date(a.publication_date)
+      );
+      setNoticias(noticiasOrdenadas);
+      console.log("Noticias recibidas (ordenadas):", noticiasOrdenadas);
+    } else {
+      console.warn("No se pudieron obtener noticias.");
     }
+  } catch (error) {
+    console.error("Error al obtener noticias:", error);
+  }
 };
 
     const handleCursoSeleccionado = (e) => {
