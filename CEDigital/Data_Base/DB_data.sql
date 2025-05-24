@@ -115,13 +115,17 @@ CREATE TABLE Professor_Group(
     FOREIGN KEY (group_id) REFERENCES Groups(group_id)
 );
 
+
 CREATE TABLE Student_Group(
     student_id INT,
     group_id INT,
+    course_code VARCHAR(20),
     PRIMARY KEY (student_id, group_id),
     FOREIGN KEY (student_id) REFERENCES Student(student_id),
-    FOREIGN KEY (group_id) REFERENCES Groups(group_id)
+    FOREIGN KEY (group_id) REFERENCES Groups(group_id),
+    FOREIGN KEY (course_code) REFERENCES Course(course_code)
 );
+
 
 CREATE TABLE Group_Section_Percentage (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -207,16 +211,17 @@ INSERT INTO Professor (id_number) VALUES (1001), (1002);
 
 -- Groups
 INSERT INTO Groups (course_code, group_number) VALUES 
-('MA1101', 1),
-('FI1402', 2),
+('CE2201', 1),
+('CE2201', 2),
 ('CE3102', 1);
 
 -- Student_Group
-INSERT INTO Student_Group (student_id, group_id) VALUES 
-(20231001, 1),
-(20231001, 2),
-(20231002, 2),
-(20231003, 3);
+INSERT INTO Student_Group (student_id, group_id, course_code) VALUES 
+(20231001, 1, 'CE1105'),
+(20231001, 2, 'CE1105'),
+(20231002, 2, 'CE1103'),
+(20231003, 3, 'CE1105');
+
 
 -- Professor_Group
 INSERT INTO Professor_Group (id_number, group_id) VALUES 

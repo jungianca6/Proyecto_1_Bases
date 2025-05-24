@@ -27,25 +27,7 @@ namespace CEDigital.Controllers
 
             try
             {
-                // 0. Verificar que el estudiante existe
-                string checkStudentExistQuery = "SELECT COUNT(*) FROM Student WHERE student_id = @student_id";
-
-                using (SqlCommand checkStudentExistCmd = new SqlCommand(checkStudentExistQuery))
-                {
-                    checkStudentExistCmd.Parameters.AddWithValue("@student_id", message.student_id);
-
-                    using (SqlDataReader reader = db.Execute_query(checkStudentExistCmd, out connection))
-                    {
-                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
-                        {
-                            response.status = "ERROR";
-                            response.message = "El estudiante no existe.";
-                            return Ok(response);
-                        }
-                        reader.Close();
-                    }
-                }
-
+                // 1. Verificar si el grupo existe
                 string checkGroupQuery = "SELECT group_id FROM Groups WHERE group_number = @group_number AND course_code = @course_code";
                 int groupId = -1;
 
@@ -69,43 +51,64 @@ namespace CEDigital.Controllers
 
                         reader.Close();
                     }
-
-                    // 2. Verificar si el estudiante ya est� en el grupo
-                    string checkStudentQuery = "SELECT COUNT(*) FROM Student_Group WHERE student_id = @student_id AND group_id = @group_id";
-
-                    using (SqlCommand checkStudentCmd = new SqlCommand(checkStudentQuery))
-                    {
-                        checkStudentCmd.Parameters.AddWithValue("@student_id", message.student_id);
-                        checkStudentCmd.Parameters.AddWithValue("@group_id", groupId);
-
-                        using (SqlDataReader reader = db.Execute_query(checkStudentCmd, out connection))
-                        {
-                            if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
-                            {
-                                response.status = "ERROR";
-                                response.message = "El estudiante ya est� en el grupo.";
-                                return Ok(response);
-                            }
-
-                            reader.Close();
-                        }
-                    }
-
-                    // 3. Insertar al estudiante en el grupo
-                    string insertQuery = "INSERT INTO Student_Group (student_id, group_id) VALUES (@student_id, @group_id)";
-
-                    using (SqlCommand insertCmd = new SqlCommand(insertQuery))
-                    {
-                        insertCmd.Parameters.AddWithValue("@student_id", message.student_id);
-                        insertCmd.Parameters.AddWithValue("@group_id", groupId);
-
-                        db.Execute_non_query(insertCmd);
-                    }
-
-                    response.status = "OK";
-                    response.message = "Estudiante agregado correctamente al grupo.";
-                    return Ok(response);
                 }
+
+                // 2. Verificar que el estudiante existe
+                string checkStudentExistsQuery = "SELECT COUNT(*) FROM Student WHERE student_id = @student_id";
+
+                using (SqlCommand checkStudentExistsCmd = new SqlCommand(checkStudentExistsQuery))
+                {
+                    checkStudentExistsCmd.Parameters.AddWithValue("@student_id", message.student_id);
+
+                    using (SqlDataReader reader = db.Execute_query(checkStudentExistsCmd, out connection))
+                    {
+                        if (reader.Read() && Convert.ToInt32(reader[0]) == 0)
+                        {
+                            response.status = "ERROR";
+                            response.message = "El estudiante no existe.";
+                            return Ok(response);
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                // 3. Verificar si el estudiante ya está en el grupo
+                string checkStudentQuery = "SELECT COUNT(*) FROM Student_Group WHERE student_id = @student_id AND group_id = @group_id";
+
+                using (SqlCommand checkStudentCmd = new SqlCommand(checkStudentQuery))
+                {
+                    checkStudentCmd.Parameters.AddWithValue("@student_id", message.student_id);
+                    checkStudentCmd.Parameters.AddWithValue("@group_id", groupId);
+
+                    using (SqlDataReader reader = db.Execute_query(checkStudentCmd, out connection))
+                    {
+                        if (reader.Read() && Convert.ToInt32(reader[0]) > 0)
+                        {
+                            response.status = "ERROR";
+                            response.message = "El estudiante ya está en el grupo.";
+                            return Ok(response);
+                        }
+
+                        reader.Close();
+                    }
+                }
+
+                // 4. Insertar al estudiante en el grupo (incluyendo course_code si aplica)
+                string insertQuery = "INSERT INTO Student_Group (student_id, group_id, course_code) VALUES (@student_id, @group_id, @course_code)";
+
+                using (SqlCommand insertCmd = new SqlCommand(insertQuery))
+                {
+                    insertCmd.Parameters.AddWithValue("@student_id", message.student_id);
+                    insertCmd.Parameters.AddWithValue("@group_id", groupId);
+                    insertCmd.Parameters.AddWithValue("@course_code", message.course_code);
+
+                    db.Execute_non_query(insertCmd);
+                }
+
+                response.status = "OK";
+                response.message = "Estudiante agregado correctamente al grupo.";
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -114,6 +117,7 @@ namespace CEDigital.Controllers
                 return Ok(response);
             }
         }
+
 
         [HttpPost("view_student_courses")]
         public IActionResult PostViewStudentCourses([FromBody] Data_input_view_student_courses message)
