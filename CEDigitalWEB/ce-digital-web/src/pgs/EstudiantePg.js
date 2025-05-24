@@ -15,19 +15,29 @@ function EstudiantePg() {
     const navigate = useNavigate();
 
     useEffect(() => {
-    const cuentaGuardada = JSON.parse(localStorage.getItem("cuenta_actual"));
-        if (cuentaGuardada) {
-            setCuenta(cuentaGuardada);
-            console.log("Datos de cuenta:", cuentaGuardada);
-            fetchNoticias(cuentaGuardada.primary_key);
-            fetchCursos(cuentaGuardada.primary_key); 
-        }
+  try {
+    const cuentaRaw = localStorage.getItem("cuenta_actual");
+    const cursoRaw = localStorage.getItem("curso_seleccionado");
 
-        // Cargar curso previamente seleccionado (si existe)
-        const cursoGuardado = JSON.parse(localStorage.getItem("curso_seleccionado"));
-        if (cursoGuardado) setCursoSeleccionado(cursoGuardado);
+    const cuentaGuardada = cuentaRaw && cuentaRaw !== "undefined" ? JSON.parse(cuentaRaw) : null;
+    const cursoGuardado = cursoRaw && cursoRaw !== "undefined" ? JSON.parse(cursoRaw) : null;
 
-    }, []);
+    if (cuentaGuardada) {
+      setCuenta(cuentaGuardada);
+      console.log("Datos de cuenta:", cuentaGuardada);
+      fetchNoticias(cuentaGuardada.primary_key);
+      fetchCursos(cuentaGuardada.primary_key);
+    }
+
+    if (cursoGuardado) {
+      setCursoSeleccionado(cursoGuardado);
+    }
+
+  } catch (error) {
+    console.error("Error leyendo localStorage:", error);
+    alert("Ocurrió un error al cargar la información guardada. Por favor, reinicie sesión.");
+  }
+}, []);
 
     const fetchCursos = async (studentId) => {
     try {

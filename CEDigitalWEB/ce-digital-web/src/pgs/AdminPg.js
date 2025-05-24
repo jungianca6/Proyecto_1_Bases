@@ -42,7 +42,7 @@ function AdminPg() {
 
   //Estado para agregar rubros default en las evaluaciones de curso
 
-  const [codigoCursoRubrosDefault, setCodigoCursoRubrosDefault] = useState("");
+  const [numeroGrupoRubrosDefault, setnumeroGrupoRubrosDefault] = useState("");
 
   const handleCrearCurso = async (e) => {
   e.preventDefault();
@@ -265,7 +265,7 @@ const handleAgregarRubrosDefaultACurso = async (e) => {
   e.preventDefault();
 
   const requestData = {
-      course_code: codigoCursoRubrosDefault,
+      group_id: parseInt(numeroGrupoRubrosDefault),
       sections: ["Quices", "Exámenes", "Proyectos"],
       percentages: [30.0, 30.0, 40.0]
   };
@@ -353,12 +353,12 @@ const enviarDatosFilaPorFila = async (filas) => {
       }
 
       // Agregar secciones por defecto
-      await axios.post("https://localhost:7199/Course/add_default_document_sections", {
+      await axios.post("https://localhost:7199/Group/add_default_document_sections", {
         data_input_add_default_document_sections: dataSecciones
       });
 
       // Agregar rubros por defecto
-      await axios.post("https://localhost:7199/Course/add_default_grades", {
+      await axios.post("https://localhost:7199/Group/add_default_grades", {
         data_input_add_default_grades: dataRubros
       });
 
@@ -647,12 +647,12 @@ const enviarDatosFilaPorFila = async (filas) => {
           Agregar Rubros Default a Curso
         </h3>
         <form>
-          <label className={styles.label}>Código del Curso:</label>
+          <label className={styles.label}>ID del Grupo:</label>
           <input
-            type="text"
+            type="number"
             className={styles.input}
-            value={codigoCursoRubrosDefault}
-            onChange={(e) => setCodigoCursoRubrosDefault(e.target.value)}
+            value={numeroGrupoRubrosDefault}
+            onChange={(e) => setnumeroGrupoRubrosDefault(e.target.value)}
           />
 
           <div className={styles.buttonGroup}>
