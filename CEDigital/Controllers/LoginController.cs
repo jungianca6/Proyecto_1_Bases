@@ -43,6 +43,7 @@ namespace CEDigital.Controllers
             }
 
             string encryptedPassword = Encriptador.ObtenerHashMD5(message.password);
+            Console.WriteLine(encryptedPassword);
 
             var (userDoc, userType) = await _mongoService.FindUser(message.username, encryptedPassword);
 

@@ -210,6 +210,7 @@ foreach (var professor in professors)
 }
 var admin = new Admin
 {
+    _id = "1233456",
     username = "superadmin",
     password = Encriptador.ObtenerHashMD5("adminpass")
 };
@@ -217,6 +218,7 @@ var admin = new Admin
 await inserter.InsertAdmin(admin);
 
 Console.WriteLine("Todos los datos fueron insertados correctamente.");
+
 
 app.UseHttpsRedirection();
 
@@ -227,8 +229,8 @@ app.MapControllers();
 app.Run();
 
 
-/*
-  
+
+  /*
 -- Insertar estudiantes
 INSERT INTO Student (student_id) VALUES (2023065165);
 INSERT INTO Student (student_id) VALUES (2023493175);
