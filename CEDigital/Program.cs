@@ -87,139 +87,139 @@ catch (Exception ex)
 
 
 
-
- // CODIGO DE UN SOLO USO
+/*
+// CODIGO DE UN SOLO USO
 var MongoDB_create = new MongoDB_create();
 await MongoDB_create.CrearBaseYColeccionesAsync();
 
 var inserter = new MongoDataInserter();
 var students = new List<Student>
 {
-    new Student
-    {
-        _id = "2023065165",
-        name = "Carlos",
-        last_name = "Rodriguez",
-        id_number = "1122334455",
-        email = "carlos.rod@example.com",
-        username = "CarloselGrande",
-        password = Encriptador.ObtenerHashMD5("123456"),
-        phone = "2222-3333"
-    },
-    new Student
-    {
-        _id = "2023493175",
-        name = "María",
-        last_name = "Gómez",
-        id_number = "2233445566",
-        email = "maria.gomez@example.com",
-        username = "MariaMagdalena",
-        password = Encriptador.ObtenerHashMD5("abcdef"),
-        phone = "3333-4444"
-    },
-    new Student
-    {
-        _id = "2024983216",
-        name = "Luis",
-        last_name = "Pérez",
-        id_number = "3344556677",
-        email = "luis.perez@example.com",
-        username = "LuisVI",
-        password = Encriptador.ObtenerHashMD5("654321"),
-        phone = "4444-5555"
-    },
-    new Student
-    {
-        _id = "2020697822",
-        name = "Sofía",
-        last_name = "Ramírez",
-        id_number = "4455667788",
-        email = "sofia.ramirez@example.com",
-        username = "ReinaSofia",
-        password = Encriptador.ObtenerHashMD5("pass123"),
-        phone = "5555-6666"
-    },
-    new Student
-    {
-        _id = "2016698746",
-        name = "Juan",
-        last_name = "Martínez",
-        id_number = "5566778899",
-        email = "juan.martinez@example.com",
-        username = "Juan",
-        password = Encriptador.ObtenerHashMD5("juan123"),
-        phone = "6666-7777"
-    }
+  new Student
+  {
+      _id = "2023065165",
+      name = "Carlos",
+      last_name = "Rodriguez",
+      id_number = "1122334455",
+      email = "carlos.rod@example.com",
+      username = "CarloselGrande",
+      password = Encriptador.ObtenerHashMD5("123456"),
+      phone = "2222-3333"
+  },
+  new Student
+  {
+      _id = "2023493175",
+      name = "María",
+      last_name = "Gómez",
+      id_number = "2233445566",
+      email = "maria.gomez@example.com",
+      username = "MariaMagdalena",
+      password = Encriptador.ObtenerHashMD5("abcdef"),
+      phone = "3333-4444"
+  },
+  new Student
+  {
+      _id = "2024983216",
+      name = "Luis",
+      last_name = "Pérez",
+      id_number = "3344556677",
+      email = "luis.perez@example.com",
+      username = "LuisVI",
+      password = Encriptador.ObtenerHashMD5("654321"),
+      phone = "4444-5555"
+  },
+  new Student
+  {
+      _id = "2020697822",
+      name = "Sofía",
+      last_name = "Ramírez",
+      id_number = "4455667788",
+      email = "sofia.ramirez@example.com",
+      username = "ReinaSofia",
+      password = Encriptador.ObtenerHashMD5("pass123"),
+      phone = "5555-6666"
+  },
+  new Student
+  {
+      _id = "2016698746",
+      name = "Juan",
+      last_name = "Martínez",
+      id_number = "5566778899",
+      email = "juan.martinez@example.com",
+      username = "Juan",
+      password = Encriptador.ObtenerHashMD5("juan123"),
+      phone = "6666-7777"
+  }
 };
 
 var professors = new List<Professor>
 {
-    new Professor
-    {
-        _id = "301849792",
-        name = "Ana",
-        last_name = "Torres",
-        email = "ana.torres@example.com",
-        username = "Anabolico",
-        password = Encriptador.ObtenerHashMD5("123456")
-    },
-    new Professor
-    {
-        _id = "194875095",
-        name = "Pedro",
-        last_name = "López",
-        email = "pedro.lopez@example.com",
-        username = "PedroPicapiedra",
-        password = Encriptador.ObtenerHashMD5("lopezpass")
-    },
-    new Professor
-    {
-        _id = "406284097",
-        name = "Lucía",
-        last_name = "Fernández",
-        email = "lucia.fernandez@example.com",
-        username = "Lucifer",
-        password = Encriptador.ObtenerHashMD5("lucia123")
-    },
-    new Professor
-    {
-        _id = "256894765",
-        name = "Jorge",
-        last_name = "Gutierrez",
-        email = "jorge.mendez@example.com",
-        username = "koki",
-        password = Encriptador.ObtenerHashMD5("jorgito")
-    },
-    new Professor
-    {
-        _id = "100000001",
-        name = "Paula",
-        last_name = "Núñez",
-        email = "paula.nunez@example.com",
-        username = "Paula",
-        password = Encriptador.ObtenerHashMD5("paula456")
-    }
+  new Professor
+  {
+      _id = "301849792",
+      name = "Ana",
+      last_name = "Torres",
+      email = "ana.torres@example.com",
+      username = "Anabolico",
+      password = Encriptador.ObtenerHashMD5("123456")
+  },
+  new Professor
+  {
+      _id = "194875095",
+      name = "Pedro",
+      last_name = "López",
+      email = "pedro.lopez@example.com",
+      username = "PedroPicapiedra",
+      password = Encriptador.ObtenerHashMD5("lopezpass")
+  },
+  new Professor
+  {
+      _id = "406284097",
+      name = "Lucía",
+      last_name = "Fernández",
+      email = "lucia.fernandez@example.com",
+      username = "Lucifer",
+      password = Encriptador.ObtenerHashMD5("lucia123")
+  },
+  new Professor
+  {
+      _id = "256894765",
+      name = "Jorge",
+      last_name = "Gutierrez",
+      email = "jorge.mendez@example.com",
+      username = "koki",
+      password = Encriptador.ObtenerHashMD5("jorgito")
+  },
+  new Professor
+  {
+      _id = "100000001",
+      name = "Paula",
+      last_name = "Núñez",
+      email = "paula.nunez@example.com",
+      username = "Paula",
+      password = Encriptador.ObtenerHashMD5("paula456")
+  }
 };
 foreach (var student in students)
 {
-    await inserter.InsertStudent(student);
+  await inserter.InsertStudent(student);
 }
 foreach (var professor in professors)
 {
-    await inserter.InsertProfessor(professor);
+  await inserter.InsertProfessor(professor);
 }
 var admin = new Admin
 {
-    _id = "1233456",
-    username = "superadmin",
-    password = Encriptador.ObtenerHashMD5("adminpass")
+  _id = "1233456",
+  username = "superadmin",
+  password = Encriptador.ObtenerHashMD5("adminpass")
 };
 
 await inserter.InsertAdmin(admin);
 
 Console.WriteLine("Todos los datos fueron insertados correctamente.");
 
-
+*/
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -230,7 +230,7 @@ app.Run();
 
 
 
-  /*
+/*
 -- Insertar estudiantes
 INSERT INTO Student (student_id) VALUES (2023065165);
 INSERT INTO Student (student_id) VALUES (2023493175);
