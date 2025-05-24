@@ -1,5 +1,3 @@
-import { FaRegUser } from "react-icons/fa";
-import { MdLockOutline } from "react-icons/md";
 import React, {useState} from "react";
 import { Button, Card, Form } from 'react-bootstrap';
 import styles from './ReporteNotasProfesorPg.module.css';
@@ -50,7 +48,7 @@ function ReporteNotasProfesorPg() {
                     const reporteFormateado = formatReport(response.data.message.grades);
                     setReporteNotas(reporteFormateado);
                 } else {
-                    setReporteNotas("No se encontraron estudiantes para este grupo.");
+                    setReporteNotas("No se encontraron notas para este grupo.");
                 }
             } else {
                 setReporteNotas("Error al obtener el reporte: " + (response.data.message || "Error desconocido"));
@@ -64,10 +62,10 @@ function ReporteNotasProfesorPg() {
     };
 
     // Función para formatear el reporte
-    const formatReport = (students) => {
-        if (!students) return "No hay datos disponibles";
+    const formatReport = (grades) => {
+        if (!grades) return "No hay datos disponibles";
 
-        return students.map(student => {
+        return grades.map(student => {
             let reporte = `Estudiante: ${student.student_name} (ID: ${student.student_id})\n`;
 
             if (student.grades_by_rubric) {
