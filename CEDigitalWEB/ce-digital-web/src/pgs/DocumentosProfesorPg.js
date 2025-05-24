@@ -69,7 +69,7 @@ function DocumentosProfesorPg() {
                 name: selectedFile.name,
                 size: formatFileSize(selectedFile.size),
                 uploadDate: new Date().toLocaleString(),
-                url: URL.createObjectURL(selectedFile) // En producción sería la URL del backend
+                url: URL.createObjectURL(selectedFile)
             };
 
             setUploadedDocuments(prev => [newDocument, ...prev]);
@@ -98,12 +98,18 @@ function DocumentosProfesorPg() {
                 const data = response.data.message;
                 console.log("Datos recibidos del backend:", data);
 
+                setUploadedDocuments(prev =>
+                    prev.filter(doc =>
+                        doc.name !== formData.nombreArchivo
+                    )
+                );
+
             } else {
                 const data = response.data.message;
                 console.log("Error:", data);
             }
         } catch (err) {
-            console.log("Error al subir el archivo: " + err.message);
+            console.log("Error al eliminar el archivo: " + err.message);
         } finally {
             setLoading(false);
         }
@@ -126,7 +132,7 @@ function DocumentosProfesorPg() {
                 <Card.Header>Subir nuevo documento</Card.Header>
                 <Card.Body>
                     <Form.Group className="mb-3">
-                        <Form.Label>Número de grupo</Form.Label>
+                        <Form.Label>ID de grupo</Form.Label>
                         <Form.Control
                             type="text"
                             name="grupoID"
