@@ -38,7 +38,7 @@ namespace CEDigital.Controllers
             
             try
             {
-                /*
+               
                 int folderId = -1;
                 string getFolderQuery = "SELECT folder_id FROM Folder WHERE group_id = @code AND name = @section";
 
@@ -77,7 +77,7 @@ namespace CEDigital.Controllers
 
                     db.Execute_non_query(insertCmd);
                 }
-                */
+                
                 response.status = "OK";
                 response.message = "Documento agregado correctamente.";
                 return Ok(response);
@@ -94,24 +94,63 @@ namespace CEDigital.Controllers
         [HttpPost("delete_document")]
         public IActionResult PostDeleteDocument([FromBody] Data_input_delete_document message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                //Verificar si la sección existe
+                int folderId = -1;
+                string getFolderQuery = "SELECT folder_id FROM Folder WHERE group_id = @group AND name = @section";
+                using (SqlCommand folderCmd = new SqlCommand(getFolderQuery))
+                {
+                    folderCmd.Parameters.AddWithValue("@group", message.group_id);
+                    folderCmd.Parameters.AddWithValue("@section", message.document_section);
 
+                    using (SqlDataReader reader = db.Execute_query(folderCmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            folderId = Convert.ToInt32(reader["folder_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró la sección del documento para ese grupo.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
 
+                // Eliminar el documento
+                string deleteDocumentQuery = "DELETE FROM Document WHERE filename = @filename AND folder_id = @folder_id";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteDocumentQuery))
+                {
+                    deleteCmd.Parameters.AddWithValue("@filename", message.file_name);
+                    deleteCmd.Parameters.AddWithValue("@folder_id", folderId);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                    db.Execute_non_query(deleteCmd);
+                }
+                
+                // Eliminar archivo físico si existe
+                string filePath = Path.Combine("Data_base_files/Documents", message.file_name);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+                response.status = "OK";
+                response.message = "Documento eliminado correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al eliminar el documento: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
         [HttpPost("edit_document")]
