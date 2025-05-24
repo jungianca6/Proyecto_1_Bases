@@ -293,82 +293,96 @@ const handleExcelUpload = (e) => {
     const data = evt.target.result;
     const workbook = XLSX.read(data, { type: "binary" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet);
+    const filas = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-    // Llama a la función que envía línea por línea
-    enviarDatosFilaPorFila(json);
+    procesarExcel(filas);
   };
   reader.readAsBinaryString(file);
 };
 
-const enviarDatosFilaPorFila = async (filas) => {
+
+const procesarExcel = async (filas) => {
+  if (filas.length === 0) return alert("El Excel está vacío.");
+
+  /* ---------- 1) Crear semestre UNA sola vez ---------- */
+  const { Año, Periodo } = filas[0];
+  const semestreYear   = parseInt(Año);
+  const semestrePeriod = (Periodo === "V") ? "V" : parseInt(Periodo);
+
+  try {
+    await axios.post("https://localhost:7199/Semester/initialize_semester", {
+      year: semestreYear,
+      period: semestrePeriod
+    });
+    console.log("Semestre inicializado.");
+  } catch (err) {
+    console.error("Error inicializando semestre:", err);
+    alert("No se pudo inicializar el semestre.");
+    return;
+  }
+
+  /* ---------- 2) Recorremos cada fila ---------- */
   for (const row of filas) {
-    // Construyes el objeto para enviar con la info de esta fila
-    const dataSemestre = {
-      year: parseInt(row["Año"]),
-      period: parseInt(row["Periodo"])
-    };
+    const courseCode     = row["Código Curso"];
+    const groupId        = row["ID Grupo"];      // para secciones / rubros
+    const groupNumber    = row["Número Grupo"];  // para inscripción de estudiantes
+    const carnetsString  = row["Carnets Estudiantes"] || "";
+    const carnets        = carnetsString.split(",").map(c => c.trim()).filter(Boolean);
 
-    const dataCurso = {
-      course_code: row["Código Curso"],
-      year: parseInt(row["Año"]),
-      period: parseInt(row["Periodo"])
-    };
-
-    const listaCarnets = row["Carnets Estudiantes"]
-      ? row["Carnets Estudiantes"].split(",").map(c => c.trim()).filter(c => c.length > 0)
-      : [];
-
-    const dataSecciones = {
-      course_code: row["Código Curso"],
-      sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
-    };
-
-    const dataRubros = {
-      course_code: row["Código Curso"],
-      sections: ["Quices", "Exámenes", "Proyectos"],
-      percentages: [30.0, 30.0, 40.0]
-    };
-
-    try {
-      // Inicializar semestre (si quieres hacerlo por cada fila)
-      await axios.post("https://localhost:7199/Semester/initialize_semester", {
-        data_input_initialize_semester: dataSemestre
-      });
-
-      // Agregar curso
-      await axios.post("https://localhost:7199/Semester/add_course_to_semester", {
-        data_input_add_course_to_semester: dataCurso
-      });
-
-      // Agregar estudiantes al grupo, uno por uno
-      for (const carnet of listaCarnets) {
-        await axios.post("https://localhost:7199/Student/add_student_to_group", {
-          data_input_add_student_to_group: {
-            student_card: carnet,
-            group_number: parseInt(row["Número Grupo"]),
-            course_code: row["Código Curso"]
-          }
+    /* 2.1 Agregar curso al semestre */
+    if (courseCode) {
+      try {
+        await axios.post("https://localhost:7199/Semester/add_course_to_semester", {
+          course_code: courseCode,
+          year: semestreYear,
+          period: semestrePeriod
         });
+        console.log(`Curso ${courseCode} añadido al semestre.`);
+      } catch (e) {
+        console.error(`Error añadiendo curso ${courseCode}:`, e);
+      }
+    }
+
+    /* 2.2 Agregar secciones de documentos por defecto al GRUPO */
+    if (groupId) {
+      try {
+        await axios.post("https://localhost:7199/Group/add_default_document_sections", {
+          group_id: String(groupId),
+          sections: ["Presentaciones", "Quices", "Exámenes", "Proyectos"]
+        });
+      } catch (e) {
+        console.error(`Error añadiendo secciones a grupo ${groupId}:`, e);
       }
 
-      // Agregar secciones por defecto
-      await axios.post("https://localhost:7199/Group/add_default_document_sections", {
-        data_input_add_default_document_sections: dataSecciones
-      });
+      /* 2.3 Agregar rubros default al GRUPO */
+      try {
+        await axios.post("https://localhost:7199/Group/add_default_grades", {
+          group_id: groupId,
+          sections: ["Quices", "Exámenes", "Proyectos"],
+          percentages: [30.0, 30.0, 40.0]
+        });
+      } catch (e) {
+        console.error(`Error añadiendo rubros a grupo ${groupId}:`, e);
+      }
+    }
 
-      // Agregar rubros por defecto
-      await axios.post("https://localhost:7199/Group/add_default_grades", {
-        data_input_add_default_grades: dataRubros
-      });
-
-      console.log(`Fila con curso ${row["Código Curso"]} procesada correctamente.`);
-    } catch (error) {
-      console.error(`Error al procesar fila con curso ${row["Código Curso"]}:`, error);
+    /* 2.4 Inscribir estudiantes en el grupo */
+    for (const carnet of carnets) {
+      try {
+        await axios.post("https://localhost:7199/Student/add_student_to_group", {
+          student_id: carnet,
+          group_number: parseInt(groupNumber),
+          course_code: courseCode
+        });
+      } catch (e) {
+        console.error(`Error inscribiendo ${carnet} en ${courseCode}:`, e);
+      }
     }
   }
-  alert("Proceso completado.");
+
+  alert("Inicializar Excel autogenerado completado ✅");
 };
+
 
 
   return (
