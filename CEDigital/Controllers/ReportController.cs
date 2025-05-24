@@ -64,7 +64,7 @@ namespace CEDigital.Controllers
 
                 using (SqlCommand getStudentsCmd = new SqlCommand(getStudentsQuery))
                 {
-                    getStudentsCmd.Parameters.AddWithValue("@group", message.group_number);
+                    getStudentsCmd.Parameters.AddWithValue("@group", message.group_id);
                     getStudentsCmd.Parameters.AddWithValue("@course", message.course_code);
 
                     using (SqlDataReader reader = db.Execute_query(getStudentsCmd, out connection))

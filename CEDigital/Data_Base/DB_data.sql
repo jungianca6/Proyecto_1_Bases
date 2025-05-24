@@ -203,11 +203,19 @@ INSERT INTO Course (name, course_code, credits) VALUES
 -- Semesters
 INSERT INTO Semester (year, period) VALUES (2024, 1), (2024, 2), (2025, 1);
 
--- Students
-INSERT INTO Student (student_id) VALUES (20231001), (20231002), (20231003);
+-- Insertar estudiantes
+INSERT INTO Student (student_id) VALUES (2023065165);
+INSERT INTO Student (student_id) VALUES (2023493175);
+INSERT INTO Student (student_id) VALUES (2024983216);
+INSERT INTO Student (student_id) VALUES (2020697822);
+INSERT INTO Student (student_id) VALUES (2016698746);
 
--- Professors
-INSERT INTO Professor (id_number) VALUES (1001), (1002);
+-- Insertar profesores
+INSERT INTO Professor (id_number) VALUES (301849792);
+INSERT INTO Professor (id_number) VALUES (194875095);
+INSERT INTO Professor (id_number) VALUES (406284097);
+INSERT INTO Professor (id_number) VALUES (256894765);
+INSERT INTO Professor (id_number) VALUES (100000001);
 
 -- Groups
 INSERT INTO Groups (course_code, group_number) VALUES 
@@ -224,22 +232,17 @@ INSERT INTO Groups (course_code, group_number) VALUES
 
 -- Student_Group
 INSERT INTO Student_Group (student_id, group_id, course_code) VALUES 
-(20231001, 1, 'CE1105'),
-(20231001, 2, 'CE1105'),
-(20231002, 2, 'CE1103'),
-(20231003, 3, 'CE1105');
-
-INSERT INTO Student_Group (student_id, group_id, course_code) VALUES 
-(20231001, 5, 'MA1101'),
-(20231001, 6, 'MA1101'),
-(20231002, 6, 'FI1402'),
-(20231003, 7, 'CE3102');
+(2023065165, 1, 'MA1101'),
+(2023493175, 1, 'MA1101'),
+(2024983216, 2, 'FI1402'),
+(2016698746, 3, 'CE3102'),
+(2020697822, 3, 'CE3102');
 
 -- Professor_Group
 INSERT INTO Professor_Group (id_number, group_id) VALUES 
-(1001, 1),
-(1001, 2),
-(1002, 3);
+(301849792, 1),
+(406284097, 2),
+(256894765, 3);
 
 -- Course_Semester
 INSERT INTO Course_Semester (course_code, semester_id) VALUES 
@@ -324,10 +327,10 @@ INSERT INTO Evaluation (
 
 -- Insertar todas las relaciones evaluación-estudiante en un solo insert
 INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
-(1, 20231001),
-(2, 20231001),
-(2, 20231002),
-(3, 20231003);
+(1, 2020697822),
+(2, 2023493175),
+(2, 2020697822),
+(3, 2023065165);
 
 -- Evaluación 4: Laboratorio 2, curso MA1101, grupo 1
 INSERT INTO Evaluation (
@@ -385,8 +388,8 @@ INSERT INTO Evaluation (
 
 -- Asociar evaluaciones al estudiante 20231001
 INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
-(4, 20231001),
-(5, 20231001);
+(4, 2020697822),
+(5, 2023493175);
 
 
 
