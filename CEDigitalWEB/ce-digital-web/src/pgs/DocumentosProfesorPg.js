@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Card, ListGroup } from 'react-bootstrap';
+import {Button, Card, Form, ListGroup} from 'react-bootstrap';
 import styles from './DocumentosProfesorPg.module.css';
 import axios from "axios";
 
@@ -7,6 +7,22 @@ function DocumentosProfesorPg() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploadedDocuments, setUploadedDocuments] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const [formData, setFormData] = useState({
+        codigoCurso: "",
+        grupoCurso: "",
+        seccionDocumento: "",
+        nombreArchivo: "",
+    });
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -25,9 +41,7 @@ function DocumentosProfesorPg() {
             alert("Por favor, seleccione un archivo PDF primero");
             return;
         }
-
         setLoading(true);
-
 
         try {
             // Simulamos la subida al backend (en producción usarías axios o fetch)
@@ -69,6 +83,50 @@ function DocumentosProfesorPg() {
             <Card className={styles.uploadCard}>
                 <Card.Header>Subir nuevo documento</Card.Header>
                 <Card.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Código de curso</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="codigoCurso"
+                            value={formData.codigoCurso}
+                            onChange={handleChange}
+                            placeholder="Ingrese el código del curso"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Número de grupo</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="grupoCurso"
+                            value={formData.grupoCurso}
+                            onChange={handleChange}
+                            placeholder="Escriba el número del grupo"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Sección de documento</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="seccionDocumento"
+                            value={formData.seccionDocumento}
+                            onChange={handleChange}
+                            placeholder="Escriba la sección de documento"
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Nombre de archivo</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="nombreArchivo"
+                            value={formData.nombreArchivo}
+                            onChange={handleChange}
+                            placeholder="Nombre del archivo"
+                        />
+                    </Form.Group>
+
                     <div className={styles.uploadContainer}>
                         <input
                             type="file"
@@ -86,6 +144,7 @@ function DocumentosProfesorPg() {
                                 <span>{formatFileSize(selectedFile.size)}</span>
                             </div>
                         )}
+
                         <Button
                             onClick={handleUpload}
                             disabled={!selectedFile || loading}
