@@ -75,7 +75,7 @@ function DocumentosProfesorPg() {
                 description: formData.descripcion,
                 evaluation_type: formData.tipoEvaluacion,
                 professor_filename: formData.nombreArchivo,
-                data_base_path_professor: formData.pathArchivo
+                data_base_path_professor: "C:/Users/Dell/Desktop/Proyecto_1_Bases/CEDigital/data_base_files/Professor_evaluation"
             });
 
             if (response.data.status === "OK") {
