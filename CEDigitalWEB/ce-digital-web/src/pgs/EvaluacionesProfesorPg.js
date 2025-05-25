@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { Button, Card, Form } from 'react-bootstrap';
 import styles from './EvaluacionesProfesorPg.module.css';
+import axios from "axios";
 
 function DocumentosProfesorPg() {
 
@@ -52,6 +53,58 @@ function DocumentosProfesorPg() {
                 setSelectedFile(null);
                 alert("Por favor, seleccione un archivo PDF");
             }
+        }
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            alert("Por favor, seleccione un archivo PDF primero");
+            return;
+        }
+        setLoading(true);
+
+        try {
+            const response = await axios.post("https://localhost:7199//Group/assign_evaluation", {
+                course_code: formData.course_code,
+                group_number: formData.grupoNumero,
+                grading_item_name: formData.rubroNombre,
+                evaluation_name: formData.evaluacionNombre,
+                grading_item_percentage: formData.rubroPorcentaje,
+                evaluation_percentage: formData.evaluacionPorcentaje,
+                delivery_date: formData.fechaEntrega,
+                description: formData.descripcion,
+                evaluation_type: formData.tipoEvaluacion,
+                professor_filename: formData.nombreArchivo,
+                data_base_path_professor: formData.pathArchivo
+            });
+
+            if (response.data.status === "OK") {
+                const data = response.data.message;
+                console.log("Datos recibidos:", data);
+
+            } else {
+                const data = response.data.message;
+                console.log("Error:", data);
+            }
+
+            // 2. Forzar descarga del archivo en el cliente
+            const downloadUrl = URL.createObjectURL(selectedFile);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = downloadUrl;
+            downloadLink.download = selectedFile.name; // Nombre del archivo
+            document.body.appendChild(downloadLink);
+            downloadLink.click(); // Se abre el diálogo de descarga
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadUrl);
+
+            setSelectedFile(null);
+
+            // Limpiar el input de archivo
+            document.getElementById("pdfUpload").value = "";
+        } catch (err) {
+            console.log("Error al asignar evaluación: " + err.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -160,7 +213,7 @@ function DocumentosProfesorPg() {
                             placeholder="Nombre del archivo"
                         />
                     </Form.Group>
-                    
+
                     <div className={styles.assignButton}>
                         <input
                             type="file"
