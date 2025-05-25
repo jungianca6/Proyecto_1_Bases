@@ -8,6 +8,6 @@
         public string grading_item_name { get; set; }     // Nombre del rubro
         public string evaluation_title { get; set; }      // Título de la evaluación
         public string filename_evaluation { get; set; }             // Nombre del archivo
-        public string evaluation_filename { get; set; }             // Ruta donde se almacenó el archivo
+        public string path { get; set; }             // Ruta donde se almacenó el archivo
     }
 }
