@@ -30,6 +30,10 @@ function ProfesorPg() {
         navigate('/profesor/reporteEstudiantes');
     }
 
+    const handlerubrosClick = () => {
+        navigate('/profesor/rubros');
+    }
+
     return (
         <div className={styles.profesorWrapper}>
             <h1 className={styles.title}>CE Digital</h1>
@@ -65,6 +69,12 @@ function ProfesorPg() {
                 className={styles.reporteButton}
                 onClick={handlerepEstudiantesClick}>
                 Reporte de estudiantes
+            </Button>
+
+            <Button
+                className={styles.rubrosButton}
+                onClick={handlerubrosClick}>
+                Rubros
             </Button>
         </div>
     );

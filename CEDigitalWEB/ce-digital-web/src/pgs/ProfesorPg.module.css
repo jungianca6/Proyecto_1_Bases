@@ -41,6 +41,16 @@
 
 .documentosButton {
     position: absolute;
+    left: 350px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.rubrosButton {
+    position: absolute;
     left: 550px;
     bottom: 550px;
     width: 120px;
