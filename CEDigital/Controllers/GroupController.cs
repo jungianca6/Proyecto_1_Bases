@@ -564,25 +564,125 @@ namespace CEDigital.Controllers
         [HttpPost("evaluate_evaluation")]
         public IActionResult PostEvaluateSubmission([FromBody] Data_input_submit_grade_and_request_file message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            try
+            {
+                SQL_connection db = new SQL_connection();
 
+                // Obtener el evaluation_id según evaluación, grading_item, grupo y curso
+                string getEvaluationIdQuery = @"
+            SELECT E.evaluation_id
+            FROM Evaluation E
+            INNER JOIN Grading_item GI ON E.grading_item_id = GI.grading_item_id
+            INNER JOIN Groups G ON GI.group_id = G.group_id
+            WHERE E.evaluation_title = @evaluation_name
+              AND GI.name = @grading_item_name
+              AND G.group_number = @group_number
+              AND G.course_code = @course_code";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                int evaluationId = -1;
+                SqlConnection connection;
 
-            Data_output_submission_file data_out = new Data_output_submission_file();
+                using (SqlCommand cmd = new SqlCommand(getEvaluationIdQuery))
+                {
+                    cmd.Parameters.AddWithValue("@evaluation_name", message.evaluation_name);
+                    cmd.Parameters.AddWithValue("@grading_item_name", message.grading_item_name);
+                    cmd.Parameters.AddWithValue("@group_number", message.group_number);
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
 
-            response.status = "OK";
-            response.message = data_out;
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            evaluationId = Convert.ToInt32(reader["evaluation_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró la evaluación especificada.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // Verificar si ya existe registro para ese student y evaluation
+                string checkExistQuery = @"
+            SELECT evaluation_filename, data_base_path_evalution
+            FROM Evaluation_Student
+            WHERE evaluation_id = @evaluation_id AND student_id = @student_id";
+
+                string existingFilename = "";
+                string existingPath = "";
+
+                using (SqlCommand checkCmd = new SqlCommand(checkExistQuery))
+                {
+                    checkCmd.Parameters.AddWithValue("@evaluation_id", evaluationId);
+                    checkCmd.Parameters.AddWithValue("@student_id", message.student_id);
+
+                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            existingFilename = reader["evaluation_filename"] as string ?? "";
+                            existingPath = reader["data_base_path_evalution"] as string ?? "";
+                        }
+                        reader.Close();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(existingFilename) || !string.IsNullOrEmpty(existingPath))
+                {
+                    // Actualizar registro existente, manteniendo filename y path
+                    string updateQuery = @"
+                UPDATE Evaluation_Student
+                SET grade = @grade,
+                    feedback = @feedback,
+                    is_public = @is_public
+                WHERE evaluation_id = @evaluation_id AND student_id = @student_id";
+
+                    using (SqlCommand updateCmd = new SqlCommand(updateQuery))
+                    {
+                        updateCmd.Parameters.AddWithValue("@grade", message.grade);
+                        updateCmd.Parameters.AddWithValue("@feedback", message.feedback);
+                        updateCmd.Parameters.AddWithValue("@is_public", message.is_public ? 1 : 0);
+                        updateCmd.Parameters.AddWithValue("@evaluation_id", evaluationId);
+                        updateCmd.Parameters.AddWithValue("@student_id", message.student_id);
+
+                        db.Execute_non_query(updateCmd);
+                    }
+                }
+                else
+                {
+                    // Insertar nuevo registro con filename y path vacíos
+                    string insertQuery = @"
+                INSERT INTO Evaluation_Student 
+                (evaluation_id, student_id, evaluation_filename, data_base_path_evalution, grade, feedback, is_public)
+                VALUES (@evaluation_id, @student_id, '', '', @grade, @feedback, @is_public)";
+
+                    using (SqlCommand insertCmd = new SqlCommand(insertQuery))
+                    {
+                        insertCmd.Parameters.AddWithValue("@evaluation_id", evaluationId);
+                        insertCmd.Parameters.AddWithValue("@student_id", message.student_id);
+                        insertCmd.Parameters.AddWithValue("@grade", message.grade);
+                        insertCmd.Parameters.AddWithValue("@feedback", message.feedback);
+                        insertCmd.Parameters.AddWithValue("@is_public", message.is_public ? 1 : 0);
+
+                        db.Execute_non_query(insertCmd);
+                    }
+                }
+
+                response.status = "OK";
+                response.message = null; // Sin mensaje
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al registrar evaluación: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
         [HttpPost("update_evaluation")]
         public IActionResult PostUpdateSubmission([FromBody] Data_input_update_grade message)
