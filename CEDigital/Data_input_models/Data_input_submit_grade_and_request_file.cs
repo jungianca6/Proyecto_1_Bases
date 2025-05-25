@@ -1,14 +1,14 @@
 ﻿namespace CEDigital.Data_input_models
 {
-    // Input para el 1er botón (guardar nota y observaciones)
     public class Data_input_submit_grade_and_request_file
     {
-        public int course_code { get; set; }
-        public int group_number { get; set; }
-        public string grading_item_name { get; set; }
-        public string evaluation_name { get; set; }
-        public float grade { get; set; }
-        public string observations { get; set; } // texto o nombre archivo
-        public bool grades_public { get; set; }
+        public string student_id { get; set; }           // Carnet del estudiante
+        public string course_code { get; set; }          // Código del curso
+        public int group_number { get; set; }            // Número de grupo
+        public string grading_item_name { get; set; }    // Nombre del grading item
+        public string evaluation_name { get; set; }      // Nombre exacto de la evaluación
+        public float grade { get; set; }                  // Nota numérica
+        public string feedback { get; set; }              // Observaciones o retroalimentación escrita
+        public bool is_public { get; set; }               // Si la nota es pública
     }
 }
