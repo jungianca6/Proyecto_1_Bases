@@ -11,5 +11,7 @@
         public string delivery_date { get; set; }
         public string description { get; set; }
         public string evaluation_type { get; set; } // "grupal" o "individual"
+        public string professor_filename { get; set; }
+        public string data_base_path_professor { get; set; }
     }
 }

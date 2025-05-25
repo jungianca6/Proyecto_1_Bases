@@ -456,23 +456,109 @@ namespace CEDigital.Controllers
         [HttpPost("assign_evaluation")]
         public IActionResult PostAssingEvalutaion([FromBody] Data_input_assign_evaluation message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
+                // Paso 1: Verificar grupo
+                string findGroupQuery = @"
+            SELECT group_id FROM Groups 
+            WHERE group_number = @group_number AND course_code = @course_code";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                int groupId = -1;
 
+                using (SqlCommand groupCommand = new SqlCommand(findGroupQuery))
+                {
+                    groupCommand.Parameters.AddWithValue("@group_number", message.group_number);
+                    groupCommand.Parameters.AddWithValue("@course_code", message.course_code);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(groupCommand, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            groupId = Convert.ToInt32(reader["group_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "El grupo no existe para ese curso.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // Paso 2: Verificar grading item
+                string findGradingItemQuery = @"
+            SELECT grading_item_id FROM Grading_item 
+            WHERE name = @name AND percentage = @percentage AND group_id = @group_id";
+
+                int gradingItemId = -1;
+
+                using (SqlCommand gradingCommand = new SqlCommand(findGradingItemQuery))
+                {
+                    gradingCommand.Parameters.AddWithValue("@name", message.grading_item_name);
+                    gradingCommand.Parameters.AddWithValue("@percentage", message.grading_item_percentage);
+                    gradingCommand.Parameters.AddWithValue("@group_id", groupId);
+
+                    using (SqlDataReader reader = db.Execute_query(gradingCommand, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            gradingItemId = Convert.ToInt32(reader["grading_item_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "El Grading Item no existe para ese grupo.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // Paso 3: Insertar evaluación
+                string insertEvaluationQuery = @"
+            INSERT INTO Evaluation (
+                evaluation_title, 
+                professor_filename, 
+                data_base_path_professor, 
+                evaluation_date, 
+                is_group, 
+                grading_item_id
+            ) 
+            VALUES (
+                @title, 
+                @filename, 
+                @path, 
+                @date, 
+                @is_group, 
+                @grading_item_id
+            )";
+
+                using (SqlCommand insertCommand = new SqlCommand(insertEvaluationQuery))
+                {
+                    insertCommand.Parameters.AddWithValue("@title", message.evaluation_name);
+                    insertCommand.Parameters.AddWithValue("@filename", message.professor_filename);
+                    insertCommand.Parameters.AddWithValue("@path", message.data_base_path_professor);
+                    insertCommand.Parameters.AddWithValue("@date", DateTime.Parse(message.delivery_date));
+                    insertCommand.Parameters.AddWithValue("@is_group", message.evaluation_type.ToLower() == "grupal" ? 1 : 0);
+                    insertCommand.Parameters.AddWithValue("@grading_item_id", gradingItemId);
+
+                    db.Execute_non_query(insertCommand);
+                }
+
+                response.status = "OK";
+                response.message = "Evaluación creada exitosamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al crear la evaluación: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
         [HttpPost("evaluate_evaluation")]

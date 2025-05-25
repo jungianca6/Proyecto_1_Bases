@@ -76,15 +76,10 @@ CREATE TABLE Grading_item(
 CREATE TABLE Evaluation (
     evaluation_id INT PRIMARY KEY IDENTITY(1,1),
     evaluation_title VARCHAR(100),
-    evaluation_filename VARCHAR(50),
     professor_filename VARCHAR(50),
-    data_base_path_evalution VARCHAR(200),
     data_base_path_professor VARCHAR(200),
     evaluation_date DATETIME,
     is_group BIT,
-    grade FLOAT,
-    feedback VARCHAR(MAX),
-    is_public BIT,
     grading_item_id INT NOT NULL,
     FOREIGN KEY (grading_item_id) REFERENCES Grading_item(grading_item_id)
 );
@@ -92,10 +87,16 @@ CREATE TABLE Evaluation (
 CREATE TABLE Evaluation_Student (
     evaluation_id INT NOT NULL,
     student_id INT NOT NULL,
+    evaluation_filename VARCHAR(50),
+    data_base_path_evalution VARCHAR(200),
+    grade FLOAT,
+    feedback VARCHAR(MAX),
+    is_public BIT,
     PRIMARY KEY (evaluation_id, student_id),
     FOREIGN KEY (evaluation_id) REFERENCES Evaluation(evaluation_id),
     FOREIGN KEY (student_id) REFERENCES Student(student_id)
 );
+
 
 -- Tablas N:M --
 
@@ -271,126 +272,35 @@ INSERT INTO Grading_item (name, percentage, group_id) VALUES
 -- Insert evaluations
 
 
--- Insertar todas las evaluaciones en un solo insert
 INSERT INTO Evaluation (
     evaluation_title,
-    evaluation_filename,
     professor_filename,
-    data_base_path_evalution,
     data_base_path_professor,
     evaluation_date,
     is_group,
-    grade,
-    feedback,
-    is_public,
     grading_item_id
 ) VALUES
-(
-    'Examen Parcial 1',
-    'examen1_ma1101.pdf',
-    'prof_ma1101.pdf',
-    '/evaluations/ma1101/examen1',
-    '/professors/ma1101',
-    '2024-04-15 10:00:00',
-    1,
-    85.0,
-    'Buen desempeño general, algunas preguntas con dificultad.',
-    1,
-    1
-),
-(
-    'Tarea 1 Física',
-    'tarea1_fi1402.docx',
-    'prof_fi1402.pdf',
-    '/evaluations/fi1402/tarea1',
-    '/professors/fi1402',
-    '2024-04-20 23:59:59',
-    0,
-    92.5,
-    'Muy buenos resultados en general.',
-    1,
-    2
-),
-(
-    'Proyecto Final Ingeniería',
-    'proyecto_final_ce3102.zip',
-    'prof_ce3102.pdf',
-    '/evaluations/ce3102/proyecto_final',
-    '/professors/ce3102',
-    '2024-05-30 17:00:00',
-    1,
-    88.0,
-    'Proyecto bien realizado, aunque con detalles a mejorar.',
-    1,
-    3
-);
+('Examen Parcial 1', 'prof_ma1101.pdf', '/professors/ma1101', '2024-04-15 10:00:00', 1, 1),
+('Tarea 1 Física', 'prof_fi1402.pdf', '/professors/fi1402', '2024-04-20 23:59:59', 0, 2),
+('Proyecto Final Ingeniería', 'prof_ce3102.pdf', '/professors/ce3102', '2024-05-30 17:00:00', 1, 3),
+('Laboratorio 2', 'prof_ma1101_lab.pdf', '/professors/ma1101', '2024-04-25 15:00:00', 0, 1),
+('Quiz 1', 'prof_fi1402.pdf', '/professors/fi1402', '2024-04-18 12:00:00', 0, 2);
 
--- Insertar todas las relaciones evaluación-estudiante en un solo insert
-INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
-(1, 2020697822),
-(2, 2023493175),
-(2, 2020697822),
-(3, 2023065165);
-
--- Evaluación 4: Laboratorio 2, curso MA1101, grupo 1
-INSERT INTO Evaluation (
-    evaluation_title,
+INSERT INTO Evaluation_Student (
+    evaluation_id,
+    student_id,
     evaluation_filename,
-    professor_filename,
     data_base_path_evalution,
-    data_base_path_professor,
-    evaluation_date,
-    is_group,
     grade,
     feedback,
-    is_public,
-    grading_item_id
-) VALUES (
-    'Laboratorio 2',
-    'lab2_ma1101.pdf',
-    'prof_ma1101_lab.pdf',
-    '/evaluations/ma1101/lab2',
-    '/professors/ma1101',
-    '2024-04-25 15:00:00',
-    0, -- individual
-    90.0,
-    'Muy buen manejo de los conceptos prácticos.',
-    1,
-    1 -- mismo grading_item_id para grupo 1 MA1101, ejemplo
-);
-
--- Evaluación 5: Quiz 1, curso FI1402, grupo 2
-INSERT INTO Evaluation (
-    evaluation_title,
-    evaluation_filename,
-    professor_filename,
-    data_base_path_evalution,
-    data_base_path_professor,
-    evaluation_date,
-    is_group,
-    grade,
-    feedback,
-    is_public,
-    grading_item_id
-) VALUES (
-    'Quiz 1',
-    'quiz1_fi1402.pdf',
-    'prof_fi1402.pdf',
-    '/evaluations/fi1402/quiz1',
-    '/professors/fi1402',
-    '2024-04-18 12:00:00',
-    0, -- individual
-    88.5,
-    'Buen desempeño en preguntas rápidas.',
-    1,
-    2 -- grading_item_id para FI1402 grupo 2
-);
-
--- Asociar evaluaciones al estudiante 20231001
-INSERT INTO Evaluation_Student (evaluation_id, student_id) VALUES
-(4, 2020697822),
-(5, 2023493175);
-
+    is_public
+) VALUES
+(1, 2020697822, 'examen1_ma1101.pdf', '/evaluations/ma1101/examen1', 85.0, 'Buen desempeño general, algunas preguntas con dificultad.', 1),
+(2, 2023493175, 'tarea1_fi1402.docx', '/evaluations/fi1402/tarea1', 92.5, 'Muy buenos resultados en general.', 1),
+(2, 2020697822, 'tarea1_fi1402.docx', '/evaluations/fi1402/tarea1', 92.5, 'Muy buenos resultados en general.', 1),
+(3, 2023065165, 'proyecto_final_ce3102.zip', '/evaluations/ce3102/proyecto_final', 88.0, 'Proyecto bien realizado, aunque con detalles a mejorar.', 1),
+(4, 2020697822, 'lab2_ma1101.pdf', '/evaluations/ma1101/lab2', 90.0, 'Muy buen manejo de los conceptos prácticos.', 1),
+(5, 2023493175, 'quiz1_fi1402.pdf', '/evaluations/fi1402/quiz1', 88.5, 'Buen desempeño en preguntas rápidas.', 1);
 
 
 -- Eliminar todos los registros de Evaluation_Student (tabla dependiente)
