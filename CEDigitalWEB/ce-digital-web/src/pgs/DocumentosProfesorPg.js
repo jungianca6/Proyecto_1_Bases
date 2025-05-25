@@ -17,7 +17,6 @@ function DocumentosProfesorPg() {
 
     const [docuData, setDocuData] = useState({
         cursoCodigo: "",
-        numeroGrupo: "",
         grupoID: "",
         seccionDocumento: "",
     });
@@ -137,7 +136,7 @@ function DocumentosProfesorPg() {
         try {
             const response = await axios.post("https://localhost:7199/Document/add_document_section", {
                 course_code: docuData.cursoCodigo,
-                group_number: docuData.numeroGrupo,
+                group_id: docuData.grupoID,
                 section_name: docuData.seccionDocumento,
             });
 
@@ -315,17 +314,6 @@ function DocumentosProfesorPg() {
                             value={docuData.seccionDocumento}
                             onChange={handledocuChange}
                             placeholder="Escriba la sección de documento"
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                        <Form.Label>Número de grupo</Form.Label>
-                        <Form.Control
-                            type="text"
-                            name="numeroGrupo"
-                            value={docuData.numeroGrupo}
-                            onChange={handledocuChange}
-                            placeholder="Número de grupo"
                         />
                     </Form.Group>
 
