@@ -685,25 +685,75 @@ namespace CEDigital.Controllers
 
 
         [HttpPost("update_evaluation")]
-        public IActionResult PostUpdateSubmission([FromBody] Data_input_update_grade message)
+        public IActionResult PostUpdateSubmission([FromBody] Data_input_submit_evaluation message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            try
+            {
+                SQL_connection db = new SQL_connection();
 
+                // Obtener el evaluation_id según evaluación, grading_item, grupo y curso
+                string getEvaluationIdQuery = @"
+        SELECT E.evaluation_id
+        FROM Evaluation E
+        INNER JOIN Grading_item GI ON E.grading_item_id = GI.grading_item_id
+        INNER JOIN Groups G ON GI.group_id = G.group_id
+        WHERE E.evaluation_title = @evaluation_name
+          AND GI.name = @grading_item_name
+          AND G.group_number = @group_number
+          AND G.course_code = @course_code";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                int evaluationId = -1;
+                SqlConnection connection;
 
+                using (SqlCommand cmd = new SqlCommand(getEvaluationIdQuery))
+                {
+                    cmd.Parameters.AddWithValue("@evaluation_name", message.evaluation_name);
+                    cmd.Parameters.AddWithValue("@grading_item_name", message.grading_item_name);
+                    cmd.Parameters.AddWithValue("@group_number", message.group_number);
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            evaluationId = Convert.ToInt32(reader["evaluation_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró la evaluación especificada.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // Actualizar el campo is_public a 1
+                string updateQuery = @"
+        UPDATE Evaluation_Student
+        SET is_public = 1
+        WHERE evaluation_id = @evaluation_id AND student_id = @student_id";
+
+                using (SqlCommand updateCmd = new SqlCommand(updateQuery))
+                {
+                    updateCmd.Parameters.AddWithValue("@evaluation_id", evaluationId);
+                    updateCmd.Parameters.AddWithValue("@student_id", message.student_id);
+
+                    // Ejecutar sin capturar retorno (porque Execute_non_query es void)
+                    db.Execute_non_query(updateCmd);
+                }
+
+                // Éxito
+                response.status = "OK";
+                response.message = "Evaluación marcada como pública correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al actualizar evaluación: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 
