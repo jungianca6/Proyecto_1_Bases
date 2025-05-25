@@ -272,17 +272,46 @@ namespace CEDigital.Controllers
         public IActionResult PostViewStudentDocuments([FromBody] Data_input_view_student_documents message)
         {
             SQL_connection db = new SQL_connection();
-            SqlConnection connection;
+            SqlConnection connection = null;
 
             try
             {
+                // Obtener group_id desde Groups usando group_number y course_code
+                string getGroupIdQuery = @"
+                SELECT group_id
+                FROM Groups
+                WHERE group_number = @group_number
+                  AND course_code = @course_code";
 
-                // Verificar que el estudiante está inscrito en el grupo
-                string checkEnrollmentQuery = "SELECT 1 FROM Student_Group WHERE student_id = @student AND group_id = @group";
-                using (SqlCommand checkCmd = new SqlCommand(checkEnrollmentQuery))
+                int groupId;
+
+                using (SqlCommand cmd = new SqlCommand(getGroupIdQuery))
+                {
+                    cmd.Parameters.AddWithValue("@group_number", message.group_number);
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
+
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            groupId = Convert.ToInt32(reader["group_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró el grupo con ese número para el curso especificado.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // Verificar que el estudiante está inscrito en ese group_id
+                string checkEnrollmentQuery = "SELECT 1 FROM Student_Group WHERE student_id = @student AND group_id = @group_id";
+                using (SqlCommand checkCmd = new SqlCommand(checkEnrollmentQuery, connection))
                 {
                     checkCmd.Parameters.AddWithValue("@student", message.student_id);
-                    checkCmd.Parameters.AddWithValue("@group", message.group_id);
+                    checkCmd.Parameters.AddWithValue("@group_id", groupId);
 
                     using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
                     {
@@ -292,28 +321,27 @@ namespace CEDigital.Controllers
                             response.message = "El estudiante no está inscrito en el grupo.";
                             return Ok(response);
                         }
-                        reader.Close();
                     }
                 }
 
                 // Obtener los documentos del grupo
                 string getDocumentsQuery = @"
-                    SELECT 
-                        d.document_id,
-                        d.filename,
-                        d.path,
-                        FORMAT(d.upload_date, 'dd/MM/yyyy HH:mm') AS formatted_date,
-                        d.uploaded_by_professor,
-                        d.folder_id,
-                        f.name AS folder_name
-                    FROM Document d
-                    JOIN Folder f ON d.folder_id = f.folder_id
-                    WHERE f.group_id = @groupId";
+            SELECT 
+                d.document_id,
+                d.filename,
+                d.path,
+                FORMAT(d.upload_date, 'dd/MM/yyyy HH:mm') AS formatted_date,
+                d.uploaded_by_professor,
+                d.folder_id,
+                f.name AS folder_name
+            FROM Document d
+            JOIN Folder f ON d.folder_id = f.folder_id
+            WHERE f.group_id = @group_id";
 
                 List<Student_document_model> documentList = new List<Student_document_model>();
-                using (SqlCommand docCmd = new SqlCommand(getDocumentsQuery))
+                using (SqlCommand docCmd = new SqlCommand(getDocumentsQuery, connection))
                 {
-                    docCmd.Parameters.AddWithValue("@groupId", message.group_id);
+                    docCmd.Parameters.AddWithValue("@group_id", groupId);
 
                     using (SqlDataReader reader = db.Execute_query(docCmd, out connection))
                     {
@@ -327,11 +355,10 @@ namespace CEDigital.Controllers
                                 upload_date = reader["formatted_date"].ToString(),
                                 uploaded_by_professor = Convert.ToBoolean(reader["uploaded_by_professor"]),
                                 folder_id = Convert.ToInt32(reader["folder_id"]),
-                                folder_name = reader["folder_name"]?.ToString() 
+                                folder_name = reader["folder_name"]?.ToString()
                             };
                             documentList.Add(doc);
                         }
-                        reader.Close();
                     }
                 }
 
@@ -349,6 +376,11 @@ namespace CEDigital.Controllers
                 response.status = "ERROR";
                 response.message = "Error al obtener los documentos: " + ex.Message;
                 return StatusCode(500, response);
+            }
+            finally
+            {
+                if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                    connection.Close();
             }
         }
 
