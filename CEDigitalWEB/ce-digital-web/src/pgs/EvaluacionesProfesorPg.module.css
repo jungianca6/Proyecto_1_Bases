@@ -4,10 +4,6 @@
     width: 100%;
     background-color: #1a1a1a; /* Fondo gris oscuro sólido */
     padding: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px;
 }
 
 /* Títulos */
@@ -25,4 +21,82 @@
     left: 900px;
     bottom: 650px;
     color: #ffffff; /* Texto blanco */
+}
+
+
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Estilo para los botones de acción */
+.actionButton {
+    flex: 1; /* Distribuye el espacio equitativamente */
+    padding: 10px;
+}
+
+/* Ajustes para los botones deshabilitados */
+.actionButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+.assignCard {
+    position: absolute;
+    margin-top: 80px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    left: -25px;
+    top: 10px;
+    width: 400px;
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Subida de archivos */
+.assignContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.fileInput {
+    display: none;
+}
+
+.assignLabel {
+    padding: 10px 15px;
+    background-color: cornflowerblue;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.assignLabel:hover {
+    background-color: #4169e1;
+}
+
+.fileInfo {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.assignButton {
+    background-color: #f8f9fa;
+    border-color: #f8f9fa;
+    width: 100%;
+}
+
+.assignButton:disabled {
+    opacity: 0.7;
 }

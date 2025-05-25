@@ -36,7 +36,7 @@ function ProfesorPg() {
             <h3 className={styles.subtitle}>Profesor</h3>
 
             {/* Botones de navegación */}
-            
+
             <Button
                 className={styles.evaluacionesButton}
                 onClick={handleEvaluacionesClick}>
