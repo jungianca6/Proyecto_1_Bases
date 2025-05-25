@@ -189,7 +189,7 @@ namespace CEDigital.Controllers
                 string insertSectionQuery = "INSERT INTO Folder (group_id, name) VALUES (@group, @name)";
                 using (SqlCommand insertCmd = new SqlCommand(insertSectionQuery))
                 {
-                    insertCmd.Parameters.AddWithValue("@group", message.group_number);
+                    insertCmd.Parameters.AddWithValue("@group", message.group_id);
                     insertCmd.Parameters.AddWithValue("@name", message.section_name);
                     db.Execute_non_query(insertCmd);
                 }
