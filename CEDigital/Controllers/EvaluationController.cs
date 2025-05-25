@@ -4,6 +4,8 @@ using CEDigital.Models;
 using CEDigital.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 
 namespace CEDigital.Controllers
@@ -139,23 +141,149 @@ namespace CEDigital.Controllers
         [HttpPost("send_student_evaluation")]
         public IActionResult PostSendStudentEvaluation([FromBody] Data_input_submit_evaluation message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection = null;
 
+            try
+            {
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // 1. Obtener group_id desde Student_Group con student_id y course_code
+                string getGroupIdQuery = @"
+            SELECT sg.group_id
+            FROM Student_Group sg
+            WHERE sg.student_id = @student_id
+              AND sg.course_code = @course_code";
 
+                int groupId;
 
-            response.status = "OK";
-            response.message = "Mensaje Aqui";
-            return Ok(response);
+                using (SqlCommand cmd = new SqlCommand(getGroupIdQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@student_id", message.student_id);
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
+
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            groupId = Convert.ToInt32(reader["group_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró el grupo para el estudiante con ese código de curso.";
+                            return Ok(response);
+                        }
+                    }
+                }
+
+                // 2. Validar que el group_number coincida en Groups con el group_id obtenido
+                string checkGroupNumberQuery = @"
+            SELECT group_number
+            FROM Groups
+            WHERE group_id = @group_id";
+
+                int actualGroupNumber;
+
+                using (SqlCommand cmd = new SqlCommand(checkGroupNumberQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@group_id", groupId);
+
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            actualGroupNumber = Convert.ToInt32(reader["group_number"]);
+                            if (actualGroupNumber != message.group_number)
+                            {
+                                response.status = "ERROR";
+                                response.message = "El número de grupo no coincide con el grupo asignado al estudiante.";
+                                return Ok(response);
+                            }
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró el grupo en la tabla Groups.";
+                            return Ok(response);
+                        }
+                    }
+                }
+
+                // 3. Obtener grading_item_id usando grading_item_name y group_id
+                string getGradingItemIdQuery = @"
+            SELECT grading_item_id
+            FROM Grading_item
+            WHERE name = @grading_item_name
+              AND group_id = @group_id";
+
+                int gradingItemId;
+
+                using (SqlCommand cmd = new SqlCommand(getGradingItemIdQuery, connection))
+                {
+                    cmd.Parameters.AddWithValue("@grading_item_name", message.grading_item_name);
+                    cmd.Parameters.AddWithValue("@group_id", groupId);
+
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        if (reader.Read())
+                        {
+                            gradingItemId = Convert.ToInt32(reader["grading_item_id"]);
+                        }
+                        else
+                        {
+                            response.status = "ERROR";
+                            response.message = "No se encontró el rubro para el grupo especificado.";
+                            return Ok(response);
+                        }
+                    }
+                }
+
+                // 4. Insertar evaluación en Evaluation
+                string insertEvaluationQuery = @"
+            INSERT INTO Evaluation (
+                evaluation_title,
+                professor_filename,
+                data_base_path_professor,
+                evaluation_date,
+                is_group,
+                grading_item_id
+            )
+            VALUES (
+                @evaluation_title,
+                @professor_filename,
+                @data_base_path_professor,
+                GETDATE(),
+                0,
+                @grading_item_id
+            )";
+
+                using (SqlCommand insertCmd = new SqlCommand(insertEvaluationQuery, connection))
+                {
+                    insertCmd.Parameters.AddWithValue("@evaluation_title", message.evaluation_title);
+                    insertCmd.Parameters.AddWithValue("@professor_filename", message.filename_evaluation);
+                    insertCmd.Parameters.AddWithValue("@data_base_path_professor", message.path);
+                    insertCmd.Parameters.AddWithValue("@grading_item_id", gradingItemId);
+
+                    db.Execute_non_query(insertCmd, out connection);
+                }
+
+                response.status = "OK";
+                response.message = "Evaluación registrada correctamente.";
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al insertar la evaluación: " + ex.Message;
+                return Ok(response);
+            }
+            finally
+            {
+                if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
         }
 
 
