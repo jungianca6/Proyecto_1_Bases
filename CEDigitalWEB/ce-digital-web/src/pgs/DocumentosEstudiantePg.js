@@ -30,9 +30,9 @@ function DocumentosEstudiantePg() {
   const fetchDocumentos = async () => {
     try {
       const response = await axios.post("https://localhost:7199/Document/view_student_documents", {
-        student_id: cuenta.primary_key,
-        course_code: cursoSeleccionado.course_code,
-        group_number: cursoSeleccionado.group_number
+        student_id: String(cuenta.primary_key),
+        course_code: String(cursoSeleccionado.course_code),
+        group_id: String(cursoSeleccionado.group_number)
       });
 
       if (response.data.status === "OK") {
@@ -91,23 +91,22 @@ function DocumentosEstudiantePg() {
                 <div className={styles.acciones}>
                   {/* Ver archivo en nueva pestaña */}
                   <a
-                    href={doc.file_data_base_path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.linkArchivo}
-                  >
-                    Ver archivo
-                  </a>
+                  href={doc.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.linkArchivo}
+                >
+                  Ver archivo
+                </a>
 
-                  {/* Descargar archivo */}
-                  <a
-                    href={doc.file_data_base_path}
-                    download={doc.filename}
-                    className={styles.linkArchivo}
-                    style={{ marginLeft: "1rem" }}
-                  >
-                    Descargar
-                  </a>
+                <a
+                  href={doc.path}
+                  download={doc.filename}
+                  className={styles.linkArchivo}
+                  style={{ marginLeft: "1rem" }}
+                >
+                  Descargar
+                </a>
                 </div>
 
                 <hr />

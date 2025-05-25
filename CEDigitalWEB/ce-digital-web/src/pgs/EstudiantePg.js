@@ -31,6 +31,7 @@ function EstudiantePg() {
 
     if (cursoGuardado) {
       setCursoSeleccionado(cursoGuardado);
+      console.log("Cursos actual:", cursoGuardado);
     }
 
   } catch (error) {
