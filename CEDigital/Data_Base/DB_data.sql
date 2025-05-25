@@ -338,25 +338,22 @@ WHERE sg.student_id = 20231001 AND sg.group_id = 1;
 SELECT 
     gi.name AS rubric_name,
     e.evaluation_title,
-    e.grade,
-    e.feedback,
-    e.is_public,
+    es.grade,
+    es.feedback,
+    es.is_public,
     e.evaluation_date,
-    e.data_base_path_evalution,
+    es.data_base_path_evalution,
     e.data_base_path_professor,
-    e.evaluation_filename,
+    es.evaluation_filename,
     e.professor_filename
-FROM Evaluation e
-INNER JOIN Grading_item gi ON e.grading_item_id = gi.grading_item_id
-INNER JOIN Evaluation_Student es ON e.evaluation_id = es.evaluation_id
-INNER JOIN Groups g ON gi.group_id = g.group_id
-WHERE es.student_id = 20231001
-  AND g.course_code = 'MA1101'
-  AND g.group_number = 1
-ORDER BY e.evaluation_date DESC;
-
-
-
+FROM Evaluation_Student es
+JOIN Evaluation e ON es.evaluation_id = e.evaluation_id
+JOIN Grading_item gi ON e.grading_item_id = gi.grading_item_id
+JOIN Groups g ON gi.group_id = g.group_id
+JOIN Student s ON es.student_id = s.student_id
+WHERE s.student_id = 2020697822
+  AND g.course_code = 'CE3102'
+  AND g.group_number = 3;
 
 
 -- 1. Visualizar todos los ítems de calificación para un curso y grupo específico
@@ -377,3 +374,51 @@ FROM Grading_item gi
 INNER JOIN Groups g ON gi.group_id = g.group_id
 WHERE g.course_code = 'MA1101' AND g.group_number = 1
   AND gi.name IN ('Quiz 1 - Updated', 'Midterm Exam');
+
+
+
+  -- Estudiante
+INSERT INTO Student (student_id) VALUES (2020697822);
+
+-- Grupo asociado al curso 'CE3102' con número de grupo 3
+INSERT INTO Groups (course_code, group_number) VALUES ( 'CE3102', 3);
+
+-- Sin especificar el grading_item_id
+INSERT INTO Grading_item (name, percentage, group_id) 
+VALUES ('Proyecto Final', 40, 7);
+
+-- Evaluación asociada a ese ítem
+INSERT INTO Evaluation (
+    evaluation_title,
+    professor_filename,
+    data_base_path_professor,
+    evaluation_date,
+    is_group,
+    grading_item_id
+) VALUES (
+    'Proyecto Final Ingeniería',
+    'prof_ce3102.pdf',
+    '/professors/ce3102',
+    '2024-05-30 17:00:00',
+    1,
+    5
+);
+
+-- Evaluación realizada por el estudiante
+INSERT INTO Evaluation_Student (
+    evaluation_id,
+    student_id,
+    evaluation_filename,
+    data_base_path_evalution,
+    grade,
+    feedback,
+    is_public
+) VALUES (
+    7,
+    2020697822,
+    'proyecto_final_ce3102.zip',
+    '/evaluations/ce3102/proyecto_final',
+    88.0,
+    'Proyecto bien realizado, aunque con detalles a mejorar.',
+    1
+);
