@@ -155,25 +155,66 @@ namespace CEDigital.Controllers
         [HttpPost("student_grades_report")]
         public IActionResult PostStudentGradesReport([FromBody] Data_input_student_grade_report message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            try
+            {
+                SQL_connection db = new SQL_connection();
+                SqlConnection connection;
 
+                string query = @"
+            SELECT 
+                GI.name AS rubric_name,
+                E.evaluation_title,
+                ES.grade
+            FROM Evaluation_Student ES
+            INNER JOIN Evaluation E ON ES.evaluation_id = E.evaluation_id
+            INNER JOIN Grading_item GI ON E.grading_item_id = GI.grading_item_id
+            INNER JOIN Groups G ON GI.group_id = G.group_id
+            WHERE ES.student_id = @student_id
+              AND G.course_code = @course_code
+              AND G.group_number = @group_number";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                List<Student_grade_detail_model> evaluations = new List<Student_grade_detail_model>();
 
-            Data_output_student_grade_report data_Output_Student_Grade_Report = new Data_output_student_grade_report();
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Parameters.AddWithValue("@student_id", message.student_id);
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
+                    cmd.Parameters.AddWithValue("@group_number", message.group_number);
 
-            response.status = "OK";
-            response.message = data_Output_Student_Grade_Report;
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        while (reader.Read())
+                        {
+                            Student_grade_detail_model eval = new Student_grade_detail_model
+                            {
+                                rubric_name = reader["rubric_name"].ToString(),
+                                evaluation_title = reader["evaluation_title"].ToString(),
+                                grade = reader["grade"] != DBNull.Value ? Convert.ToSingle(reader["grade"]) : 0
+                            };
+
+                            evaluations.Add(eval);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                Data_output_student_grade_report data_Output_Student_Grade_Report = new Data_output_student_grade_report
+                {
+                    evaluations = evaluations
+                };
+
+                response.status = "OK";
+                response.message = data_Output_Student_Grade_Report;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al obtener las notas del estudiante: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
 
     }
