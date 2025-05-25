@@ -24,25 +24,72 @@ namespace CEDigital.Controllers
         [HttpPost("grades_report")]
         public IActionResult PostGradesReport([FromBody] Data_input_grades_report message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            try
+            {
+                SQL_connection db = new SQL_connection();
+                SqlConnection connection;
 
+                // 1. Obtener todos los estudiantes y sus notas por rubro
+                string query = @"
+            SELECT 
+                ES.student_id,
+                GI.name AS grading_item_name,
+                ES.grade
+            FROM Evaluation_Student ES
+            INNER JOIN Evaluation E ON ES.evaluation_id = E.evaluation_id
+            INNER JOIN Grading_item GI ON E.grading_item_id = GI.grading_item_id
+            INNER JOIN Groups G ON GI.group_id = G.group_id
+            WHERE G.course_code = @course_code AND G.group_number = @group_number";
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                Dictionary<string, Student_grade_model> studentGrades = new Dictionary<string, Student_grade_model>();
 
-            Data_output_grades_report data_Output_Grades_Report = new Data_output_grades_report();
+                using (SqlCommand cmd = new SqlCommand(query))
+                {
+                    cmd.Parameters.AddWithValue("@course_code", message.course_code);
+                    cmd.Parameters.AddWithValue("@group_number", message.group_number);
 
-            response.status = "OK";
-            response.message = data_Output_Grades_Report;
-            return Ok(response);
+                    using (SqlDataReader reader = db.Execute_query(cmd, out connection))
+                    {
+                        while (reader.Read())
+                        {
+                            string studentId = reader["student_id"].ToString();
+                            string rubricName = reader["grading_item_name"].ToString();
+                            float grade = reader["grade"] != DBNull.Value ? Convert.ToSingle(reader["grade"]) : 0;
+
+                            if (!studentGrades.ContainsKey(studentId))
+                            {
+                                studentGrades[studentId] = new Student_grade_model
+                                {
+                                    student_id = studentId,
+                                    grades_by_rubric = new Dictionary<string, float>()
+                                };
+                            }
+
+                            studentGrades[studentId].grades_by_rubric[rubricName] = grade;
+                        }
+                        reader.Close();
+                    }
+                }
+
+                // 2. Preparar output
+                Data_output_grades_report data_Output_Grades_Report = new Data_output_grades_report
+                {
+                    grades = studentGrades.Values.ToList()
+                };
+
+                // 3. Enviar respuesta
+                response.status = "OK";
+                response.message = data_Output_Grades_Report;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al generar el reporte de notas: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
+
 
         [HttpPost("enrolled_students_report")]
         public IActionResult PostEnrolledStudentsReport([FromBody] Data_input_enrolled_students_report message)
