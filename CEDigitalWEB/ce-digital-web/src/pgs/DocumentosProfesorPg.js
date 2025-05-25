@@ -80,6 +80,16 @@ function DocumentosProfesorPg() {
                 console.log("Error:", data);
             }
 
+            // 2. Forzar descarga del archivo en el cliente
+            const downloadUrl = URL.createObjectURL(selectedFile);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = downloadUrl;
+            downloadLink.download = selectedFile.name; // Nombre del archivo
+            document.body.appendChild(downloadLink);
+            downloadLink.click(); // Se abre el diálogo de descarga
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(downloadUrl);
+
             const newDocument = {
                 name: selectedFile.name,
                 size: formatFileSize(selectedFile.size),
