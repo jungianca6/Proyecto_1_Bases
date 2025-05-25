@@ -141,7 +141,6 @@ namespace CEDigital.Controllers
             SQL_connection db = new SQL_connection();
             SqlConnection connection;
 
-            // Validación básica
             if (message.sections.Count != message.percentages.Count)
             {
                 response.status = "ERROR";
@@ -149,12 +148,16 @@ namespace CEDigital.Controllers
                 return Ok(response);
             }
 
+            // Verificar existencia del grupo
             string checkGroupQuery = "SELECT COUNT(*) FROM Groups WHERE group_id = @group_id";
-            string insertQuery = "INSERT INTO Group_Section_Percentage (group_id, section_name, percentage) VALUES (@group_id, @section_name, @percentage)";
+
+            // Insertar en Grading_item
+            string insertQuery = @"
+        INSERT INTO Grading_item (name, percentage, group_id)
+        VALUES (@name, @percentage, @group_id)";
 
             try
             {
-                // Verificar si el group_id existe
                 using (SqlCommand checkCommand = new SqlCommand(checkGroupQuery))
                 {
                     checkCommand.Parameters.AddWithValue("@group_id", message.group_id);
@@ -171,27 +174,26 @@ namespace CEDigital.Controllers
                     }
                 }
 
-                // Insertar cada sección con su porcentaje
                 for (int i = 0; i < message.sections.Count; i++)
                 {
                     using (SqlCommand insertCommand = new SqlCommand(insertQuery))
                     {
-                        insertCommand.Parameters.AddWithValue("@group_id", message.group_id);
-                        insertCommand.Parameters.AddWithValue("@section_name", message.sections[i]);
+                        insertCommand.Parameters.AddWithValue("@name", message.sections[i]);
                         insertCommand.Parameters.AddWithValue("@percentage", message.percentages[i]);
+                        insertCommand.Parameters.AddWithValue("@group_id", message.group_id);
 
                         db.Execute_non_query(insertCommand);
                     }
                 }
 
                 response.status = "OK";
-                response.message = "Secciones y porcentajes añadidos correctamente al grupo.";
+                response.message = "Ítems de evaluación añadidos correctamente a Grading_item.";
                 return Ok(response);
             }
             catch (Exception ex)
             {
                 response.status = "ERROR";
-                response.message = "Error al agregar las secciones: " + ex.Message;
+                response.message = "Error al insertar en Grading_item: " + ex.Message;
                 return StatusCode(500, response);
             }
         }
