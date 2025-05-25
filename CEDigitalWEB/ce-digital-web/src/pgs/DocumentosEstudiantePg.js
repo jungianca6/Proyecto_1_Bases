@@ -32,7 +32,7 @@ function DocumentosEstudiantePg() {
       const response = await axios.post("https://localhost:7199/Document/view_student_documents", {
         student_id: String(cuenta.primary_key),
         course_code: String(cursoSeleccionado.course_code),
-        group_id: String(cursoSeleccionado.group_number)
+        group_number: String(cursoSeleccionado.group_number)
       });
 
       if (response.data.status === "OK") {

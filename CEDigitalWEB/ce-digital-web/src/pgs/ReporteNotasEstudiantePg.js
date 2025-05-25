@@ -27,9 +27,9 @@ function ReporteNotasEstudiantePg() {
   const obtenerReporteNotas = async (student_id, course_code, group_number) => {
     try {
       const response = await axios.post("https://localhost:7199/Report/student_grades_report", {
-        student_id,
-        course_code,
-        group_number
+        student_id: String(student_id),
+        course_code: String(course_code),
+        group_number: String(group_number)
       });
 
       if (response.data.status === "OK") {

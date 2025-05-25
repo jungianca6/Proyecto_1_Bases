@@ -31,11 +31,11 @@ function EvaluacionesEstudiantesPg() {
     }
   }, [cuenta, cursoSeleccionado]);
 
-  const fetchEvaluaciones = async (studentId) => {
+  const fetchEvaluaciones = async () => {
     const payload = {
-      student_id: studentId,
-      course_code: cursoSeleccionado.course_code,
-      group_number: cursoSeleccionado.group_number
+      student_id: String(cuenta.primary_key),
+      course_code: String(cursoSeleccionado.course_code),
+      group_number: String(cursoSeleccionado.group_number)
     };
 
     try {
@@ -74,13 +74,13 @@ function EvaluacionesEstudiantesPg() {
       const contenidoBase64 = e.target.result.split(',')[1];
 
       const payload = {
-        student_id: cuenta.primary_key,
-        course_code: cursoSeleccionado.course_code,
-        group_number: cursoSeleccionado.group_number,
-        grading_item_name: evaluacion.rubric_name,
-        evaluation_title: evaluacion.evaluation_title,
-        file_name: archivo.name,
-        file_path: contenidoBase64
+        student_id: String(cuenta.primary_key),
+        course_code: String(cursoSeleccionado.course_code),
+        group_number: String(cursoSeleccionado.group_number), // o Number si backend espera número
+        grading_item_name: String(evaluacion.rubric_name),
+        evaluation_title: String(evaluacion.evaluation_title),
+        filename_evaluation: String(archivo.name),
+        path: String(contenidoBase64)
       };
 
       try {
