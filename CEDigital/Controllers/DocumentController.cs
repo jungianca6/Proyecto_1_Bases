@@ -268,28 +268,88 @@ namespace CEDigital.Controllers
             }
         }
 
-
         [HttpPost("view_student_documents")]
         public IActionResult PostViewStudentDocuments([FromBody] Data_input_view_student_documents message)
         {
-            /*
-             * #######Logica para verificar si el codigo no existe con la informacion del SQL Y MongoDBB#######
-             */
+            SQL_connection db = new SQL_connection();
+            SqlConnection connection;
 
+            try
+            {
 
-            /*
-             * #######Envio de la respuesta#######
-             * 
-             * En caso postivo enviar Ok
-             * En caso negativo enviar el error corrspondiente
-             * 
-             */
+                // Verificar que el estudiante está inscrito en el grupo
+                string checkEnrollmentQuery = "SELECT 1 FROM Student_Group WHERE student_id = @student AND group_id = @group";
+                using (SqlCommand checkCmd = new SqlCommand(checkEnrollmentQuery))
+                {
+                    checkCmd.Parameters.AddWithValue("@student", message.student_id);
+                    checkCmd.Parameters.AddWithValue("@group", message.group_id);
 
-            Data_output_view_student_documents Data_output_view_student_documents = new Data_output_view_student_documents();
+                    using (SqlDataReader reader = db.Execute_query(checkCmd, out connection))
+                    {
+                        if (!reader.Read())
+                        {
+                            response.status = "ERROR";
+                            response.message = "El estudiante no está inscrito en el grupo.";
+                            return Ok(response);
+                        }
+                        reader.Close();
+                    }
+                }
 
-            response.status = "OK";
-            response.message = Data_output_view_student_documents;
-            return Ok(response);
+                // Obtener los documentos del grupo
+                string getDocumentsQuery = @"
+                    SELECT 
+                        d.document_id,
+                        d.filename,
+                        d.path,
+                        FORMAT(d.upload_date, 'dd/MM/yyyy HH:mm') AS formatted_date,
+                        d.uploaded_by_professor,
+                        d.folder_id,
+                        f.name AS folder_name
+                    FROM Document d
+                    JOIN Folder f ON d.folder_id = f.folder_id
+                    WHERE f.group_id = @groupId";
+
+                List<Student_document_model> documentList = new List<Student_document_model>();
+                using (SqlCommand docCmd = new SqlCommand(getDocumentsQuery))
+                {
+                    docCmd.Parameters.AddWithValue("@groupId", message.group_id);
+
+                    using (SqlDataReader reader = db.Execute_query(docCmd, out connection))
+                    {
+                        while (reader.Read())
+                        {
+                            Student_document_model doc = new Student_document_model
+                            {
+                                document_id = Convert.ToInt32(reader["document_id"]),
+                                filename = reader["filename"].ToString(),
+                                path = reader["path"].ToString(),
+                                upload_date = reader["formatted_date"].ToString(),
+                                uploaded_by_professor = Convert.ToBoolean(reader["uploaded_by_professor"]),
+                                folder_id = Convert.ToInt32(reader["folder_id"]),
+                                folder_name = reader["folder_name"]?.ToString() 
+                            };
+                            documentList.Add(doc);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                Data_output_view_student_documents output = new Data_output_view_student_documents
+                {
+                    documents = documentList
+                };
+
+                response.status = "OK";
+                response.message = output;
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.status = "ERROR";
+                response.message = "Error al obtener los documentos: " + ex.Message;
+                return StatusCode(500, response);
+            }
         }
 
 
