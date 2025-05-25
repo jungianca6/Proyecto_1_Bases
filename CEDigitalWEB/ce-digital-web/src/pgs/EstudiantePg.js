@@ -85,12 +85,28 @@ function EstudiantePg() {
     };
 
     const handleEvaluacionesClick = () => {
+        if (cursos.length > 0 && !cursoSeleccionado) {
+            alert("Debes seleccionar un curso antes de continuar.");
+            return;
+        }
         navigate('/estudiante/evaluaciones');
-    };
+        };
 
-    const handleDocumentosClick = () => {
+        const handleDocumentosClick = () => {
+        if (cursos.length > 0 && !cursoSeleccionado) {
+            alert("Debes seleccionar un curso antes de continuar.");
+            return;
+        }
         navigate('/estudiante/documentos');
-    };
+        };
+
+        const handleReporteNotasClick = () => {
+        if (cursos.length > 0 && !cursoSeleccionado) {
+            alert("Debes seleccionar un curso antes de continuar.");
+            return;
+        }
+        navigate('/estudiante/reportenotas');
+        };
 
     return (
         <div className={styles.estudianteWrapper}>
@@ -126,44 +142,57 @@ function EstudiantePg() {
             <Card className={styles.noticiasSection}>
                 <Card.Header as="h5">Noticias</Card.Header>
                 <Card.Body>
-                    {noticias.length === 0 ? (
-                        <p>No hay noticias disponibles.</p>
-                    ) : (
-                        noticias.map((n, index) => (
-                            <div key={index} className={styles.noticiaItem}>
-                                <h5>{n.title}</h5>
-                                <p>{n.message}</p>
-                                <p><strong>Autor:</strong> {n.author}</p>
-                                <p><strong>Fecha:</strong> {new Date(n.publish_date).toLocaleDateString()}</p>
-                                <hr />
-                            </div>
-                        ))
-                    )}
+                {noticias.length === 0 ? (
+                    <p>No hay noticias disponibles.</p>
+                ) : (
+                    noticias.map((n, index) => {
+                    const originalDate = new Date(n.publication_date);
+                    const localDate = new Date(originalDate.getTime() - 6 * 60 * 60 * 1000); // Ajuste manual UTC-6
+                    const fechaFormateada = new Intl.DateTimeFormat("es-CR", {
+                        dateStyle: "medium",
+                        timeStyle: "short"
+                    }).format(localDate);
+
+                    return (
+                        <div key={index} className={styles.noticiaItem}>
+                        <h5>{n.title}</h5>
+                        <p>{n.message}</p>
+                        <p><strong>Autor:</strong> {n.author}</p>
+                        <p><strong>Fecha:</strong> {fechaFormateada}</p>
+                        <hr />
+                        </div>
+                    );
+                    })
+                )}
                 </Card.Body>
             </Card>
 
             {/* Botones de navegación */}
             <div className={styles.botonesWrapper}>
             <Button
-                variant="dark"
-                className={styles.reporteNotasButton}
-                onClick={() => navigate('/estudiante/reportenotas')}>
-                Reporte de Notas
+            variant="dark"
+            className={styles.reporteNotasButton}
+            onClick={handleReporteNotasClick}
+            >
+            Reporte de Notas
             </Button>
 
             <Button
-                variant="dark"
-                className={styles.evaluacionesButton}
-                onClick={handleEvaluacionesClick}>
-                Evaluaciones
+            variant="dark"
+            className={styles.evaluacionesButton}
+            onClick={handleEvaluacionesClick}
+            >
+            Evaluaciones
             </Button>
 
             <Button
-                variant="dark"
-                className={styles.documentosButton}
-                onClick={handleDocumentosClick}>
-                Documentos
+            variant="dark"
+            className={styles.documentosButton}
+            onClick={handleDocumentosClick}
+            >
+            Documentos
             </Button>
+
             </div>
         </div>
     );
