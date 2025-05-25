@@ -658,7 +658,7 @@ const procesarExcel = async (filas) => {
 
 
         <h3 className={styles.title} style={{ marginTop: "3rem" }}>
-          Agregar Rubros Default a Curso
+          Agregar Rubros Default a Grupo
         </h3>
         <form>
           <label className={styles.label}>ID del Grupo:</label>
