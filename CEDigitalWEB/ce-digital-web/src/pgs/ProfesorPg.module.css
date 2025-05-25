@@ -1,0 +1,100 @@
+.profesorWrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-color: #1a1a1a;
+    background-size: cover;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Titulos */
+.title {
+    position: absolute;
+    font-size: 30px;
+    left: 30px;
+    bottom: 650px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 25px;
+    left: 900px;
+    bottom: 650px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Botones de navegación (manteniendo los existentes) */
+.cursosButton {
+    position: absolute;
+    left: 30px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.documentosButton {
+    position: absolute;
+    left: 350px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.rubrosButton {
+    position: absolute;
+    left: 550px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.evaluacionesButton {
+    position: absolute;
+    left: 750px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.noticiasButton {
+    position: absolute;
+    left: 950px;
+    bottom: 550px;
+    width: 120px;
+    height: 45px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.notasButton {
+    position: absolute;
+    left: 1150px;
+    bottom: 550px;
+    width: 140px;
+    height: 55px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}
+
+.reporteButton {
+    position: absolute;
+    left: 1350px;
+    bottom: 550px;
+    width: 140px;
+    height: 55px;
+    background-color: cornflowerblue;
+    border-color: cornflowerblue;
+}

@@ -1,0 +1,122 @@
+.evaluacionesWrapper {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background-color: #1a1a1a; /* Fondo gris oscuro */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+}
+
+/* Sección Notas */
+.notasSection {
+    grid-column: 2;
+    grid-row: 4;
+    height: 300px;
+    background-color: #2a2a2a; /* Fondo oscuro sólido para tarjeta */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+}
+
+/* Áreas de texto */
+.textArea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: 1px solid #555555;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #333333;
+    color: #ffffff;
+}
+
+/* Títulos */
+.title {
+    position: absolute;
+    font-size: 30px;
+    left: 30px;
+    bottom: 650px;
+    color: #ffffff;
+}
+
+.subtitle {
+    position: absolute;
+    font-size: 25px;
+    left: 900px;
+    bottom: 650px;
+    color: #ffffff;
+}
+
+.listaEvaluacion {
+    position: absolute;
+    font-size: 25px;
+    left: 50px;
+    bottom: 575px;
+    color: #ffffff;
+}
+
+.notaEvaluacion {
+    position: absolute;
+    font-size: 25px;
+    left: 300px;
+    bottom: 600px;
+    color: #ffffff;
+}
+
+.sectionTitle {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.evaluacionItem {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: rgba(40, 40, 40, 0.8);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.inputArchivo {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.entregarButton {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 10px 16px;
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.entregarButton:hover:not(:disabled) {
+    background-color: #333;
+    border-color: #666;
+    transform: translateY(-1px);
+}
+
+.entregarButton:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.textoBlanco {
+    color: #ffffff;
+}
+
