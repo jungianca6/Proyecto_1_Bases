@@ -56,13 +56,13 @@ namespace CEDigital.Controllers
                 SELECT 
                 gi.name AS rubric_name,
                 e.evaluation_title,
-                e.grade,
-                e.feedback,
-                e.is_public,
+                es.grade,
+                es.feedback,
+                es.is_public,
                 e.evaluation_date,
-                e.data_base_path_evalution,
+                es.data_base_path_evalution,
                 e.data_base_path_professor,
-                e.evaluation_filename,
+                es.evaluation_filename,
                 e.professor_filename
                 FROM Evaluation e
                 INNER JOIN Grading_item gi ON e.grading_item_id = gi.grading_item_id
@@ -71,7 +71,7 @@ namespace CEDigital.Controllers
                 WHERE es.student_id = @student_id
                 AND g.course_code = @course_code
                 AND g.group_number = @group_number
-                ORDER BY e.evaluation_date DESC";
+                ORDER BY e.evaluation_date DESC;";
 
                 var evaluations = new List<Student_evaluation_model>();
 

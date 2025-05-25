@@ -86,8 +86,8 @@ catch (Exception ex)
 }
 
 
-
 /*
+
 // CODIGO DE UN SOLO USO
 var MongoDB_create = new MongoDB_create();
 await MongoDB_create.CrearBaseYColeccionesAsync();
@@ -220,6 +220,8 @@ await inserter.InsertAdmin(admin);
 Console.WriteLine("Todos los datos fueron insertados correctamente.");
 
 */
+
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
