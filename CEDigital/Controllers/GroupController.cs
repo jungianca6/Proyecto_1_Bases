@@ -685,7 +685,7 @@ namespace CEDigital.Controllers
 
 
         [HttpPost("update_evaluation")]
-        public IActionResult PostUpdateSubmission([FromBody] Data_input_submit_evaluation message)
+        public IActionResult PostUpdateSubmission([FromBody] Data_input_submit_evaluation2 message)
         {
             try
             {
