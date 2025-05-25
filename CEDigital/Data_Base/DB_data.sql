@@ -237,7 +237,8 @@ INSERT INTO Student_Group (student_id, group_id, course_code) VALUES
 (2023493175, 1, 'MA1101'),
 (2024983216, 2, 'FI1402'),
 (2016698746, 3, 'CE3102'),
-(2020697822, 3, 'CE3102');
+(2020697822, 3, 'CE3102')
+(2020697822, 1, 'CE2201');
 
 -- Professor_Group
 INSERT INTO Professor_Group (id_number, group_id) VALUES 
@@ -284,6 +285,7 @@ INSERT INTO Evaluation (
 ('Tarea 1 Física', 'prof_fi1402.pdf', '/professors/fi1402', '2024-04-20 23:59:59', 0, 2),
 ('Proyecto Final Ingeniería', 'prof_ce3102.pdf', '/professors/ce3102', '2024-05-30 17:00:00', 1, 3),
 ('Laboratorio 2', 'prof_ma1101_lab.pdf', '/professors/ma1101', '2024-04-25 15:00:00', 0, 1),
+('Examen 1 - Primera Evaluación Individual', 'string', 'string', '2024-04-18 12:00:00.000', 0, 1),
 ('Quiz 1', 'prof_fi1402.pdf', '/professors/fi1402', '2024-04-18 12:00:00', 0, 2);
 
 INSERT INTO Evaluation_Student (
